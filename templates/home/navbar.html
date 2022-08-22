@@ -1,0 +1,105 @@
+{% load static %}
+
+
+
+ <!-- <header class="dark-bb">
+
+
+    <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand" href="exchange-dark.html"><img src="{% static 'home/trx34.png' %}" alt="logo"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#headerMenu"
+      aria-controls="headerMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="icon ion-md-menu"></i>
+    </button>
+
+      <div class="collapse navbar-collapse" id="headerMenu">
+       
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+
+                
+
+                <a class="nav-link " href="{% url 'home:about' %}" role="button"  aria-haspopup="true"
+
+                  aria-expanded="false">
+                 About-us
+                </a>
+                
+              </li>
+              <li class="nav-item">
+
+                
+
+                <a class="nav-link " href="{% url 'home:contactus' %}" role="button"  aria-haspopup="true"
+
+                  aria-expanded="false">
+                 Contact-us
+                </a>
+                
+              </li>
+          <a href="{% url 'home:login' %}" class="btn-1">Sign In</a>
+          <a href="{% url 'home:signup' %}" class="btn-2">Get Started</a>
+        </ul>
+      </div>
+    </nav>
+  </header> -->
+
+
+
+
+
+
+
+  <header class="dark-bb">
+    <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand" href="exchange-dark.html"><img src="{% static 'home/trx34.png' %}" alt="logo"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#headerMenu"
+        aria-controls="headerMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="icon ion-md-menu"></i>
+      </button>
+
+      <div class="collapse navbar-collapse collapse-show" id="headerMenu">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item ">
+            <a class="nav-link " role="button"  aria-haspopup="true"
+              aria-expanded="false">
+             
+            </a>
+           
+          </li>
+            <li class="nav-item " {% if is_index %} class="active" {% endif %}>
+            <a class="nav-link " href="{% url 'home:index' %}"  role="button"  aria-haspopup="true"
+              aria-expanded="false">
+              Home
+            </a>
+           
+          </li>
+          <li class="nav-item " {% if is_about %} class="active" {% endif %}>
+            <a class="nav-link " href="{% url 'home:about' %}"  role="button"  aria-haspopup="true"
+              aria-expanded="false">
+              About-us
+            </a>
+           
+          </li>
+          <li class="nav-item " {% if is_contactus %} class="active" {% endif %}>
+            <a class="nav-link "  href="{% url 'home:contactus' %}" role="button"  aria-haspopup="true"
+              aria-expanded="false">
+              Contact-us
+            </a>
+           
+          </li>
+          <li class="nav-item " {% if is_faq %} class="active" {% endif %}>
+            <a class="nav-link " href="{% url 'home:FAQ' %}"  role="button"  aria-haspopup="true"
+              aria-expanded="false">
+             FAQ
+            </a>
+           
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <a href="{% url 'home:login' %}" class="btn-1">Sign In</a>
+          <a href="{% url 'home:signup' %}" class="btn-2">Get Started</a>
+        </ul>
+      </div>
+    </nav>
+  </header>

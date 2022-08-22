@@ -1,0 +1,102 @@
+{% extends 'trxadmin/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+		<!--**********************************
+            Content body start
+        ***********************************-->
+        
+
+        <div class="content-body">
+			<div class="container-fluid">
+			
+				<div class="row">
+					<div class="col-xl-3 col-sm-6 m-t35">
+						<div class="card card-coin">
+							<div class="card-body text-center">
+								<img src="{% static 'trxadmin/images/deposit.png' %}" class="mb-4" style="width:60px;">
+								<h2 class="mb-2 font-w600" style="color: brown;">Total Deposit</h2>
+								<h3 class="text-black mb-2 font-w600" >$168,331.09</h3>
+								
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xl-3 col-sm-6 m-t35">
+						<div class="card card-coin">
+							<div class="card-body text-center">
+								<img src="{% static 'trxadmin/images/cash-withdrawal.png' %}" class="mb-4" style="width:60px;">
+								<h2 class=" mb-2 font-w600" style="color: brown; ">Withdrawal</h2>
+								<h3 class="text-black mb-2 font-w600">$667,224</h3>
+									
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3 col-sm-6 m-t35">
+						<div class="card card-coin">
+							<div class="card-body text-center">
+								<img src="{% static 'trxadmin/images/wage.png' %}" class="mb-4" style="width:60px;">
+								<h2 class="mb-2 font-w600" style="color: brown;">Earnings</h2>
+								<h3 class="text-black mb-2 font-w600">$667,224</h3>
+									
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3 col-sm-6 m-t35">
+						<div class="card card-coin">
+							<div class="card-body text-center">
+								<img src="{% static 'trxadmin/images/referral.png' %}" class="mb-4" style="width:60px;">
+								<h2 class=" mb-2 font-w600"  style="color: brown;">Referral Request</h2>
+								<h3 class="text-black mb-2 font-w600">$24,098</h3>
+									
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+<div class="row" style="margin: 0px;">
+					
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+    <div id="tradingview_f9e8d"></div>
+    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/TRXUSDT/?exchange=BINANCE" rel="noopener" target="_blank"><span class="blue-text">TRXUSDT Chart</span></a> by TradingView</div>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script type="text/javascript">
+    new TradingView.widget(
+    {
+    "width": 980,
+    "height": 610,
+    "symbol": "BINANCE:TRXUSDT",
+    "interval": "1",
+    "timezone": "exchange",
+    "theme": "light",
+    "style": "2",
+    "locale": "en",
+    "toolbar_bg": "#f1f3f6",
+    "enable_publishing": false,
+    "allow_symbol_change": true,
+    "container_id": "tradingview_f9e8d"
+  }
+    );
+    </script>
+  </div>
+  <!-- TradingView Widget END -->
+					
+				</div>
+
+
+
+
+			       
+			</div>
+		</div>	 
+
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+{% endblock %}

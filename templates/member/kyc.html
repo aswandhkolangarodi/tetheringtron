@@ -1,0 +1,197 @@
+{% extends 'member/partials/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="content-body" style="min-height: 780px;">
+    <div class="container-fluid">
+
+
+        <!-- row -->
+        <div class="row">
+            <div class="col-xl-12 col-xxl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Form step</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="smartwizard" class="form-wizard order-create sw sw-theme-default sw-justified">
+                            <ul class="nav nav-wizard">
+                                <li><a class="nav-link inactive active" href="#wizard_Service">
+                                        <span>1</span>
+                                    </a></li>
+                                <li><a class="nav-link inactive" href="#wizard_Time">
+                                        <span>2</span>
+                                    </a></li>
+                                <li><a class="nav-link inactive" href="#wizard_Details">
+                                        <span>3</span>
+                                    </a></li>
+                                <li><a class="nav-link inactive" href="#wizard_Payment">
+                                        <span>4</span>
+                                    </a></li>
+                            </ul>
+                            <div class="tab-content" style="height: 287px;">
+                                <div id="wizard_Service" class="tab-pane" role="tabpanel" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-lg-12 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Country*</label>
+                                                <input type="text" name="firstName" class="form-control" autocomplete="none"
+                                                    placeholder="Country" required="" list="browsers" name="browser" id="browser">
+                                                    <datalist id="browsers">
+                                                        <option value="india">
+                                                        <option value="Afghanistan">
+                                                        <option value="Albania">
+                                                        <option value="Algeria">
+                                                        <option value="Andorra">
+                                                      </datalist>
+                                                </div>
+                                        </div>
+                                        <!-- <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Last Name*</label>
+                                                <input type="text" name="lastName" class="form-control" placeholder="Montana" required="">
+                                            </div>
+                                        </div> -->
+                                        <!-- <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Email Address*</label>
+                                                <input type="email" class="form-control" id="inputGroupPrepend2" aria-describedby="inputGroupPrepend2" placeholder="example@example.com.com" required="">
+                                            </div>
+                                        </div> -->
+                                        <!-- <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Phone Number*</label>
+                                                <input type="text" name="phoneNumber" class="form-control" placeholder="(+1)408-657-9007" required="">
+                                            </div>
+                                        </div> -->
+                                        <div class="col-xl-6">
+                                            <div class="">
+                                                <div class="card-header">
+                                                    <h4 class="card-title">Varification Process</h4>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="basic-list-group">
+                                                        <ul class="list-group list-group-flush">
+                                                            <li class="list-group-item">Personal Information</li>
+                                                            <li class="list-group-item">Government Issued ID</li>
+                                                            <li class="list-group-item">Facial Recognition</li>
+                                                            <li class="list-group-item">Review Time : 1 day</li>
+                                                            <li class="list-group-item">
+                                                                <h4 class="card-title">Guidance </h4> <a
+                                                                    href="https://youtu.be/5WDlOStGKmY">How to
+                                                                    verify?</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="wizard_Time" class="tab-pane" role="tabpanel" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Full Name*</label>
+                                                <input type="text" name="firstName" class="form-control"
+                                                    placeholder="Cellophane Square" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Date Of Birth*</label>
+                                                <input type="date" class="form-control" id="emial1"
+                                                    placeholder="example@example.com.com" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Residential Address*</label>
+                                                <input type="text" name="phoneNumber" class="form-control"
+                                                    placeholder="(+1)408-657-9007" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">Pin*</label>
+                                                <input type="text" name="place" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">City*</label>
+                                                <input type="text" name="place" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 mb-2">
+                                            <div class="form-group">
+                                                <label class="text-label">PAN card Number*</label>
+                                                <input type="text" name="place" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="wizard_Details" class="tab-pane" role="tabpanel" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-sm-6 mb-2">
+                                            <h4>ID Proof</h4>
+                                        </div>
+                                        <div class="col-6 col-sm-6 mb-2">
+                                            <div class="form-group">
+                                                <input class="form-file-input form-control" value="9.00" type="file"
+                                                    name="input1" id="input1">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 mb-2">
+                                            <h4>ID Card(Adhar Image Upload)</h4>
+                                        </div>
+                                        <div class="col-6 col-sm-6 mb-2">
+                                            <div class="form-group">
+                                                <input class="form-file-input form-control" value="9.00" type="file"
+                                                    name="input1" id="input1">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 mb-2">
+                                            <h4>Driver's License</h4>
+                                        </div>
+                                        <div class="col-6 col-sm-6 mb-2">
+                                            <div class="form-group">
+                                                <input class="form-file-input form-control" value="9.00" type="file"
+                                                    name="input1" id="input1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="wizard_Payment" class="tab-pane" role="tabpanel" style="display: none;">
+                                    <div class="row emial-setup">
+                                       
+                                        <div class="col-sm-6 mb-2">
+                                            <h4>Selfi With ID Proof</h4>
+                                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing
+                                                elit. Maiores cum dolor quas, placeat illum debitis nihil blanditiis</p>
+                                        </div>
+                                        <div class="col-6 col-sm-6 mb-2">
+                                            <div class="form-group">
+                                                <input class="form-file-input form-control" value="9.00" type="file"
+                                                    name="input1" id="input1">
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="toolbar toolbar-bottom" role="toolbar" style="text-align: right;"><button
+                                    class="btn btn-primary sw-btn-prev disabled" type="button">Previous</button><button
+                                    class="btn btn-primary sw-btn-next" type="button">Next</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

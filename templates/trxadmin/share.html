@@ -1,0 +1,216 @@
+
+{% extends 'trxadmin/base.html' %}
+{% load static %}
+{% block content %}
+
+	<!--**********************************
+            Content body start
+        ***********************************-->
+        
+
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header d-sm-flex d-block">
+                        <div class="me-auto mb-sm-0 mb-3">
+                            <h4 class="card-title mb-2">REFEREEC Listing</h4>
+                           
+                        </div>
+                        <!-- <a href="javascript:void(0);" class="btn btn-info light me-3"><i class="las la-download scale3 me-2"></i>Import Csv</a> -->
+                        <a href="javascript:void(0);" class="btn btn-info" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg">+ Add REFEREEC</a>
+               
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table style-1" id="ListDatatableView">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>REFERRER</th>
+                                        <th>REFEREEC</th>
+                                        <th>COUNTRY</th>
+                                        <th>DATE</th>
+                                        <th>UNIT</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h6>1.</h6>
+                                        </td>
+                                        <td>
+                                            <div class="media style-1">
+                                                <!-- <img src="../static/images/avatar/1.jpg" class="img-fluid me-2" alt=""> -->
+                                                <div class="media-body">
+                                                    <h6>John Doe</h6>
+                                                    <span>johndoe@gmail.com</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="media style-1">
+                                                <!-- <img src="../static/images/avatar/1.jpg" class="img-fluid me-2" alt=""> -->
+                                                <div class="media-body">
+                                                    <h6>John Doe</h6>
+                                                    <span>969652436</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <h6>England</h6>
+                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <h6 class="text-primary">10/21/2016</h6>
+                                               
+                                            </div>
+                                        </td>
+                                        <td>
+                                            5
+                                        </td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>
+                                            <div class="d-flex action-button">
+                                                <a href="javascript:void(0);" class="btn btn-info btn-xs light px-2">
+                                                   <img src="{% static 'trxadmin/icons8-name-24.png' %}">
+                                                </a>
+                                               
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h6>2.</h6>
+                                        </td>
+                                        <td>
+                                            <div class="media style-1">
+                                               
+                                                <div class="media-body">
+                                                    <h6>Martin Chuaks</h6>
+                                                    <span>martinchuaks@gmail.com</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="media style-1">
+                                                <!-- <img src="../static/images/avatar/1.jpg" class="img-fluid me-2" alt=""> -->
+                                                <div class="media-body">
+                                                    <h6>John Doe</h6>
+                                                    <span>969652436</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <h6>Indonasia</h6>
+                                               
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <h6 class="text-primary">05/11/2016</h6>
+                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                           2
+                                        </td>
+                                        <td><span class="badge badge-danger">Danger</span></td>
+                                        <td>
+                                            <div class="d-flex action-button">
+                                                <a href="{% url 'trxadmin:shareprofile' %}" class="btn btn-info btn-xs light px-2">
+                                                   <img src="{% static 'trxadmin/icons8-name-24.png' %}">
+                                                </a>
+                                               
+                                            </div>
+                                        </td>
+                                    </tr>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+                <!--**********************************
+                    Content body end
+                ***********************************-->
+
+              
+              
+
+
+
+
+
+                <!-- modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+           
+            <div class="col-xl-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                     
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <form>
+
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label"> Referrer</label>
+                                        <input type="text" class="form-control" >
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">Refereec</label>
+                                        <input type="email" class="form-control">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="form-label">Country</label>
+                                        <input type="password" class="form-control" >
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label>date</label>
+                                        <input type="date" class="form-control">
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label>unit</label>
+                                        <input type="number" class="form-control">
+                                    </div>
+                                    <div class="mb-3 col-md-4">
+                                        <label class="form-label">phone number</label>
+                                        <input type="number" class="form-control">
+                                    </div>
+                                    <!-- <div class="mb-3 col-md-2">
+                                        <label class="form-label">Zip</label>
+                                        <input type="text" class="form-control">
+                                    </div> -->
+                                    <div class="mb-3 col-md-2">
+                                        <label class="form-label">Status</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                              
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+                {% endblock %}

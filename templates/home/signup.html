@@ -1,0 +1,56 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  a {
+    color: white;
+  }
+
+  a:hover {
+    color: #b21212;
+  }
+</style>
+
+<div>
+  <div class="vh-100 d-flex justify-content-center">
+    <div class="form-access my-auto">
+      <form method="post">
+        {% csrf_token %}
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <div class="alert alert-inf0">{{ message }}</div>
+
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <span>Create Account</span>
+        <div class="form-group">
+          <input type="text" class="form-control" name="username" placeholder="Full Name">
+        </div>
+        <div class="form-group">
+          <input type="email" class="form-control" name="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="phone" placeholder="Phone">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" placeholder="Confirm Password">
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="form-checkbox">
+          <label class="custom-control-label" for="form-checkbox">I agree to the <a href="#!">Terms &
+              Conditions</a></label>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+      <h2>Already have an account? <a href="{% url 'home:login' %}">Sign in here</a></h2>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

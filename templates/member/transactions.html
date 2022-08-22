@@ -1,0 +1,224 @@
+{% extends 'member/partials/base.html' %}
+{% load static %}
+{% block content %}
+        
+<div class="content-body">
+    <div class="container-fluid">
+    
+     
+        <!-- row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Recent Payments Queue</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-responsive-md">
+                                <thead>
+                                    <tr>
+                                        <th style="width:80px;"><strong>#</strong></th>
+                                        <th><strong>PATIENT</strong></th>
+                                        <th><strong>DR NAME</strong></th>
+                                        <th><strong>DATE</strong></th>
+                                        <th><strong>STATUS</strong></th>
+                                        <th><strong>PRICE</strong></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>01</strong></td>
+                                        <td>Mr. Bobby</td>
+                                        <td>Dr. Jackson</td>
+                                        <td>01 August 2020</td>
+                                        <td><span class="badge light badge-success">Successful</span></td>
+                                        <td>$21.56</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">
+                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Edit</a>
+                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>02</strong></td>
+                                        <td>Mr. Bobby</td>
+                                        <td>Dr. Jackson</td>
+                                        <td>01 August 2020</td>
+                                        <td><span class="badge light badge-danger">Canceled</span></td>
+                                        <td>$21.56</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-danger light sharp" data-bs-toggle="dropdown">
+                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Edit</a>
+                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>03</strong></td>
+                                        <td>Mr. Bobby</td>
+                                        <td>Dr. Jackson</td>
+                                        <td>01 August 2020</td>
+                                        <td><span class="badge light badge-warning">Pending</span></td>
+                                        <td>$21.56</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-warning light sharp" data-bs-toggle="dropdown">
+                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Edit</a>
+                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script>
+    (function($) {
+    "use strict"
+    //example 1
+    var table = $('#example').DataTable({
+        createdRow: function ( row, data, index ) {
+           $(row).addClass('selected')
+        } ,
+		language: {
+			paginate: {
+			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+			}
+		}
+    });
+
+    table.on('click', 'tbody tr', function() {
+    var $row = table.row(this).nodes().to$();
+    var hasClass = $row.hasClass('selected');
+    if (hasClass) {
+        $row.removeClass('selected')
+    } else {
+        $row.addClass('selected')
+    }
+    })
+
+    table.rows().every(function() {
+    this.nodes().to$().removeClass('selected')
+    });
+
+
+
+    //example 2
+    var table2 = $('#example2').DataTable( {
+        createdRow: function ( row, data, index ) {
+            $(row).addClass('selected')
+        },
+
+        "scrollY":        "42vh",
+        "scrollCollapse": true,
+        "paging":         false
+    });
+
+
+    table2.on('click', 'tbody tr', function() {
+        var $row = table2.row(this).nodes().to$();
+        var hasClass = $row.hasClass('selected');
+        if (hasClass) {
+            $row.removeClass('selected')
+        } else {
+            $row.addClass('selected')
+        }
+    })
+
+    table2.rows().every(function() {
+        this.nodes().to$().removeClass('selected')
+    });
+
+	 //example 5
+	var table = $('#example5').DataTable({
+		searching: false,
+		paging:true,
+		select: false,
+		//info: false,
+		lengthChange:false ,
+		language: {
+			paginate: {
+			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+      }
+		}
+
+	});
+
+	//example 6
+	var table = $('#example6').DataTable({
+		searching: false,
+		paging:true,
+		select: false,
+		//info: false,
+		lengthChange:false,
+		language: {
+			paginate: {
+			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+			}
+		}
+
+	});
+
+	//ListDatatableView
+	var table = $('#ListDatatableView').DataTable({
+		searching: false,
+		paging:true,
+		select: false,
+		//info: false,
+		lengthChange:false ,
+		language: {
+			paginate: {
+			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+			}
+		}
+
+	});
+
+
+
+	//
+	var table = $('#example3, #example4').DataTable({
+		language: {
+			paginate: {
+			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+			}
+		}
+	});
+	$('#example tbody').on('click', 'tr', function () {
+		var data = table.row( this ).data();
+	});
+
+	jQuery('.dataTables_wrapper select').selectpicker();
+
+})(jQuery);
+</script>
+{% endblock %}
