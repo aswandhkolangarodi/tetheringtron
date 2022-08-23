@@ -8,6 +8,12 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'member/css/kycstyle.css' %}">
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -43,24 +49,15 @@
                             <p>Enter your personal information to get closer to copanies.</p>
                         </div>
                        
-                        <div class="input-text">
-                            <div class="input-div">
-                                <select>
-                                    <option>Select Country</option>
-                                    <option>India</option>
-                                    <option>France</option>
-                                    <option>UK</option>
-                                    <option>USA</option>
-                                    <option>Germany</option>
-                                    <option>Russia</option>
-                                    <option>China</option>
-                                    <option>Japan</option>
-                                    <option>Pakistan</option>
-                                </select>
+                        
+                            <form id="login" onsubmit="process(event)">
+                              <p>{{form.phone_number}}</p>
+                              <input id="phone" type="tel" name="phone" />
+                              <!-- <input type="submit" class="btn" value="Verify" /> -->
                             
-                            </div>
                           
-                        </div>
+
+
                         <div class="buttons">
                             <button class="next_button">Next Step</button>
                         </div>
@@ -74,11 +71,11 @@
                         <div class="input-text">
                             <div class="input-div">
                                 <input type="text" required require>
-                                <span>Full Name</span>
+                                <span>{{form.full_name}}</span>
                             </div>
                             <div class="input-div"> 
                                 <input type="text" required>
-                                <span>Email</span>
+                                <span>{{form.email}}</span>
                             </div>
                             
                         </div>
@@ -91,11 +88,11 @@
                         <div class="input-text">
                             <div class="input-div">
                                 <input type="text" required require>
-                                <span>City</span>
+                                <span>{{form.city}}</span>
                             </div>
                             <div class="input-div"> 
                                 <input type="text" required>
-                                <span>Pin</span>
+                                <span>{{form.pin}}</span>
                             </div>
                             
                         </div>
@@ -154,38 +151,21 @@
                     
                     
                     <div class="main">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <h2>User Photo</h2>
-                            <p>Upload your profile picture and share yourself.</p>
-                        </div>
-                        <button id="start-camera">Start Camera</button>
-<video id="video" width="320" height="240" autoplay></video>
-<button id="click-photo">Click Photo</button>
-<div id="dataurl-container">
-    <canvas id="canvas" width="320" height="240"></canvas>
-    <div id="dataurl-header">Image Data URL</div>
-    <textarea id="dataurl" readonly></textarea>
-</div>
+                                            <!-- <small><i class="fa fa-smile-o"></i></small>
+                                            <div class="text">
+                                                <h2>User Photo</h2>
+                                                <p>Upload your profile picture and share yourself.</p>
+                                            </div>
+                                                <button id="start-camera">Start Camera</button>
+                            <video id="video" width="320" height="240" autoplay></video>
+                        <button id="click-photo">Click Photo</button>
+                        <div id="dataurl-container">
+                            <canvas id="canvas" width="320" height="240"></canvas>
+                            <div id="dataurl-header">Image Data URL</div>
+                            <textarea id="dataurl" readonly></textarea>
+                        </div> -->
 
-                        <!-- <div class="user_card">
-                            <span></span>
-                            <div class="circle">
-                                <span><img src="https://i.imgur.com/hnwphgM.jpg"></span>
-                                
-                            </div>
-                            <div class="social">
-                                <span><i class="fa fa-share-alt"></i></span>
-                                <span><i class="fa fa-heart"></i></span>
-                                
-                            </div>
-                            <div class="user_name">
-                                <h3>Peter Hawkins</h3>
-                                <div class="detail">
-                                    <p><a href="#">Izmar,Turkey</a>Hiring</p>
-                                    <p>17 last day . 94Apply</p>
-                                </div>
-                            </div>
+                       
                         </div> -->
                         <div class="buttons button_space">
                             <button class="back_button">Back</button>
@@ -208,8 +188,9 @@
                   
     
                 
-    
+                </form>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -416,4 +397,12 @@ function validateform(){
 }
     </script>
 </body>
+
+<script>
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+  </script>
 </html>
