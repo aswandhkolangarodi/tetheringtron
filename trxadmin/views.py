@@ -55,3 +55,11 @@ def notifications(request):
 
 def singlenotification(request):
     return render(request, 'trxadmin/singlenotification.html')
+
+
+def kyclist(request):
+    return render(request, 'trxadmin/kyclist.html')
+
+
+def kycdetail(request):
+    return render(request, 'trxadmin/kycdetail.html')
