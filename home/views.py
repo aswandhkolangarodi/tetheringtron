@@ -8,12 +8,51 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from home.models import Profile
+from django.contrib.auth import login,authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-# Create your views here.
-#  APP password vulvpmwpjvvwqxkg
+
+
+def main_view(request,*args,**kwargs):
+    code = str(kwargs.get('ref_code'))
+    try:
+        profile = Profile.objects.get(code = code)
+        request.session['ref-profile']
+        print('id',profile.id)
+    except:
+        pass
+    print(request.session.get_expiry_date())
+    return render(request,"home/signup.html")
+
+
 
 
 def signup(request):
+    profile_id= request.session.get("ref_profile")
+    print('profile_id',profile_id)
+    form = UserCreationForm(request.POST or None)
+    if form.is_valid():
+        if profile_id is not None:
+            recommended_by_profile = Profile.objects.get(id=profile_id) 
+            instance = form.save()
+            registered_user = User.objects.get(id=instance.id)
+            registered_profile = Profile.objects.get(user=registered_user)
+            registered_profile.recommended_by = recommended_by_profile
+            registered_profile.save()
+        else:
+            form.save()
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return redirect('main-view')
+    context = {
+        'form':form
+    }
+     
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')

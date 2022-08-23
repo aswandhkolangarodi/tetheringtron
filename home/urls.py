@@ -15,6 +15,7 @@ urlpatterns = [
     path("FAQ",views.faq,name='FAQ'),
     path('verify/<auth_token>' , views.verify , name="verify"),
     path('sent-mail', views.sent_mail, name='sent_mail'),
-    path('error' , views.error_page , name="error")
+    path('error' , views.error_page , name="error"),
+    path('<str:ref_code>/',views.main_view,name='main-view')
 
 ]
