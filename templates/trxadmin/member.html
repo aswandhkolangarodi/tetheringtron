@@ -14,6 +14,7 @@
                 <!-- <a href="javascript:void(0);" class="btn btn-info" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg">+ Add Member</a> -->
                
             </div>
+            {% for post in posts %}
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table style-1" id="ListDatatableView">
@@ -40,7 +41,7 @@
                                     <div class="media style-1">
                                         
                                         <div class="media-body">
-                                            <h6>Oliver Jean</h6>
+                                            <h6>{{post.title}}</h6>
                                             <span>oliverjean@gmail.com</span>
                                         </div>
                                     </div>
@@ -135,6 +136,7 @@
                     </table>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
 </div>

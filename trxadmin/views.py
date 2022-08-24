@@ -1,10 +1,13 @@
 from multiprocessing import context
 from django.shortcuts import render
+from member.models import Kyc
+# from tetheringtron.member.models import Kycform
 
 # Create your views here.
 
 
 def Trxadmin(request):
+    
     context={
         "is_index":True,
     }
@@ -26,10 +29,11 @@ def share(request):
     return render(request,'trxadmin/share.html',context)
 
 def member(request):
+    posts = Kyc.objects.all().order_by('-id')
     context={
         "is_member":True,
     }
-    return render(request,'trxadmin/member.html',context)
+    return render(request,'trxadmin/member.html',context,{'posts':posts})
 
 def coindetails(request):
     context={

@@ -4,7 +4,9 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
-from .forms import KycForm
+from .models import Kyc
+# from .forms import Kyc
+
 # Create your views here.
 
 @login_required(login_url="/member/login")
@@ -35,8 +37,8 @@ def rewards(request):
     }
     return render(request, 'member/rewards.html',context)
 
-def kyc_home(request):
-    return render(request, 'member/kyc-home.html')
+# def kyc_home(request):
+#     return render(request, 'member/kyc-home.html')
 
 def coin_details(request):
     context ={
@@ -44,12 +46,17 @@ def coin_details(request):
     }
     return render(request, 'member/coin-details.html',context)
 
-def kyc(request):
-    form = KycForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()   
-    context= {
-        "form":form,
-    }
-    return render(request, 'member/kycnew.html')
+def kyc_main(request):
+     if request.POST.get('action') == 'kyc_main':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+
+        Kyc.objects.create(
+            title=title,
+            description=description,
+            image=image
+        )
+    
+  
+     return render(request, 'member/kyc_main.html')

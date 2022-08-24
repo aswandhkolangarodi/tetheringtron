@@ -41,137 +41,136 @@
     
                     
                 </div>
-                <div class="right-side">
-                    <div class="main active">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <h2>Your Personal Information</h2>
-                            <p>Enter your personal information to get closer to copanies.</p>
-                        </div>
-                       
-                        
-                            <form id="login" onsubmit="process(event)">
-                              <p>{{form.phone_number}}</p>
-                              <input id="phone" type="tel" name="phone" />
-                              <!-- <input type="submit" class="btn" value="Verify" /> -->
-                            
-                          
+                <form>
 
 
-                        <div class="buttons">
-                            <button class="next_button">Next Step</button>
-                        </div>
-                    </div>
-                    <div class="main">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <!-- <h2>Education</h2> -->
-                            <!-- <p>Inform companies about your education life.</p> -->
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>{{form.full_name}}</span>
+                        <div class="right-side">
+                            <div class="main active">
+                                <small><i class="fa fa-smile-o"></i></small>
+                                <div class="text">
+                                    <h2>Your Personal Information</h2>
+                                    <p>Enter your personal information to get closer to copanies.</p>
+                                </div>
+                            
+                                <div class="form-group">
+                                    <div id="login" onsubmit="process(event)" >
+                                    <p></p>
+                                    <input id="phone" type="tel" name="phone" id="phone_number" />
+                                    <!-- <input type="submit" class="btn" value="Verify" /> -->
+                                    
+                                    </div>
+                                </div>
+
+
+                                <div class="buttons">
+                                    <button class="next_button">Next Step</button>
+                                </div>
                             </div>
-                            <div class="input-div"> 
-                                <input type="text" required>
-                                <span>{{form.email}}</span>
+                            <div class="form-group">
+                                <div class="main">
+                                    <small><i class="fa fa-smile-o"></i></small>
+                                    <div class="text">
+                                        
+                                    </div>
+                                    <div class="input-text">
+                                        <div class="input-div">
+                                            <input type="text" id="full_name" required require>
+                                            <span></span>
+                                        </div>
+                                        <div class="input-div"> 
+                                            <input type="email" id="email"  required>
+                                            <span></span>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="input-text">
+                                        <div class="input-div">
+                                            <input type="text" required  id="Address"  require>
+                                            <span>Address</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-text">
+                                        <div class="input-div">
+                                            <input type="text"  id="city"  required require>
+                                            <span></span>
+                                        </div>
+                                        <div class="input-div"> 
+                                            <input type="text" id="pin"  required>
+                                            <span></span>
+                                        </div>
+                                        
+                                    </div>
+                                 
+                                    <div class="buttons button_space">
+                                        <button class="back_button">Back</button>
+                                        <button class="next_button">Next Step</button>
+                                    </div>
+                                </div>
                             </div>
                             
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>Address</span>
-                            </div>
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>{{form.city}}</span>
-                            </div>
-                            <div class="input-div"> 
-                                <input type="text" required>
-                                <span>{{form.pin}}</span>
-                            </div>
-                            
-                        </div>
-                        <!-- <div class="input-text">
-                            <div class="input-div">
-                                <select>
-                                    <option>Select Course</option>
-                                    <option>BCA</option>
-                                    <option>B-TECH</option>
-                                    <option>BA</option>
-                                    <option>B-COM</option>
-                                    <option>B-SC</option>
-                                    <option>MBA</option>
-                                    <option>MCA</option>
-                                    <option>M-COM</option>
-                                    <option>M-TECH</option>
-                                </select>
-                            </div>
-                        </div> -->
-                        <div class="buttons button_space">
-                            <button class="back_button">Back</button>
-                            <button class="next_button">Next Step</button>
-                        </div>
-                    </div>
-                    <div class="main">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <h2>Government issued ID</h2>
-                            <p>Can you talk about your past work experience?</p>
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>ID Proof</span>
-                            </div>
-                           
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
+                            <div class="main">
+                                <small><i class="fa fa-smile-o"></i></small>
+                                <div class="text">
+                                    <h2>Government issued ID</h2>
+                                    <p>Can you talk about your past work experience?</p>
+                                </div>
+                                <div class="form-group">
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        <input type="text"  id="id_proof" required require>
+                                        <span>ID Proof</span>
+                                    </div>
                                 
-                                <span>ID Proof</span>
+                                </div>
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        
+                                        <span>ID Proof</span>
+                                    </div>
+                                    <div class="input-div"> 
+                                        <input type="file" required require>
+                                        <!-- <span>choose</span> -->
+                                    </div>
+                                </div>
                             </div>
-                            <div class="input-div"> 
-                                <input type="file" required require>
-                                <!-- <span>choose</span> -->
+                            
+                                <div class="buttons button_space">
+                                    <button class="back_button">Back</button>
+                                    <button class="next_button">Next Step</button>
+                                </div>
                             </div>
-                        </div>
-                    
-                    
-                        <div class="buttons button_space">
-                            <button class="back_button">Back</button>
-                            <button class="next_button">Next Step</button>
-                        </div>
-                    </div>
-                    
-                    
-                    
-                    <div class="main">
-                                            <!-- <small><i class="fa fa-smile-o"></i></small>
-                                            <div class="text">
-                                                <h2>User Photo</h2>
-                                                <p>Upload your profile picture and share yourself.</p>
-                                            </div>
-                                                <button id="start-camera">Start Camera</button>
-                            <video id="video" width="320" height="240" autoplay></video>
-                        <button id="click-photo">Click Photo</button>
-                        <div id="dataurl-container">
-                            <canvas id="canvas" width="320" height="240"></canvas>
-                            <div id="dataurl-header">Image Data URL</div>
-                            <textarea id="dataurl" readonly></textarea>
-                        </div> -->
+                            
+                            
+                            
+                            <div class="main">
+                                                    <!-- <small><i class="fa fa-smile-o"></i></small>
+                                                    <div class="text">
+                                                        <h2>User Photo</h2>
+                                                        <p>Upload your profile picture and share yourself.</p>
+                                                    </div>
+                                                        <button id="start-camera">Start Camera</button>
+                                    <video id="video" width="320" height="240" autoplay></video>
+                                <button id="click-photo">Click Photo</button>
+                                <div id="dataurl-container">
+                                    <canvas id="canvas" width="320" height="240"></canvas>
+                                    <div id="dataurl-header">Image Data URL</div>
+                                    <textarea id="dataurl" readonly></textarea>
+                                </div> -->
 
-                       
-                        </div> -->
-                        <div class="buttons button_space">
-                            <button class="back_button">Back</button>
-                            <button class="submit_button">Submit</button>
-                        </div>
-                    </div>
+                            
+                                </div> 
+                                <div class="buttons button_space">
+                                    <button class="back_button">Back</button>
+                                    <button class="submit_button">Submit</button>
+                                </div>
+
+                            </div>
+
+
+
+
+
+                </form>
                      <div class="main">
                          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                              <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
@@ -249,7 +248,7 @@
         
         </style>
     <!-- live photo script -->
-    <script>
+    <!-- <script>
 
         let camera_button = document.querySelector("#start-camera");
         let video = document.querySelector("#video");
@@ -284,9 +283,9 @@
             dataurl_container.style.display = 'block';
         });
         
-        </script>
+        </script> -->
 
-
+        <!-- live photo script -->
 
 
     <script>
@@ -396,6 +395,53 @@ function validateform(){
     
 }
     </script>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>        
+
+
+
+
+
+
+ <!-- form  -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ <script>
+   var formData = new FormData();
+  
+     $(document).on('click', '#submit', function(e) {
+       formData.append('title', $('#title').val())
+       formData.append('description', $('#description').val())
+       formData.append('image',  $('#image')[0].files[0])
+       formData.append('action', 'member')
+       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+         $.ajax({
+             type: 'POST',
+             url: '{% url "member" %}',
+             data: formData,
+             cache: false,
+             processData: false,
+             contentType: false,
+             enctype: 'multipart/form-data',
+             success: function (){
+                 alert('The post has been created!')
+             },
+             error: function(xhr, errmsg, err) {
+                 console.log(xhr.status + ":" + xhr.responseText)
+             }
+         })
+     })
+</script>
+
+
+
+
 </body>
 
 <script>
@@ -405,4 +451,7 @@ function validateform(){
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     });
   </script>
+
+ 
+
 </html>
