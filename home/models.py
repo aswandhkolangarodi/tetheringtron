@@ -9,7 +9,7 @@ from datetime import datetime
 class User(AbstractUser):
     phone=models.CharField(max_length=15)
     user_img = models.ImageField(upload_to='user')
-
+    
     
 class Profile(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
@@ -25,7 +25,13 @@ class Profile(models.Model):
         return self.user.username
 
     def get_recommended_profiles(self):
-        pass
+        qs=Profile.objects.all()
+        my_recs=[]
+        for profile in qs:
+            if profile.recommended_by == self.user:
+                my_recs.append(profile)
+        
+        return my_recs
 
     def save(self,*args,**kwargs):
         if self.code == "":
