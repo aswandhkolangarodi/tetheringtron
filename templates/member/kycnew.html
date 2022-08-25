@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,12 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'member/css/kycstyle.css' %}">
     <link rel="stylesheet" href="styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
-    />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="card">
@@ -25,10 +26,14 @@
                     </div>
                     <div class="steps-content">
                         <h3>Step <span class="step-number">1</span></h3>
-                        <p class="step-number-content active">Please ensure your country of residence matches your valid ID.Your privilages could changed based on the selection</p>
-                        <p class="step-number-content d-none">Get to know better by adding your diploma,certificate and education life.</p>
-                        <p class="step-number-content d-none">Help companies get to know you better by telling then about your past experiences.</p>
-                        <p class="step-number-content d-none">Add your profile piccture and let companies find youy fast.</p>
+                        <p class="step-number-content active">Please ensure your country of residence matches your valid
+                            ID.Your privilages could changed based on the selection</p>
+                        <p class="step-number-content d-none">Get to know better by adding your diploma,certificate and
+                            education life.</p>
+                        <p class="step-number-content d-none">Help companies get to know you better by telling then
+                            about your past experiences.</p>
+                        <p class="step-number-content d-none">Add your profile piccture and let companies find youy
+                            fast.</p>
                     </div>
                     <ul class="progress-bar">
                         <li class="active">Select Country</li>
@@ -37,166 +42,172 @@
                         <li>Facial Recognition</li>
                         <!-- <li>Review time : 1 Day</li> -->
                     </ul>
-                    
-    
-                    
+
+
+
                 </div>
-                <div class="right-side">
-                    <div class="main active">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <h2>Your Personal Information</h2>
-                            <p>Enter your personal information to get closer to copanies.</p>
-                        </div>
-                       
-                        
-                            <form id="login" onsubmit="process(event)">
-                              <p>{{form.phone_number}}</p>
-                              <input id="phone" type="tel" name="phone" />
-                              <!-- <input type="submit" class="btn" value="Verify" /> -->
-                            
-                          
+
+                <form>
 
 
-                        <div class="buttons">
-                            <button class="next_button">Next Step</button>
-                        </div>
-                    </div>
-                    <div class="main">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <!-- <h2>Education</h2> -->
-                            <!-- <p>Inform companies about your education life.</p> -->
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>{{form.full_name}}</span>
+                    <div class="right-side">
+                        <div class="main active" class="form-group">
+                            <small><i class="fa fa-smile-o"></i></small>
+                            <div class="text">
+                                <h2>Your Personal Information</h2>
+                                <p>Enter your personal information to get closer to copanies.</p>
                             </div>
-                            <div class="input-div"> 
-                                <input type="text" required>
-                                <span>{{form.email}}</span>
+
+                            <div class="form-group">
+                                <!-- <div id="login" onsubmit="process(event)">
+                                    <p></p> -->
+                                    <input name="phone_number" id="phone_number" />
+                                    <!-- <input type="submit" class="btn" value="Verify" />
+
+                                </div> -->
                             </div>
-                            
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>Address</span>
+
+
+                            <div class="buttons">
+                                <button class="next_button" >Next Step</button>
+
                             </div>
                         </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>{{form.city}}</span>
+                        <div class="form-group">
+                            <div class="main">
+                                <small><i class="fa fa-smile-o"></i></small>
+                                <div class="text">
+
+                                </div>
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        <input type="text" id="full_name" name="full_name" required require>
+                                        <span>full name</span>
+                                    </div>
+                                    <div class="input-div">
+                                        <input type="email" id="email" name="email"  required>
+                                        <span>email</span>
+                                    </div>
+
+                                </div>
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        <input type="text" required id="address" name="address" require>
+                                        <span>address</span>
+                                    </div>
+                                </div>
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        <input type="text" required id="country" name="country" require>
+                                        <span>country</span>
+                                    </div>
+                                </div>
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        <input type="text" id="city"  name="city" required require>
+                                        <span>city</span>
+                                    </div>
+                                    <div class="input-div">
+                                        <input type="text" id="pin"  name="pin" required>
+                                        <span>pin</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="buttons button_space">
+                                    <button class="back_button">Back</button>
+                                    <button class="next_button" >Next Step</button>
+                                </div>
                             </div>
-                            <div class="input-div"> 
-                                <input type="text" required>
-                                <span>{{form.pin}}</span>
-                            </div>
-                            
                         </div>
-                        <!-- <div class="input-text">
-                            <div class="input-div">
-                                <select>
-                                    <option>Select Course</option>
-                                    <option>BCA</option>
-                                    <option>B-TECH</option>
-                                    <option>BA</option>
-                                    <option>B-COM</option>
-                                    <option>B-SC</option>
-                                    <option>MBA</option>
-                                    <option>MCA</option>
-                                    <option>M-COM</option>
-                                    <option>M-TECH</option>
-                                </select>
+
+                        <div class="main">
+                            <small><i class="fa fa-smile-o"></i></small>
+                            <div class="text">
+                                <h2>Government issued ID</h2>
+                                <p>Can you talk about your past work experience?</p>
                             </div>
+                            <div class="form-group">
+                                <div class="input-text">
+                                    <div class="input-div">
+                                        <input type="text" id="id_proof" name="id_proof" required require>
+                                        <span>ID Proof</span>
+                                    </div>
+
+                                </div>
+                                <div class="input-text">
+                                    <div class="input-div">
+
+                                        <span>ID Proof</span>
+                                    </div>
+                                    <div class="input-div">
+                                        <input type="file" id="id_proof_file"  name="id_proof_file" required require>
+                                        <!-- <span>choose</span> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="buttons button_space">
+                                <button class="back_button">Back</button>
+                                <button class="next_button"  id="submit" >Next Step</button>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- <div class="main">
+                            <small><i class="fa fa-smile-o"></i></small>
+                                                    <div class="text">
+                                                        <h2>User Photo</h2>
+                                                        <p>Upload your profile picture and share yourself.</p>
+                                                    </div>
+                                                        <button id="start-camera">Start Camera</button>
+                                    <video id="video" width="320" height="240" autoplay></video>
+                                <button id="click-photo">Click Photo</button>
+                                <div id="dataurl-container">
+                                    <canvas id="canvas" width="320" height="240"></canvas>
+                                    <div id="dataurl-header">Image Data URL</div>
+                                    <textarea id="dataurl" readonly></textarea>
+                                </div>
+
+
+
                         </div> -->
                         <div class="buttons button_space">
                             <button class="back_button">Back</button>
-                            <button class="next_button">Next Step</button>
+                            <button class="submit_button" >Submit</button>
                         </div>
-                    </div>
-                    <div class="main">
-                        <small><i class="fa fa-smile-o"></i></small>
-                        <div class="text">
-                            <h2>Government issued ID</h2>
-                            <p>Can you talk about your past work experience?</p>
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                <input type="text" required require>
-                                <span>ID Proof</span>
-                            </div>
-                           
-                        </div>
-                        <div class="input-text">
-                            <div class="input-div">
-                                
-                                <span>ID Proof</span>
-                            </div>
-                            <div class="input-div"> 
-                                <input type="file" required require>
-                                <!-- <span>choose</span> -->
-                            </div>
-                        </div>
-                    
-                    
-                        <div class="buttons button_space">
-                            <button class="back_button">Back</button>
-                            <button class="next_button">Next Step</button>
-                        </div>
-                    </div>
-                    
-                    
-                    
-                    <div class="main">
-                                            <!-- <small><i class="fa fa-smile-o"></i></small>
-                                            <div class="text">
-                                                <h2>User Photo</h2>
-                                                <p>Upload your profile picture and share yourself.</p>
-                                            </div>
-                                                <button id="start-camera">Start Camera</button>
-                            <video id="video" width="320" height="240" autoplay></video>
-                        <button id="click-photo">Click Photo</button>
-                        <div id="dataurl-container">
-                            <canvas id="canvas" width="320" height="240"></canvas>
-                            <div id="dataurl-header">Image Data URL</div>
-                            <textarea id="dataurl" readonly></textarea>
-                        </div> -->
 
-                       
-                        </div> -->
-                        <div class="buttons button_space">
-                            <button class="back_button">Back</button>
-                            <button class="submit_button">Submit</button>
-                        </div>
                     </div>
-                     <div class="main">
-                         <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                             <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                        </svg>
-                         
-                        <div class="text congrats">
-                            <h2>Congratulations!</h2>
-                            <p>Thanks Mr./Mrs. <span class="shown_name"></span> your information have been submitted successfully for the future reference we will contact you soon.</p>
-                        </div>
-                    </div>
-                    
-                
-                  
-    
-                
+
+
+
+
+
                 </form>
+                <div class="main">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+
+                    <div class="text congrats">
+                        <h2>Congratulations!</h2>
+                        <p>Thanks Mr./Mrs. <span class="shown_name"></span> your information have been submitted
+                            successfully for the future reference we will contact you soon.</p>
+                    </div>
+
+
                 </div>
                 
             </div>
+
         </div>
     </div>
-     <!-- live photo style -->
-     <style type="text/css">
-
+    </div>
+    <!-- live photo style -->
+    <style type="text/css">
         button {
             width: 120px;
             padding: 10px;
@@ -206,34 +217,34 @@
             cursor: pointer;
             background-color: white;
         }
-        
+
         #start-camera {
             margin-top: 50px;
         }
-        
+
         #video {
             display: none;
             margin: 50px auto 0 auto;
         }
-        
+
         #click-photo {
             display: none;
         }
-        
+
         #dataurl-container {
             display: none;
         }
-        
+
         #canvas {
             display: block;
             margin: 0 auto 20px auto;
         }
-        
+
         #dataurl-header {
             text-align: center;
             font-size: 15px;
         }
-        
+
         #dataurl {
             display: block;
             height: 100px;
@@ -246,10 +257,9 @@
             font-size: 13px;
             box-sizing: border-box;
         }
-        
-        </style>
+    </style>
     <!-- live photo script -->
-    <script>
+    <!-- <script>
 
         let camera_button = document.querySelector("#start-camera");
         let video = document.querySelector("#video");
@@ -284,125 +294,189 @@
             dataurl_container.style.display = 'block';
         });
         
-        </script>
+        </script> -->
 
-
+    <!-- live photo script -->
 
 
     <script>
-        var next_click=document.querySelectorAll(".next_button");
-var main_form=document.querySelectorAll(".main");
-var step_list = document.querySelectorAll(".progress-bar li");
-var num = document.querySelector(".step-number");
-let formnumber=0;
+        var next_click = document.querySelectorAll(".next_button");
+        var main_form = document.querySelectorAll(".main");
+        var step_list = document.querySelectorAll(".progress-bar li");
+        var num = document.querySelector(".step-number");
+        let formnumber = 0;
 
-next_click.forEach(function(next_click_form){
-    next_click_form.addEventListener('click',function(){
-        if(!validateform()){
-            return false
+        next_click.forEach(function (next_click_form) {
+            next_click_form.addEventListener('click', function () {
+                if (!validateform()) {
+                    return false
+                }
+                formnumber++;
+                updateform();
+                progress_forward();
+                contentchange();
+            });
+        });
+
+        var back_click = document.querySelectorAll(".back_button");
+        back_click.forEach(function (back_click_form) {
+            back_click_form.addEventListener('click', function () {
+                formnumber--;
+                updateform();
+                progress_backward();
+                contentchange();
+            });
+        });
+
+        var username = document.querySelector("#user_name");
+        var shownname = document.querySelector(".shown_name");
+
+
+        var submit_click = document.querySelectorAll(".submit_button");
+        submit_click.forEach(function (submit_click_form) {
+            submit_click_form.addEventListener('click', function () {
+                shownname.innerHTML = username.value;
+                formnumber++;
+                updateform();
+            });
+        });
+
+        var heart = document.querySelector(".fa-heart");
+        heart.addEventListener('click', function () {
+            heart.classList.toggle('heart');
+        });
+
+
+        var share = document.querySelector(".fa-share-alt");
+        share.addEventListener('click', function () {
+            share.classList.toggle('share');
+        });
+
+
+
+        function updateform() {
+            main_form.forEach(function (mainform_number) {
+                mainform_number.classList.remove('active');
+            })
+            main_form[formnumber].classList.add('active');
         }
-       formnumber++;
-       updateform();
-       progress_forward();
-       contentchange();
-    });
-}); 
 
-var back_click=document.querySelectorAll(".back_button");
-back_click.forEach(function(back_click_form){
-    back_click_form.addEventListener('click',function(){
-       formnumber--;
-       updateform();
-       progress_backward();
-       contentchange();
-    });
-});
+        function progress_forward() {
+            // step_list.forEach(list => {
 
-var username=document.querySelector("#user_name");
-var shownname=document.querySelector(".shown_name");
- 
+            //     list.classList.remove('active');
 
-var submit_click=document.querySelectorAll(".submit_button");
-submit_click.forEach(function(submit_click_form){
-    submit_click_form.addEventListener('click',function(){
-       shownname.innerHTML= username.value;
-       formnumber++;
-       updateform(); 
-    });
-});
-
-var heart=document.querySelector(".fa-heart");
-heart.addEventListener('click',function(){
-   heart.classList.toggle('heart');
-});
+            // }); 
 
 
-var share=document.querySelector(".fa-share-alt");
-share.addEventListener('click',function(){
-   share.classList.toggle('share');
-});
-
- 
-
-function updateform(){
-    main_form.forEach(function(mainform_number){
-        mainform_number.classList.remove('active');
-    })
-    main_form[formnumber].classList.add('active');
-} 
- 
-function progress_forward(){
-    // step_list.forEach(list => {
-        
-    //     list.classList.remove('active');
-         
-    // }); 
-    
-     
-    num.innerHTML = formnumber+1;
-    step_list[formnumber].classList.add('active');
-}  
-
-function progress_backward(){
-    var form_num = formnumber+1;
-    step_list[form_num].classList.remove('active');
-    num.innerHTML = form_num;
-} 
- 
-var step_num_content=document.querySelectorAll(".step-number-content");
-
- function contentchange(){
-     step_num_content.forEach(function(content){
-        content.classList.remove('active'); 
-        content.classList.add('d-none');
-     }); 
-     step_num_content[formnumber].classList.add('active');
- } 
- 
- 
-function validateform(){
-    validate=true;
-    var validate_inputs=document.querySelectorAll(".main.active input");
-    validate_inputs.forEach(function(vaildate_input){
-        vaildate_input.classList.remove('warning');
-        if(vaildate_input.hasAttribute('require')){
-            if(vaildate_input.value.length==0){
-                validate=false;
-                vaildate_input.classList.add('warning');
-            }
+            num.innerHTML = formnumber + 1;
+            step_list[formnumber].classList.add('active');
         }
-    });
-    return validate;
-    
-}
+
+        function progress_backward() {
+            var form_num = formnumber + 1;
+            step_list[form_num].classList.remove('active');
+            num.innerHTML = form_num;
+        }
+
+        var step_num_content = document.querySelectorAll(".step-number-content");
+
+        function contentchange() {
+            step_num_content.forEach(function (content) {
+                content.classList.remove('active');
+                content.classList.add('d-none');
+            });
+            step_num_content[formnumber].classList.add('active');
+        }
+
+
+        function validateform() {
+            validate = true;
+            var validate_inputs = document.querySelectorAll(".main.active input");
+            validate_inputs.forEach(function (vaildate_input) {
+                vaildate_input.classList.remove('warning');
+                if (vaildate_input.hasAttribute('require')) {
+                    if (vaildate_input.value.length == 0) {
+                        validate = false;
+                        vaildate_input.classList.add('warning');
+                    }
+                }
+            });
+            return validate;
+
+        }
     </script>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+
+
+
+
+
+    <!-- form  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var formData = new FormData();
+
+        $(document).on('click', '#submit', function (e) {
+            formData.append('full_name', $('#full_name').val())
+            formData.append('country', $('#country').val())
+            formData.append('email', $('#email').val())
+            formData.append('phone_number', $('#phone_number').val())
+            formData.append('address', $('#address').val())
+            formData.append('city', $('#city').val())
+            formData.append('pin', $('#pin').val())
+            formData.append('id_proof', $('#id_proof').val())
+
+            formData.append('id_proof_file', $('#id_proof_file')[0].files[0])
+
+            formData.append('action', 'kyc_main')
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+            $.ajax({
+                type: 'POST',
+                url: '{% url "member:kyc_main" %}',
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function () {
+                    alert('The post has been created!')
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log(xhr.status + ":" + xhr.responseText)
+                }
+            })
+        })
+    </script>
+
+
+
+
 </body>
 
 <script>
     const phoneInputField = document.querySelector("#phone");
     const phoneInput = window.intlTelInput(phoneInputField, {
-      utilsScript:
-        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     });
-  </script>
+</script>
+
+
+
 </html>
+
