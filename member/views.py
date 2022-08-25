@@ -3,19 +3,19 @@ from django import views
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from home.models import *
+from trxadmin.models import *
+from .forms import KycForm
 # Create your views here.
 
 @login_required(login_url="/member/login")
 def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
-    profile=Profile.objects.get(user=request.user)
-    my_recs=profile.get_recommended_profiles()
-    recs_count= len(my_recs)
+    alert = Announcement.objects.all()
     context ={
         'recs_count':recs_count,
         'user':user,
-        'my_recs':my_recs,
+        'alert':alert,
         'is_index':True
     }
     return render(request, 'member/index.html', context)
@@ -58,6 +58,11 @@ def coin_details(request):
     return render(request, 'member/coin-details.html',context)
 
 def kyc(request):
+    form = KycForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()   
+    context= {
+        "form":form,
+    }
     return render(request, 'member/kycnew.html')
-
-
