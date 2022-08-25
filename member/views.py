@@ -12,6 +12,9 @@ def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
     alert = Announcement.objects.all()
+    profile=Profile.objects.get(user=request.user)
+    my_recs=profile.get_recommended_profiles()
+    recs_count= len(my_recs)
     context ={
         'recs_count':recs_count,
         'user':user,
