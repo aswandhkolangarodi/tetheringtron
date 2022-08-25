@@ -1,6 +1,18 @@
 {% extends 'member/partials/base.html' %}
 {% load static %}
 {% block content %}
+<!-- ###### ALERT ###### -->
+<div class="card-body">
+    <div class="alert alert-primary alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+        <strong>Welcome!</strong> Message has been sent.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+        </button>
+    </div>
+</div>
+
+
+
 <div class="content-body">
     <div class="container-fluid">
         <div class="form-head mb-sm-5 mb-3 d-flex flex-wrap align-items-center">
@@ -97,7 +109,7 @@
                             <div class="card-info">
                                 <p class="mb-1 text-white fs-14">Referrals</p>
                                 <div class="d-flex justify-content-between">
-                                    <h2 class="num-text text-white mb-5 font-w600">20</h2>
+                                    <h2 class="num-text text-white mb-5 font-w600">{{recs_count}}</h2>
                                     <svg width="55" height="34" viewBox="0 0 55 34" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="38.0091" cy="16.7788" r="16.7788" fill="white"
@@ -118,6 +130,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="col-md-4 col-6 text-center">
                         <a href="javascript:void(0);" class="btn my-2 btn-secondary btn-lg px-4 " data-bs-toggle="modal"

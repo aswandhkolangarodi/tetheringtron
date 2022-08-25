@@ -72,12 +72,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <div class="modal-body">
-                <form>
+            <div class="modal-body" >
+                <form method="post">
+                  {% csrf_token %}
                     <div class="mb-3">
-                        <input type="url" class="form-control input-default " placeholder="Video URL here">
+                        <input type="url" name="youtube" class="form-control input-default " placeholder="Video URL here">
                     </div>
-                    <div class="text-center"><a href="#" class="btn btn-primary">Sent</a></div>
+                    <div class="text-center">
+                        <button  type="submit" class="btn btn-primary">Sent</button>
+                    </div>
                 </form>
             </div>
 
