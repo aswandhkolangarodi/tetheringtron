@@ -4,8 +4,12 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
+
 from .models import Kyc
 # from .forms import Kyc
+
+
+from .forms import KycForm
 
 # Create your views here.
 
@@ -13,6 +17,7 @@ from .models import Kyc
 def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
+
 
     alert = Announcement.objects.all()
 
@@ -24,9 +29,13 @@ def index(request):
         'recs_count':recs_count,
         'user':user,
 
+
         'alert':alert,
 
         'my_recs':my_recs,
+
+
+        
 
         'is_index':True
     }
@@ -43,8 +52,20 @@ def transactions(request):
     return render(request, 'member/transactions.html',context)
 
 def rewards(request):
+    user_id=request.session['userid']
+    user=User.objects.get(id=user_id)
+    reward=Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        youtube = request.POST['youtube']
+        print(youtube)
+        youtube_obj = Reward(youtube=youtube,user=request.user)
+        youtube_obj.save()
+        
     context ={
-        'is_rewards':True
+        'is_rewards':True,
+        'reward' : reward,
+        
+        
     }
     return render(request, 'member/rewards.html',context)
 
@@ -91,7 +112,13 @@ def kyc_main(request):
     return render(request, 'member/kyc_main.html')
 
 def kyc(request):
+
+    form = KycForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()   
+    context= {
+        "form":form,
+    }
     return render(request, 'member/kycnew.html')
-
-
 
