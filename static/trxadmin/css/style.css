@@ -91,6 +91,20 @@
   --font-family-base: Roboto, sans-serif;
   --font-family-title: Roboto, sans-serif;
 }
+.selfi{
+  position:relative;
+}
+.approve{
+  text-align: end;
+  padding-right: 42px;
+}
+
+.downloadselfibutton{
+  position: absolute;
+  padding-left: 15px;
+  /* top: -8px; */
+  bottom: 394px;
+}
 
 .gradient_one {
   background-image: linear-gradient(to right, rgba(186, 1, 181, 0.85) 0%, rgba(103, 25, 255, 0.85) 100%);
