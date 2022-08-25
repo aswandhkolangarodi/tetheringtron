@@ -32,8 +32,10 @@ def member(request):
     posts = Kyc.objects.all().order_by('-id')
     context={
         "is_member":True,
+        "posts":posts
     }
-    return render(request,'trxadmin/member.html',context,{'posts':posts})
+    return render(request,'trxadmin/member.html',context)
+    # return render(request,'trxadmin/member.html',context)
 
 def coindetails(request):
     context={

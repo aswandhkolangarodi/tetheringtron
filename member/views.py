@@ -47,16 +47,34 @@ def coin_details(request):
     return render(request, 'member/coin-details.html',context)
 
 def kyc_main(request):
-     if request.POST.get('action') == 'kyc_main':
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        image = request.FILES.get('image')
+    #  if request.POST.get('action') == 'kyc_main':
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name')
+        
+        country = request.POST.get('country')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        address = request.POST.get('address')
+        print(address)
+        city = request.POST.get('city')
+        pin = request.POST.get('pin')
+        id_proof = request.POST.get('id_proof')
+       
+        id_proof_file = request.FILES.get('id_proof_file')
+        
 
-        Kyc.objects.create(
-            title=title,
-            description=description,
-            image=image
+        new = Kyc(
+            full_name=full_name,
+            country=country,
+            email=email,
+            phone_number=phone_number,
+            address=address,
+            city=city,
+            pin=pin,
+            id_proof=id_proof,
+            id_proof_file=id_proof_file,
         )
+        new.save()
     
   
-     return render(request, 'member/kyc_main.html')
+    return render(request, 'member/kyc_main.html')
