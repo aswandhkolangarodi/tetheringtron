@@ -602,7 +602,7 @@
                                     <img src="{% static 'member/images/profile/pic1.jpg' %}" width="20" alt="" />
                                     {% endif %}
                                     <div class="header-info">
-                                        <span class="text-capitalize">{{user.username}}</span>
+                                        <span class="text-capitalize">{{user.first_name}}</span>
                                         <small> Member</small>
                                     </div>
                                 </a>
@@ -663,7 +663,7 @@
                                     <img src="{% static 'member/images/profile/pic1.jpg' %}" width="20" alt="" />
                                     {% endif %}
                     </div>
-                    <h5 class="name text-capitalize" ><span class="font-w400">Hello,</span> {{user.username}}</h5>
+                    <h5 class="name text-capitalize" ><span class="font-w400">Hello,</span> {{user.first_name}}</h5>
                     <p class="email">{{user.email}}</p>
                 </div>
                 <ul class="metismenu" id="">
@@ -762,7 +762,7 @@
     <!-- Required vendors -->
 
 
-<!-- Modal -->
+<!-- Modal SHARE Reward -->
 <div class="modal fade" id="share">
 <div class="share-content">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -773,33 +773,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="icon-container1 d-flex">
-                    <div class="smd">
-                        <i class=" img-thumbnail fab fa-twitter fa-2x"
-                            style="color:#4c6ef5;background-color: aliceblue"></i>
-                        <p>Twitter</p>
-                    </div>
-                    <div class="smd">
-                        <i class="img-thumbnail fab fa-facebook fa-2x"
-                            style="color: #3b5998;background-color: #eceff5;"></i>
-                        <p>Facebook</p>
-                    </div>
-                    <div class="smd">
-                        <i class="img-thumbnail fab fa-reddit-alien fa-2x"
-                            style="color: #FF5700;background-color: #fdd9ce;"></i>
-                        <p>Reddit</p>
-                    </div>
-                    <div class="smd">
-                        <i class="img-thumbnail fab fa-discord fa-2x "
-                            style="color: #738ADB;background-color: #d8d8d8;"></i>
-                        <p>Discord</p>
-                    </div>
-                </div>
+               
                 <div class="icon-container2 d-flex">
-                    <div class="smd">
-                         
-                        <i class="img-thumbnail fab fa-whatsapp fa-2x"
+                    <div class="smd" >
+                        
+                            <a href="https://wa.me/?text=http://127.0.0.1:8000/{{ reward.code }}">
+                            <i class="img-thumbnail fab fa-whatsapp fa-2x"
                             style="color:  #25D366;background-color: #cef5dc;"></i>
+                         </a>
                         <p>Whatsapp</p>
                     </div>
                     <div class="smd">
@@ -808,8 +789,11 @@
                         <p>Messenger</p>
                     </div>
                     <div class="smd">
+                        
+                        <a href="https://t.me/?text=http://127.0.0.1:8000/{{ reward.code }}">
                         <i class="img-thumbnail fab fa-telegram fa-2x"
                             style="color:  #4c6ef5;background-color: aliceblue"></i>
+                        </a>
                         <p>Telegram</p>
                     </div>
                     <div class="smd">
@@ -821,7 +805,9 @@
                 
                 <div class="input-text-reward">
                     <i class="fa fa-lock"></i>
-                    <input type="text" id="social_input" value="http://127.0.0.1:8000/member/1">
+
+                    <input type="text" id="social_input" value="http://127.0.0.1:8000/{{ reward.code }}">
+
                     <i class="fa fa-copy"></i>
                 </div>
             </div>
@@ -830,6 +816,7 @@
     </div>
 </div>
 </div>
+
 
 <script>
     var a = document.querySelectorAll(".social li a");
@@ -889,6 +876,8 @@
     
     <script src="{% static 'member/js/plugins-init/sweetalert.init.js' %}"></script>
     
+    <!--###### jquery #####  -->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
    
     
     

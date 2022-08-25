@@ -1,3 +1,4 @@
+import email
 from .models import Profile
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -7,12 +8,23 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate,login
 from django.shortcuts import render
+import math, random
+from django.http import HttpResponse
 
+def generateOTP() :
+    digits = "0123456789"
+    OTP = ""
+    for i in range(4) :
+        OTP += digits[math.floor(random.random() * 10)]
+    return OTP
 
-
- 
-
-
+def send_otp(request):
+    email=request.POST.get("email")
+    o=generateOTP()
+    print('otp:',o)
+    htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
+    send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
+    return HttpResponse(o)
 
         
 
@@ -21,7 +33,7 @@ def signup(request):
     profile_id= request.session.get("ref_profile")
     print('profile_id',profile_id)
     if request.method == 'POST':
-        username = request.POST.get('username')
+        first_name = request.POST.get('username')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
@@ -29,7 +41,7 @@ def signup(request):
     
 
         try:
-            if User.objects.filter(username = username).first():
+            if User.objects.filter(email = email).first():
                 messages.success(request, 'Username is taken.')
                 return redirect('/signup')
 
@@ -37,7 +49,7 @@ def signup(request):
                 messages.success(request, 'Email is taken.')
                 return redirect('/signup')
             
-            user_obj = User(username = username , email = email, phone=phone)
+            user_obj = User(first_name = first_name , email = email, phone=phone)
             print(user_obj)
             user_obj.set_password(password)
             user_obj.save()
@@ -136,10 +148,10 @@ def error_page(request):
 
 def login_attempt(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-
-        user_obj = User.objects.filter(username = username).first()
+        print(email)
+        user_obj = User.objects.filter(email = email).first()
         print(user_obj)
         if user_obj is None:
             messages.success(request, 'User not found.')
@@ -152,7 +164,7 @@ def login_attempt(request):
             messages.success(request, 'Profile is not verified check your mail.')
             return redirect('/member/login')
 
-        user = authenticate(username = username , password = password)
+        user = authenticate(email = email , password = password)
         if user is None:
             messages.success(request, 'Wrong password.')
             return redirect('/member/login')

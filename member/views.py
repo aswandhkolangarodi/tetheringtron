@@ -31,8 +31,20 @@ def transactions(request):
     return render(request, 'member/transactions.html',context)
 
 def rewards(request):
+    user_id=request.session['userid']
+    user=User.objects.get(id=user_id)
+    reward=Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        youtube = request.POST['youtube']
+        print(youtube)
+        youtube_obj = Reward(youtube=youtube,user=request.user)
+        youtube_obj.save()
+        
     context ={
-        'is_rewards':True
+        'is_rewards':True,
+        'reward' : reward,
+        
+        
     }
     return render(request, 'member/rewards.html',context)
 
