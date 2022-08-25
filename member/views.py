@@ -69,8 +69,8 @@ def rewards(request):
     }
     return render(request, 'member/rewards.html',context)
 
-# def kyc_home(request):
-#     return render(request, 'member/kyc-home.html')
+def kyc_home(request):
+    return render(request, 'member/kyc-home.html')
 
 def coin_details(request):
     context ={
@@ -109,7 +109,7 @@ def kyc_main(request):
         new.save()
     
   
-    return render(request, 'member/kyc_main.html')
+    return render(request, 'member/kycnew.html')
 
 def kyc(request):
 
