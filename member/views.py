@@ -13,10 +13,21 @@ from .models import Kyc
 def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
+
     alert = Announcement.objects.all()
+
+    profile=Profile.objects.get(user=request.user)
+    my_recs=profile.get_recommended_profiles()
+    recs_count= len(my_recs)
+
     context ={
+        'recs_count':recs_count,
         'user':user,
+
         'alert':alert,
+
+        'my_recs':my_recs,
+
         'is_index':True
     }
     return render(request, 'member/index.html', context)
@@ -78,3 +89,9 @@ def kyc_main(request):
     
   
     return render(request, 'member/kyc_main.html')
+
+def kyc(request):
+    return render(request, 'member/kycnew.html')
+
+
+

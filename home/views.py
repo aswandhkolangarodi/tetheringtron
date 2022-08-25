@@ -1,25 +1,32 @@
 from .models import Profile
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import *
 import uuid
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate,login
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
-# Create your views here.
-#  APP password vulvpmwpjvvwqxkg
+
+
+ 
+
+
+
+        
 
 
 def signup(request):
+    profile_id= request.session.get("ref_profile")
+    print('profile_id',profile_id)
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
         print(password)
+    
 
         try:
             if User.objects.filter(username = username).first():
@@ -36,8 +43,26 @@ def signup(request):
             user_obj.save()
             auth_token = str(uuid.uuid4())
             profile_obj = Profile.objects.create(user = user_obj , auth_token = auth_token)
-            profile_obj.save()
-            send_mail_after_registration(email , auth_token)
+            
+            if profile_id is not None:
+                recommended_by_profile = Profile.objects.get(id=profile_id)
+                print(recommended_by_profile)
+                profile_obj.save()
+                instance=User.objects.get(phone= phone)
+                print(instance.id)
+                registered_user = User.objects.get(id=instance.id)
+                print('registered_user id',registered_user)
+                registered_profile = Profile.objects.get(user=registered_user)
+                print('....................')
+                print(recommended_by_profile)
+                registered_profile.recommended_by = recommended_by_profile.user
+                registered_profile.save()
+                send_mail_after_registration(email , auth_token)
+            else:
+                profile_obj.save()
+                send_mail_after_registration(email , auth_token)
+
+            
             return redirect('/sent-mail')
 
         except Exception as e:
@@ -46,7 +71,21 @@ def signup(request):
 
     return render(request,'home/signup.html')
 
+def main_view(request,*args,**kwargs):
+    code = str(kwargs.get('ref_code'))
+    try:
+        profile = Profile.objects.get(code = code)
+        request.session['ref_profile']=profile.id
+        
+        print('id',profile.id)
+    except:
+        pass
+    print(request.session.get_expiry_date())
+    context={
+            "is_index":True,
 
+        }
+    return render(request,'home/index.html',context)
 
 def verify(request , auth_token):
     try:
@@ -119,7 +158,7 @@ def login_attempt(request):
             return redirect('/member/login')
         request.session['userid']=user.id
         login(request , user)
-        return redirect('/member')
+        return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
 
@@ -127,13 +166,7 @@ def logout(request):
     del request.session['userid']
     return redirect('/member/login')
 
-def index(request):
-
-        context={
-            "is_index":True,
-
-        }
-        return render(request,'home/index.html',context)  
+ 
 
 
 
