@@ -10,19 +10,28 @@
     a:hover{
         color: #b21212;
     }
+    .alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem
+}
 </style>
   <div class="vh-100 d-flex justify-content-center">
-    {% if messages %}
-
-            {% for message in messages %}
-            <div class="alert alert-info">
-                {{ message }}
-            </div>
-            {% endfor %}
-      
-        {% endif %}
+  
     <div class="form-access my-auto">
       <form method="post">
+        {% if messages %}
+
+        {% for message in messages %}
+       
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+        {% endfor %}
+  
+    {% endif %}
         {% csrf_token %}
         <div id="email_div" style="display: block;">
         <span>Sign In</span>
@@ -39,7 +48,7 @@
           <input type="checkbox" class="custom-control-input" id="form-checkbox">
           <label class="custom-control-label" for="form-checkbox" >Remember me</label>
         </div>
-        <button  onclick="ajax_send_otp()" class="btn btn-primary">Sign In</button>
+        <button type="submit" onclick="ajax_send_otp()" class="btn btn-primary">Sign In</button>
       </div>
 
         <div id="otp_div" style="display: none;" >
@@ -55,7 +64,7 @@
   </div>
   <br> <br>
 
-  <script>
+  <!-- <script>
     var otp_from_back="";
     function ajax_send_otp(){
        document.getElementById("email_div").style.display='none';
@@ -90,6 +99,6 @@
            document.getElementById("verify_text_div").innerHTML="Try Again!!";
        }
    } 
-</script>
+</script> -->
 
   {% endblock %}

@@ -2,9 +2,7 @@
 {% load static %}
 {% block content %}
 
-{% if request.user.is_authenticated %}
-{{request.user}}
-{% else %}
+
 
 
 <style>
@@ -58,5 +56,5 @@
     </div>
   </div>
 </div>
-{% endif %}
+
 {% endblock %}

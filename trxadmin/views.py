@@ -1,13 +1,15 @@
 from multiprocessing import context
 from django.shortcuts import render
 from member.models import Kyc
+
+from .models import *
 # from tetheringtron.member.models import Kycform
 
 # Create your views here.
 
 
 def Trxadmin(request):
-    
+   
     context={
         "is_index":True,
     }
@@ -44,6 +46,10 @@ def coindetails(request):
     return render(request,'trxadmin/coindetails.html',context)
 
 def announcement(request):
+    if request.method == 'POST':
+        alert = request.POST['announcement']
+        aler_obj = Announcement(Alert=alert)
+        aler_obj.save()
     context={
         "is_announcement":True,
     }

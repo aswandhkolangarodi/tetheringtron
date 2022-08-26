@@ -17,9 +17,9 @@ from .forms import KycForm
 def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
-
-
-    alert = Announcement.objects.all()
+    
+    alert = Announcement.objects.all().last()
+    print(alert)
 
     profile=Profile.objects.get(user=request.user)
     my_recs=profile.get_recommended_profiles()
@@ -28,15 +28,8 @@ def index(request):
     context ={
         'recs_count':recs_count,
         'user':user,
-
-
         'alert':alert,
-
         'my_recs':my_recs,
-
-
-        
-
         'is_index':True
     }
     return render(request, 'member/index.html', context)
