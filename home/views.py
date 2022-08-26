@@ -168,9 +168,13 @@ def login_attempt(request):
         if user is None:
             messages.success(request, 'Wrong password.')
             return redirect('/member/login')
-        request.session['userid']=user.id
-        login(request , user)
-        return redirect('/member/dashboard')
+        if user.member_status == False:
+            messages.success(request,'you are temporary blocked')
+            return redirect('/member/login')
+        else:
+            request.session['userid']=user.id
+            login(request , user)
+            return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
 

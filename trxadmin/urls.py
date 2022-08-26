@@ -15,6 +15,7 @@ urlpatterns = [
     path("notifications",views.notifications,name='notifications'),
     path("singlenotification",views.singlenotification,name='singlenotification'),
     path("kyclist",views.kyclist,name='kyclist'),
-    path("kycdetail",views.kycdetail,name='kycdetail'),
-
+    path("kycdetail/<str:user_id>",views.kycdetail,name='kycdetail'),
+    path('block/<str:user_id>', views.block, name="block"),
+    path('unblock/<str:user_id>', views.unblock, name="unblock")
 ]

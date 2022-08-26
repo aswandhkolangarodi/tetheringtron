@@ -1,6 +1,6 @@
 from multiprocessing import context
 from django import views
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
@@ -72,36 +72,20 @@ def coin_details(request):
     return render(request, 'member/coin-details.html',context)
 
 def kyc_main(request):
+    user_id=request.session['userid']
     #  if request.POST.get('action') == 'kyc_main':
     if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        
-        country = request.POST.get('country')
-        email = request.POST.get('email')
-        phone_number = request.POST.get('phone_number')
-        address = request.POST.get('address')
-        print(address)
-        city = request.POST.get('city')
-        pin = request.POST.get('pin')
-        id_proof = request.POST.get('id_proof')
-       
-        id_proof_file = request.FILES.get('id_proof_file')
-        
-
-        new = Kyc(
-            full_name=full_name,
-            country=country,
-            email=email,
-            phone_number=phone_number,
-            address=address,
-            city=city,
-            pin=pin,
-            id_proof=id_proof,
-            id_proof_file=id_proof_file,
-        )
-        new.save()
-    
-  
+        country=request.POST['country']
+        city =request.POST['city']
+        idproof_name=request.POST['idproof_name']
+        address=request.POST['address']
+        pin=request.POST['pin']
+        idproof_document=request.POST['idproof_document']
+        selfi=request.POST['selfi']
+        user=User.objects.get(id=user_id)
+        kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, live_photo=selfi)
+        kyc_obj.save()
+        return redirect('/member/dashboard')
     return render(request, 'member/kycnew.html')
 
 def kyc(request):

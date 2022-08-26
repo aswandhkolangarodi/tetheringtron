@@ -7,6 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             
+             
             <div class="col-lg-6 order-lg-2 mb-4">
                 <div>
                     <img src="{% static 'trxadmin/images/selfi.jpg' %}" alt="" class="selfi">
@@ -19,7 +20,6 @@
                </div>
               
             </div> 
-
             <div class="col-xl-6 col-xxl-6 col-sm-6">
                 <div class="card user-card text-center">
                     <div class="card-body pb-0">
@@ -36,35 +36,27 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
                                 <span class="mb-0 title">Email</span> :
-                                <span class="text-black ms-2">example@gmail.com</span>
+                                <span class="text-black ms-2">{{kyc_details.user.email}}</span>
                             </li>
                             <li class="list-group-item">
                                 <span class="mb-0 title">Phone</span> :
-                                <span class="text-black ms-2">1238545644</span>
+                                <span class="text-black ms-2">{{kyc_details.user.phone}}</span>
                             </li>
                             <li class="list-group-item">
-                                <span class="mb-0 title">Location</span> :
-                                <span class="text-black desc-text ms-2">Indonasia</span>
+                                <span class="mb-0 title">Country</span> :
+                                <span class="text-black desc-text ms-2">{{kyc_details.country}}</span>
                             </li>
                             <li class="list-group-item">
-                                <span class="mb-0 title">Refereec</span> :
-                                <span class="text-black desc-text ms-2">ram</span>
+                                <span class="mb-0 title">Referenced By</span> :
+                                <span class="text-black desc-text ms-2">{{profile.recommended_by}}</span>
                             </li>
-                        
-                            <li class="list-group-item">
-                                <span class="mb-0 title">Referred id</span> :
-                                <span class="text-black desc-text ms-2">545</span>
-                            </li>
-                           
-                           
-                            <li class="list-group-item">
-                                <span class="mb-0 title">
-                                    status
-                                </span> :
-                                <span class="badge badge-danger">pending</span></td>
-                            </li>
+                       
 
                         </ul>
+                        <div>
+                            <a href="#" class="btn btn-primary">Download Document</a>
+                            
+                        </div>
                     </div>
                    
                 </div>
@@ -80,40 +72,7 @@
             
            
         </h4>
-        <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                    <h6 class="my-0">Trx Address</h6>
-                    
-                </div>
-                <span class="text-muted">757512</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                    <h6 class="my-0">Unit</h6>
-                    <!-- <small class="text-muted">Brief description</small> -->
-                </div>
-                <span class="text-muted">8</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                    <h6 class="my-0">Deposit Date</h6>
-                    <!-- <small class="text-muted">Brief description</small> -->
-                </div>
-                <span class="text-muted">1/5/2025</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between active">
-                <div class="text-white">
-                    <h6 class="my-0 text-white">Earnings</h6>
-                    <!-- <small>EXAMPLECODE</small> -->
-                </div>
-                <span class="text-white">-$5</span>
-            </li>
-            <!-- <li class="list-group-item d-flex justify-content-between">
-                <span>Total (USD)</span>
-                <strong>$20</strong>
-            </li> -->
-        </ul>
+      
     
       
     </div> 
@@ -126,10 +85,10 @@
                 
                
             </h4>
-            <button type="button" class="btn btn-danger">Reject<span class="btn-icon-end"><i class="fas fa-times"></i></span>
-            </button>
-            <button type="button" class="btn btn-success">Approve <span class="btn-icon-end"><i class="fa fa-check"></i></span>
-            </button>
+            <a href="#" class="btn btn-danger">Reject<span class="btn-icon-end"><i class="fas fa-times"></i></span>
+            </a>
+            <a href="#" class="btn btn-success">Approve <span class="btn-icon-end"><i class="fa fa-check"></i></span>
+            </a>
 
             
         

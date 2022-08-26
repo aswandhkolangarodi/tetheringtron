@@ -47,8 +47,9 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     phone=models.CharField(max_length=15)
     user_img = models.ImageField(upload_to='user')
-
-
+    kyc_status=models.BooleanField(default=False)
+    member_status= models.BooleanField(default=True)
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()

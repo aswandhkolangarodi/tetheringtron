@@ -1,7 +1,9 @@
 from multiprocessing import context
+from urllib import request
 from django.shortcuts import render
 from member.models import Kyc
-
+from home.models import Profile, User
+from member.views import profile
 from .models import *
 # from tetheringtron.member.models import Kycform
 
@@ -31,10 +33,10 @@ def share(request):
     return render(request,'trxadmin/share.html',context)
 
 def member(request):
-    posts = Kyc.objects.all().order_by('-id')
+    members= Profile.objects.all()
     context={
         "is_member":True,
-        "posts":posts
+        "members":members
     }
     return render(request,'trxadmin/member.html',context)
     # return render(request,'trxadmin/member.html',context)
@@ -70,8 +72,40 @@ def singlenotification(request):
 
 
 def kyclist(request):
-    return render(request, 'trxadmin/kyclist.html')
+    kyc_list=Kyc.objects.all()
+    context={
+        'kyc_list':kyc_list
+    }
+    return render(request, 'trxadmin/kyclist.html',context)
 
 
-def kycdetail(request):
-    return render(request, 'trxadmin/kycdetail.html')
+def kycdetail(request,user_id):
+    user_id=User.objects.get(id=user_id)
+    user = Kyc.objects.get(user=user_id)
+    profile=Profile.objects.get(user=user_id)
+    context={
+        'kyc_details':user,
+        'profile':profile
+    }
+    return render(request, 'trxadmin/kycdetail.html',context)
+
+
+def block(request,user_id):
+    members= Profile.objects.all()
+    block_obj=User.objects.filter(id=user_id).update(member_status=False)
+    context={
+        "is_member":True,
+        "members":members
+    }
+    
+    return render(request,'trxadmin/member.html',context)
+    
+def unblock(request,user_id):
+    members= Profile.objects.all()
+    unblock_obj=User.objects.filter(id=user_id).update(member_status=True)
+    context={
+        "is_member":True,
+        "members":members
+    }
+    
+    return render(request,'trxadmin/member.html',context)

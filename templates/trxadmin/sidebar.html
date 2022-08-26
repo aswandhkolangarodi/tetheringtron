@@ -19,14 +19,14 @@
                 </div>
                 <ul class="metismenu" id="menu">
                     <li class="nav-label first">Main Menu</li>
-                    <li  {% if is_index %} class="active" {% endif %}><a class=" ai-icon " href="{% url 'trxadmin:Trxadmin' %}" aria-expanded="false">
+                    <li  {% if is_index %} class="mm-active" {% endif %}><a class=" ai-icon " href="{% url 'trxadmin:Trxadmin' %}" aria-expanded="false">
                             <i class="flaticon-144-layout"></i>
                             <span class="nav-text" >Dashboard</span>
                         </a>
                        
                     </li>
                     
-                    <li  {% if is_share %} class="active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:share' %}" aria-expanded="false">
+                    <li  {% if is_share %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:share' %}" aria-expanded="false">
                     <i class="flaticon-061-puzzle"></i>
                     <span class="nav-text">Share</span>
                 </a>
@@ -34,14 +34,14 @@
 
             </li>
                    
-                            <li  {% if is_member %} class="active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:member' %}" aria-expanded="false">
+                            <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:member' %}" aria-expanded="false">
                             <i class="flaticon-381-network"></i>
                             <span class="nav-text">Member's</span>
                         </a>
                        
         
                     </li>
-                    <li  {% if is_coin %} class="active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:kycdetail' %}" aria-expanded="false">
+                    <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:kyclist' %}" aria-expanded="false">
                         <i class="flaticon-049-copy"></i>
                         <span class="nav-text">KYC Varification</span>
                     </a>
@@ -50,14 +50,14 @@
                 </li>
     
                
-                <li  {% if is_coin %} class="active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
+                <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
                     <i class="flaticon-049-copy"></i>
                     <span class="nav-text">Coin deatails</span>
                 </a>
                
 
             </li>
-            <li  {% if is_announcement %} class="active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:announcement' %}" aria-expanded="false">
+            <li  {% if is_announcement %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:announcement' %}" aria-expanded="false">
                 <i class="flaticon-003-diamond"></i>
                 <span class="nav-text">Create Announcement</span>
             </a>

@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <div id="example4_wrapper" class="dataTables_wrapper no-footer">
-                           
+
                             <table id="example4" class="display dataTable no-footer" style="min-width: 845px"
                                 role="grid" aria-describedby="example4_info">
                                 <thead>
@@ -23,7 +23,7 @@
                                         <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-sort="ascending"
                                             aria-label="Roll No: activate to sort column descending"
-                                            style="width: 56.5469px;">Roll No</th>
+                                            style="width: 56.5469px;">sl/no</th>
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Student Name: activate to sort column ascending"
                                             style="width: 123.984px;">Member Name :</th>
@@ -33,6 +33,9 @@
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Fees Type : activate to sort column ascending"
                                             style="width: 79.5938px;">Phone </th>
+                                        <!-- <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Fees Type : activate to sort column ascending"
+                                            style="width: 79.5938px;">KYC Status </th> -->
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Payment Type : activate to sort column ascending"
                                             style="width: 108.531px;">Action </th>
@@ -48,42 +51,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for kyc_list in kyc_list %}
                                     <tr role="row" class="odd">
-                                        <td class="sorting_1">01</td>
-                                        <td>Tiger Nixon</td>
-                                        <td>India</td>
-                                        <td>9766878876</td>
+                                        <td class="sorting_1">{{forloop.counter}}</td>
+                                        <td>{{kyc_list.user.first_name}}</td>
+                                        <td>{{kyc_list.country}}</td>
+                                        <td>{{kyc_list.user.phone}}</td>
+                                        <!-- <td><span class="badge badge-success">Aprooved</span></td> -->
                                         <td>
                                             <div class="d-flex action-button">
-                                                
-                                                <a href="{% url 'trxadmin:kycdetail' %}" class="btn btn-info btn-xs light px-2">
+
+                                                <a href="{% url 'trxadmin:kycdetail' kyc_list.user.id %}"
+                                                    class="btn btn-info btn-xs light px-2">
                                                     View
-                                                 </a>
-                                                
+                                                </a>
+
                                             </div>
                                         </td>
-                                        
+
                                     </tr>
-                                    <tr role="row" class="even">
-                                        <td class="sorting_1">02</td>
-                                        <td>Garrett Winters</td>
-                                        <td>USA</td>
-                                        <td>566673</td>
-                                        <td>
-                                            <div class="d-flex action-button">
-                                                
-                                                <a href="/trxadmin/profile" class="btn btn-info btn-xs light px-2">
-                                                   View
-                                                 </a>
-                                                
-                                            </div>
-                                        </td>
-                                     
-                                    </tr>
-                                   
+                                  
+                                    {% endfor %}
                                 </tbody>
                             </table>
-                            
+
                         </div>
                     </div>
                 </div>
