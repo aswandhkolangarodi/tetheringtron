@@ -18,7 +18,7 @@ def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
     
-    alert = Announcement.objects.all().last()
+    alert = Announcement.objects.filter().order_by('-id')
     print(alert)
 
     profile=Profile.objects.get(user=request.user)
