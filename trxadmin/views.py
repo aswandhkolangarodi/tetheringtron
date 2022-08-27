@@ -1,6 +1,6 @@
 from multiprocessing import context
 from urllib import request
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from member.models import Kyc
 from home.models import Profile, User
 from member.views import profile
@@ -109,3 +109,8 @@ def unblock(request,user_id):
     }
     
     return render(request,'trxadmin/member.html',context)
+
+
+def logout_admin(request):
+    del request.session['userid']
+    return redirect('/member/login')

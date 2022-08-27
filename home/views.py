@@ -136,7 +136,7 @@ def sent_mail(request):
 
 def send_mail_after_registration(email , token):
     subject = 'Your accounts need to be verified'
-    message = f'Hi paste the link to verify your account http://127.0.0.1:8000/verify/{token}'
+    message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message , email_from ,recipient_list )
@@ -158,6 +158,9 @@ def login_attempt(request):
             return redirect('/member/login')
         
         if user_obj.is_superuser:
+            user = authenticate(email = email , password = password)
+            request.session['userid']=user.id
+            login(request , user)
             return redirect('/trxadmin/dashboard')
         profile_obj = Profile.objects.filter(user = user_obj ).first()
 
