@@ -54,6 +54,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
 
+
 class Reward(models.Model):
     youtube = models.TextField(max_length=1000)
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)

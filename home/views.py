@@ -157,7 +157,8 @@ def login_attempt(request):
             messages.success(request, 'User not found.')
             return redirect('/member/login')
         
-        
+        if user_obj.is_superuser:
+            return redirect('/trxadmin/dashboard')
         profile_obj = Profile.objects.filter(user = user_obj ).first()
 
         if not profile_obj.is_verified:

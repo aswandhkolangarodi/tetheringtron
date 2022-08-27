@@ -1,3 +1,4 @@
+from email import message
 from multiprocessing import context
 from django import views
 from django.shortcuts import render,redirect
@@ -17,10 +18,11 @@ from .forms import KycForm
 def index(request):
     user_id=request.session['userid']
     user=User.objects.get(id=user_id)
-    
     alert = Announcement.objects.filter().order_by('-id')
-    print(alert)
-
+    # kyc_obj=Kyc.objects.get(user=user)
+    # if kyc_obj is None:
+    #     message.success('Complete KYC to live on Tethering Tron')
+    #     return redirect('/member/kyc')
     profile=Profile.objects.get(user=request.user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
