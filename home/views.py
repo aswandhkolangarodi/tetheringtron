@@ -31,22 +31,29 @@ def send_otp(request):
 
 def signup(request):
     profile_id= request.session.get("ref_profile")
-    print('profile_id',profile_id)
+    # print('profile_id',profile_id)
     if request.method == 'POST':
         first_name = request.POST.get('username')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
-        print(password)
-    
+        confirm_password=request.POST.get('confirm_password')
+        check=request.POST.get('ckeck')
+        if password != confirm_password:
+            messages.success(request,'Password Must Be Same')
+            return redirect('/signup')
+
+        if check is None:
+            messages.success(request,'check Terms And condition')
+            return redirect('/signup')
 
         try:
             if User.objects.filter(email = email).first():
                 messages.success(request, 'Username is taken.')
                 return redirect('/signup')
 
-            if User.objects.filter(email = email).first():
-                messages.success(request, 'Email is taken.')
+            if User.objects.filter(phone = phone).first():
+                messages.success(request, 'Number is taken.')
                 return redirect('/signup')
             
             user_obj = User(first_name = first_name , email = email, phone=phone)
@@ -206,6 +213,22 @@ def contactus(request):
         }
   
      return render(request,'home/contactus.html',context)
+
+def generateOTP() :
+    digits = "123456789"
+    OTP = ""
+    for i in range(4) :
+        OTP += digits[math.floor(random.random() * 10)]
+    return OTP
+
+def send_otp(request):
+    email=request.POST.get("email")
+    password=request.POST.get("password")
+    print(email)
+    o=generateOTP()
+    htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
+    send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
+    return HttpResponse(o)
         
 # def login(request):
 #      return render(request, 'home/login.html')

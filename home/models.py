@@ -49,7 +49,7 @@ class User(AbstractUser):
     user_img = models.ImageField(upload_to='user')
     kyc_status=models.BooleanField(default=False)
     member_status= models.BooleanField(default=True)
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()

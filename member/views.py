@@ -76,14 +76,14 @@ def coin_details(request):
 def kyc_main(request):
     user_id=request.session['userid']
     #  if request.POST.get('action') == 'kyc_main':
-    if request.method == 'POST':
+    if request.method == 'POST' and request.FILES:
         country=request.POST['country']
         city =request.POST['city']
         idproof_name=request.POST['idproof_name']
         address=request.POST['address']
         pin=request.POST['pin']
-        idproof_document=request.POST['idproof_document']
-        selfi=request.POST['selfi']
+        idproof_document=request.FILES['idproof_document']
+        selfi=request.FILES['selfi']
         user=User.objects.get(id=user_id)
         kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, live_photo=selfi)
         kyc_obj.save()
