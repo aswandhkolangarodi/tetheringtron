@@ -18,6 +18,8 @@ urlpatterns = [
     path('sent-mail', views.sent_mail, name='sent_mail'),
     path('error' , views.error_page , name="error"),
     path('<str:ref_code>/',views.main_view,name='main-view'),
+    path('member/change-password/<token>/' , views.ChangePassword , name="change_password"),
+    path('member/forgetpassword', views.forgetpassword, name='forgetpassword')
     # path('send_otp',views.send_otp)
 
 ]

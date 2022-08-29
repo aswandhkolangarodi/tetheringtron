@@ -42,7 +42,7 @@
           <input type="password" name="password" id="password" class="form-control" placeholder="Password">
         </div>
         <div class="text-right">
-          <a href="reset-password-dark.html" >Forgot Password?</a>
+          <a href="{% url 'home:forgetpassword' %}" >Forgot Password?</a>
         </div>
        
         <button type="submit" onclick="ajax_send_otp()" class="btn btn-primary">Sign In</button>

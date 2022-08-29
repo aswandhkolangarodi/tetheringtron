@@ -70,6 +70,7 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True,null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     auth_token = models.CharField(max_length=100 )
+    forget_password_token = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
