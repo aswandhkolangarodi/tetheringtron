@@ -5,6 +5,9 @@ from member.models import Kyc
 from home.models import Profile, User
 from member.views import profile
 from .models import *
+from django.contrib.auth import logout as django_logout
+from django.contrib.auth.decorators import login_required
+
 # from tetheringtron.member.models import Kycform
 
 # Create your views here.
@@ -110,7 +113,7 @@ def unblock(request,user_id):
     
     return render(request,'trxadmin/member.html',context)
 
-
+@login_required(login_url="/member/login")
 def logout_admin(request):
-    del request.session['userid']
+    django_logout(request)
     return redirect('/member/login')

@@ -1,4 +1,5 @@
 import email
+import re
 from .models import Profile
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -7,6 +8,8 @@ import uuid
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate,login
+from django.contrib.auth import logout as django_logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 import math, random
 from django.http import HttpResponse
@@ -166,7 +169,6 @@ def login_attempt(request):
         
         if user_obj.is_superuser:
             user = authenticate(email = email , password = password)
-            request.session['userid']=user.id
             login(request , user)
             return redirect('/trxadmin/dashboard')
         profile_obj = Profile.objects.filter(user = user_obj ).first()
@@ -183,14 +185,13 @@ def login_attempt(request):
             messages.success(request,'you are temporary blocked')
             return redirect('/member/login')
         else:
-            request.session['userid']=user.id
             login(request , user)
             return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
-
+@login_required(login_url="/member/login")
 def logout(request):
-    del request.session['userid']
+    django_logout(request)
     return redirect('/member/login')
 
  
