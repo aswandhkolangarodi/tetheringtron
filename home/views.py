@@ -241,7 +241,7 @@ def ChangePassword(request , token):
             user_obj = User.objects.get(id = user_id)
             user_obj.set_password(new_password)
             user_obj.save()
-            messages.success(request, 'Message Reset Successfully.')
+            messages.success(request, 'Password Reset Successfully.')
             return redirect('/member/login')
             
             
