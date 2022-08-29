@@ -53,12 +53,14 @@ def coindetails(request):
     return render(request,'trxadmin/coindetails.html',context)
 
 def announcement(request):
+    announcement = Announcement.objects.filter().order_by('-id')
     if request.method == 'POST':
         alert = request.POST['announcement']
         aler_obj = Announcement(Alert=alert)
         aler_obj.save()
     context={
         "is_announcement":True,
+        "announcement":announcement
     }
     return render(request, 'trxadmin/announcement.html',context)
 

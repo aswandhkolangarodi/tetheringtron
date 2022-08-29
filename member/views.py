@@ -23,7 +23,7 @@ def index(request):
     # if kyc_obj is None:
     #     message.success('Complete KYC to live on Tethering Tron')
     #     return redirect('/member/kyc')
-    profile=Profile.objects.get(user=user.id)
+    profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
 
@@ -47,9 +47,8 @@ def transactions(request):
     return render(request, 'member/transactions.html',context)
 
 def rewards(request):
-    user_id=request.session['userid']
-    user=User.objects.get(id=user_id)
-    reward=Profile.objects.get(user=request.user)
+    user=User.objects.get(email=request.user)
+    reward=Profile.objects.get(user=user)
     if request.method == 'POST':
         youtube = request.POST['youtube']
         print(youtube)
