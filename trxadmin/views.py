@@ -14,8 +14,10 @@ from django.contrib.auth.decorators import login_required
 
 
 def Trxadmin(request):
-   
+    members=Profile.objects.all().count()
+    
     context={
+        "members":members,
         "is_index":True,
     }
 
