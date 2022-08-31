@@ -1,3 +1,4 @@
+from distutils.log import error
 from email import message
 from multiprocessing import context
 from django import views
@@ -5,9 +6,13 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
+from . cryptoutilts import *
+
+
 
 from .models import Kyc
 # from .forms import Kyc
+
 
 
 from .forms import KycForm
@@ -16,7 +21,16 @@ from .forms import KycForm
 
 @login_required(login_url="/member/login")
 def index(request):
+    # val = crypto_client
+    print(crypto_client.create_transaction(create_transaction_params))
+    # rates = crypto_client.rates()
+    # transactions = crypto_client.create_transaction()
+    # if 'error' == 'ok':
+    #     url = 'checkout_url'
     
+
+    
+
     user=User.objects.get(email=request.user)
     alert = Announcement.objects.filter().order_by('-id')
     # kyc_obj=Kyc.objects.get(user=user)
@@ -73,7 +87,7 @@ def coin_details(request):
     return render(request, 'member/coin-details.html',context)
 
 def kyc_main(request):
-    user_id=request.session['userid']
+    user=User.objects.get(email=request.user)
     #  if request.POST.get('action') == 'kyc_main':
     if request.method == 'POST' and request.FILES:
         country=request.POST['country']
@@ -83,7 +97,7 @@ def kyc_main(request):
         pin=request.POST['pin']
         idproof_document=request.FILES['idproof_document']
         selfi=request.FILES['selfi']
-        user=User.objects.get(id=user_id)
+        user=User.objects.get(id=user.id)
         kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, live_photo=selfi)
         kyc_obj.save()
         return redirect('/member/dashboard')
@@ -99,4 +113,3 @@ def kyc(request):
         "form":form,
     }
     return render(request, 'member/kycnew.html')
-
