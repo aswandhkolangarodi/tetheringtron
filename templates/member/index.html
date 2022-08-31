@@ -2,19 +2,28 @@
 {% load static %}
 {% block content %}
 <!-- ###### ALERT ###### -->
-<div class="card-body">
-    <div class="alert alert-primary alert-dismissible fade show">
-        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-        <strong>Welcome!</strong> Message has been sent.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
-        </button>
-    </div>
-</div>
+
+
+
+   
 
 
 
 <div class="content-body">
     <div class="container-fluid">
+        
+        {% for alert in alert|slice:":1" %}
+        <div class="alert alert-primary alert-dismissible fade show">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+           
+            <strong>Alert! </strong> {{alert.Alert}}
+            
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            </button>
+        </div>
+    
+        {% endfor %}
+
         <div class="form-head mb-sm-5 mb-3 d-flex flex-wrap align-items-center">
             <h2 class="font-w600 title mb-2 me-auto ">Dashboard</h2>
 
@@ -69,7 +78,7 @@
                                     </div>
                                     <div class="text-white">
                                         <p class="fs-12 mb-1 op6">CARD HOLDER</p>
-                                        <span>Marquezz Silalahi</span>
+                                        <span>{{user.first_name}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -97,7 +106,7 @@
                                     </div>
                                     <div class="text-white">
                                         <p class="fs-12 mb-1 op6">CARD HOLDER</p>
-                                        <span>Marquezz Silalahi</span>
+                                        <span>{{user.first_name}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +160,7 @@
                             <div class="card-header pb-2 d-block d-sm-flex flex-wrap border-0">
                                 <div class="mb-3">
                                     <h4 class="fs-20 text-black">Transaction History</h4>
-                                    <p class="mb-0 fs-12">Lorem ipsum dolor sit amet, consectetur</p>
+                                    <p class="mb-0 fs-12">Recent Transactions</p>
                                 </div>
                                 <div class="card-action card-tabs mb-3 style-1">
                                     <ul class="nav nav-tabs" role="tablist">
@@ -228,7 +237,7 @@
                                                     <td>
                                                         <span class="font-w600 text-black">+$5,553</span>
                                                     </td>
-                                                    <td><span class="badge badge-success">Completed</span></td>
+                                                    <td><span class="badge badge-success">Deposit</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -280,7 +289,7 @@
                                                         <span class="font-w600 text-black">+$5,553</span>
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-warning">Pending</span>
+                                                        <span class="badge badge-warning">Withdraw</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -333,7 +342,7 @@
                                                         <span class="font-w600 text-black">-$912</span>
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-danger">Canceled</span>
+                                                        <span class="badge badge-warning">Withdraw</span>
                                                     </td>
                                                 </tr>
                                              
@@ -703,11 +712,9 @@
                         <div class="basic-form">
                             <form>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control input-default " placeholder="Deposit Amount">
+                                    <input type="number" class="form-control input-default " placeholder="Deposit Amount">
                                 </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control input-default" placeholder="TRX Address">
-                                </div>
+                               
                                 <div class="modal-footer "><button type="button" class="btn btn-primary">Deposit</button></div>
                             </form>
                         </div>

@@ -1,4 +1,5 @@
 import email
+import re
 from .models import Profile
 from django.shortcuts import redirect, render
 from django.contrib import messages
@@ -7,9 +8,12 @@ import uuid
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate,login
+from django.contrib.auth import logout as django_logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 import math, random
 from django.http import HttpResponse
+from .helpers import send_forget_password_mail
 
 def generateOTP() :
     digits = "0123456789"
@@ -31,22 +35,29 @@ def send_otp(request):
 
 def signup(request):
     profile_id= request.session.get("ref_profile")
-    print('profile_id',profile_id)
+    # print('profile_id',profile_id)
     if request.method == 'POST':
         first_name = request.POST.get('username')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
-        print(password)
-    
+        confirm_password=request.POST.get('confirm_password')
+        check=request.POST.get('ckeck')
+        if password != confirm_password:
+            messages.success(request,'Password Must Be Same')
+            return redirect('/signup')
+
+        if check is None:
+            messages.success(request,'check Terms And condition')
+            return redirect('/signup')
 
         try:
             if User.objects.filter(email = email).first():
                 messages.success(request, 'Username is taken.')
                 return redirect('/signup')
 
-            if User.objects.filter(email = email).first():
-                messages.success(request, 'Email is taken.')
+            if User.objects.filter(phone = phone).first():
+                messages.success(request, 'Number is taken.')
                 return redirect('/signup')
             
             user_obj = User(first_name = first_name , email = email, phone=phone)
@@ -136,7 +147,7 @@ def sent_mail(request):
 
 def send_mail_after_registration(email , token):
     subject = 'Your accounts need to be verified'
-    message = f'Hi paste the link to verify your account http://127.0.0.1:8000/verify/{token}'
+    message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message , email_from ,recipient_list )
@@ -157,7 +168,10 @@ def login_attempt(request):
             messages.success(request, 'User not found.')
             return redirect('/member/login')
         
-        
+        if user_obj.is_superuser:
+            user = authenticate(email = email , password = password)
+            login(request , user)
+            return redirect('/trxadmin/dashboard')
         profile_obj = Profile.objects.filter(user = user_obj ).first()
 
         if not profile_obj.is_verified:
@@ -168,14 +182,17 @@ def login_attempt(request):
         if user is None:
             messages.success(request, 'Wrong password.')
             return redirect('/member/login')
-        request.session['userid']=user.id
-        login(request , user)
-        return redirect('/member/dashboard')
+        if user.member_status == False:
+            messages.success(request,'you are temporary blocked')
+            return redirect('/member/login')
+        else:
+            login(request , user)
+            return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
-
+@login_required(login_url="/member/login")
 def logout(request):
-    del request.session['userid']
+    django_logout(request)
     return redirect('/member/login')
 
  
@@ -198,6 +215,84 @@ def contactus(request):
         }
   
      return render(request,'home/contactus.html',context)
+
+
+def ChangePassword(request , token):
+    context = {}
+    try:
+        profile_obj = Profile.objects.filter(forget_password_token = token).first()
+        context = {'user_id' : profile_obj.user.id}
+        
+        if request.method == 'POST':
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('reconfirm_password')
+            user_id = request.POST.get('user_id')
+            
+            if user_id is  None:
+                messages.success(request, 'No user id found.')
+                return redirect(f'/member/change-password/{token}/')
+                
+            
+            if  new_password != confirm_password:
+                messages.success(request, 'both should  be equal.')
+                return redirect(f'/member/change-password/{token}/')
+                         
+            
+            user_obj = User.objects.get(id = user_id)
+            user_obj.set_password(new_password)
+            user_obj.save()
+            messages.success(request, 'Password Reset Successfully.')
+            return redirect('/member/login')
+            
+            
+            
+        
+        
+    except Exception as e:
+        print(e)
+    return render(request , 'home/change-password.html' , context)
+
+
+
+def forgetpassword(request):
+    try:
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            
+            if not User.objects.filter(email=email).first():
+                messages.success(request, 'Not user found with this email.')
+                return redirect('/forgetpassword')
+            
+            user_obj = User.objects.get(email = email)
+            token = str(uuid.uuid4())
+            profile_obj= Profile.objects.get(user = user_obj)
+            profile_obj.forget_password_token = token
+            profile_obj.save()
+            send_forget_password_mail(user_obj.email , token)
+            messages.success(request, 'An email is sent.')
+            return redirect('/member/forgetpassword')
+                
+    
+    
+    except Exception as e:
+        print(e)
+    return render(request , 'home/forget-password.html')
+
+# def generateOTP() :
+#     digits = "123456789"
+#     OTP = ""
+#     for i in range(4) :
+#         OTP += digits[math.floor(random.random() * 10)]
+#     return OTP
+
+# def send_otp(request):
+#     email=request.POST.get("email")
+#     password=request.POST.get("password")
+#     print(email)
+#     o=generateOTP()
+#     htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
+#     send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
+#     return HttpResponse(o)
         
 # def login(request):
 #      return render(request, 'home/login.html')

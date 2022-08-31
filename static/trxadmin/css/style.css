@@ -91,6 +91,30 @@
   --font-family-base: Roboto, sans-serif;
   --font-family-title: Roboto, sans-serif;
 }
+.download{
+  position: relative;
+  top: -90px;
+}
+@media only screen and (max-width: 1024px){
+  .selfie{
+      width: 348px;
+      position:relative;
+  }
+}
+
+.selfi{
+  position:relative;
+}
+.approve{
+  text-align: end;
+  padding-right: 42px;
+}
+
+.downloadselfibutton{
+  position: relative;
+  bottom: 59px;
+}
+
 
 .gradient_one {
   background-image: linear-gradient(to right, rgba(186, 1, 181, 0.85) 0%, rgba(103, 25, 255, 0.85) 100%);

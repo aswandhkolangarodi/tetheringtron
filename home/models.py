@@ -47,11 +47,13 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     phone=models.CharField(max_length=15)
     user_img = models.ImageField(upload_to='user')
-
+    kyc_status=models.BooleanField(default=False)
+    member_status= models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
+
 
 class Reward(models.Model):
     youtube = models.TextField(max_length=1000)
@@ -68,6 +70,7 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True,null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     auth_token = models.CharField(max_length=100 )
+    forget_password_token = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
