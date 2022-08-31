@@ -10,7 +10,7 @@ urlpatterns = [
     path("about",views.about,name='about'),
     path("contactus",views.contactus,name='contactus'),
     path("member/login",views.login_attempt,name='login'),
-    path('member/login/otp', views.send_otp, name='send-otp'),
+    # path('member/login/otp', views.send_otp, name='send-otp'),
     path('logout' , views.logout, name='logout'),
     path("signup",views.signup,name='signup'),
     path("FAQ",views.faq,name='FAQ'),
@@ -19,7 +19,8 @@ urlpatterns = [
     path('error' , views.error_page , name="error"),
     path('<str:ref_code>/',views.main_view,name='main-view'),
     path('member/change-password/<token>/' , views.ChangePassword , name="change_password"),
-    path('member/forgetpassword', views.forgetpassword, name='forgetpassword')
+    path('member/forgetpassword', views.forgetpassword, name='forgetpassword'),
+    path('member/otp/<uid>',views.otp, name='otp')
     # path('send_otp',views.send_otp)
 
 ]

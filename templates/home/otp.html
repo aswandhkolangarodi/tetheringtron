@@ -1,0 +1,46 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+
+<style>
+  a {
+    color: white;
+  }
+
+  a:hover {
+    color: #b21212;
+  }
+</style>
+
+<div>
+  <div class="vh-100 d-flex justify-content-center">
+    <div class="form-access my-auto">
+      <form method="post">
+        {% csrf_token %}
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <div class="alert alert-info">{{ message }}</div>
+
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <span>OTP</span>
+       
+        
+        <div class="form-group">
+          <input required type="text" class="form-control" name="otp" placeholder="OTP">
+        </div>
+        
+       
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -14,7 +14,7 @@ from django.shortcuts import render
 import math, random
 from django.http import HttpResponse
 from .helpers import send_forget_password_mail
-
+from .mixins import MessageHandler
 def generateOTP() :
     digits = "0123456789"
     OTP = ""
@@ -161,7 +161,6 @@ def login_attempt(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        print(email)
         user_obj = User.objects.filter(email = email).first()
         print(user_obj)
         if user_obj is None:
@@ -186,9 +185,29 @@ def login_attempt(request):
             messages.success(request,'you are temporary blocked')
             return redirect('/member/login')
         else:
-            login(request , user)
-            return redirect('/member/dashboard')
+            user=User.objects.get(email=email)
+            member_profile=Profile.objects.get(user=user)
+            member_profile.otp=random.randint(1000,9999)
+            member_profile.save()
+            message_handler=MessageHandler(user.phone, member_profile.otp).send_otp()
+            messages.success(request,"OTP is send to registered Phone number")
+            return redirect(f'/member/otp/{member_profile.uid}')
+            # login(request , user)
+            # return redirect('/member/dashboard')
     return render(request , 'home/login.html')
+
+def otp(request, uid):
+    if request.method == 'POST':
+        otp=request.POST['otp']
+        user=Profile.objects.get(uid=uid)
+        
+        login_user=User.objects.get(email=user)
+        if otp == user.otp:
+            login(request , login_user)
+            return redirect('/member/dashboard')
+        messages.success(request,'Wrong OTP')
+        return redirect(f'/member/otp/{user.uid}')
+    return render(request,'home/otp.html')
 
 @login_required(login_url="/member/login")
 def logout(request):
@@ -277,6 +296,10 @@ def forgetpassword(request):
     except Exception as e:
         print(e)
     return render(request , 'home/forget-password.html')
+
+
+
+
 
 # def generateOTP() :
 #     digits = "123456789"

@@ -7,7 +7,7 @@ from datetime import datetime
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 from django.utils.translation import gettext_lazy as _
-
+import uuid
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -73,7 +73,8 @@ class Profile(models.Model):
     forget_password_token = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+    otp=models.CharField(max_length=10,null=True,blank=True)
+    uid=models.UUIDField(default=uuid.uuid4)
     def __str__(self):
         return self.user.email
 
