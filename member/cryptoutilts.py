@@ -1,3 +1,4 @@
+from http import client
 import urllib.request, urllib.parse, urllib.error
 import hmac
 import hashlib
@@ -14,8 +15,10 @@ import urllib.request
 import urllib.request
 
 
+
 public_key = "993ff690a1b137fc405c9ee1f05caf2cecec6539a382051445e3931a7857fbb8"
 private_key = "4f5fA72bEaDDAe0667fF8b8ec647136D970aF27ed39E9a919b581780019c5BFa"
+
 
 class CoinPayments():
 
@@ -255,9 +258,14 @@ class CoinPayments():
                        'format': self.format})
         return self.request('post', **params)
 
+
+# ####################get basic info
 if __name__ == "__main__":
-    crypto_client = CoinPayments(public_key, private_key)
-    
+    client_info = CoinPayments(public_key, private_key)
+    # print(client_info.get_basic_info())
+
+
+# ##################### create transaction
 
 if __name__ == "__main__":
     crypto_client = CoinPayments(public_key, private_key)
@@ -268,15 +276,56 @@ if __name__ == "__main__":
         'buyer_email' : 'viveknhc@gmail.com',
 
     }
+    # transaction = client.create_transaction(create_transaction_params)
     # transaction = crypto_client.create_transaction(create_transaction_params)
+    # print(transaction)
 
-        # print(crypto_client.create_transaction(create_transaction_params))
+
+    # if transaction['error'] == 'ok': 
+    #     print (transaction['amount']) 
+    #     print (transaction['address'])
+    # else:
+    #     print (transaction['error'])
+    
+
+# print(crypto_client.create_transaction(create_transaction_params))
+
+
 
     # print(json.dumps(crypto_client.rates()))
 
+
+# ############ balances
+
+if __name__ == "__main__":
+    client_balances = CoinPayments(public_key, private_key)
+    balance = {
+        'cmd':'balances'
+    }
+    balances = client_balances.balances(balance)
+    print(balances)
+
+    # balance ######
+
 # if __name__ == "__main__":
-#     deposit_clinet = CoinPayments(public_key, private_key)
-#     get_deposit_address_params = {
-#         'currency' : 'TRX'       
+#     client_withdrawal = CoinPayments(public_key, private_key)
+#     withdrawal = {
+#         'amount': '1',
+#         'cmd':'create_withdrawal',
+#         'currency':'TRX' # The cryptocurrency to withdraw
 #     }
-#     print(deposit_clinet.get_deposit_address(get_deposit_address_params))
+#     balances = client_balances.balances(balance)
+#     print(balances)
+
+
+
+# ### withdrawel history
+
+if __name__ == "__main__":
+    withdrawal_history = CoinPayments(public_key, private_key)
+    print(withdrawal_history.get_withdrawal_history())
+
+
+
+
+

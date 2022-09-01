@@ -22,7 +22,7 @@ from .forms import KycForm
 @login_required(login_url="/member/login")
 def index(request):
     # val = crypto_client
-    print(crypto_client.create_transaction(create_transaction_params))
+    # print(crypto_client.create_transaction(create_transaction_params))
     # rates = crypto_client.rates()
     # transactions = crypto_client.create_transaction()
     # if 'error' == 'ok':
