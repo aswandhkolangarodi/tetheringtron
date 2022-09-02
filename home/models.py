@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractUser
 from .utils import generate_ref_code
 from datetime import datetime
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
 from django.utils.translation import gettext_lazy as _
 import uuid
 # Create your models here.

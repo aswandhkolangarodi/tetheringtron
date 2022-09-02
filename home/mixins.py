@@ -4,7 +4,7 @@ from django.conf import settings
 import time
 
 ACCOUNT_SID = "ACb9b60800ed9b7c42b7a6effdac22b7d0"
-AUTH_TOKEN = "142ea5eb34008a9f42fa8f7c32b25fa1"
+AUTH_TOKEN = "af28c30e9b97df06323be940ba19a740"
 class MessageHandler:
     phone_number=None
     otp=None
@@ -14,15 +14,14 @@ class MessageHandler:
         self.otp=otp
 
     def send_otp(self):
-        print('.........',self.phone_number)
-        print(',,,,,,,,,',self.otp)
-        account_sid = 'ACb9b60800ed9b7c42b7a6effdac22b7d0' 
-        auth_token = AUTH_TOKEN
-        client = Client(account_sid, auth_token) 
+        
+        
+        client = Client(ACCOUNT_SID, AUTH_TOKEN) 
 
         message = client.messages.create(  
-                                messaging_service_sid='MG50cd2dc652121ee9fa33b4dad45a7d13',  
-                                body=f'Your otp for verification is {self.otp}',     
+                               
+                                body=f'Your otp for verification is {self.otp}',   
+                                from_='+12184007822',  
                                 to=self.phone_number
                             ) 
 

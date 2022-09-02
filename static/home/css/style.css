@@ -2,6 +2,7 @@
 @import url("bootstrap.min.css");
 @import url("ionicons.min.css");
 @import url("jquery.mCustomScrollbar.min.css");
+
 body {
     font-family: 'Overpass', sans-serif;
     font-size: 14px;
@@ -18,7 +19,9 @@ a:hover {
     transition: 0.3s;
    
 }
-
+.errors{
+    color: red;
+}
 ul,
 ol {
     margin: 0;

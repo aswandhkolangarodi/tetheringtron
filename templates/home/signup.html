@@ -16,9 +16,9 @@
 </style>
 
 <div>
-  <div class="vh-100 d-flex justify-content-center">
+  <div class="min-vh-100 d-flex justify-content-center">
     <div class="form-access my-auto">
-      <form method="post">
+      <form method="post" id="signup">
         {% csrf_token %}
         {% if messages %}
         <ul class="messages">
@@ -30,24 +30,29 @@
         {% endif %}
 
         <span>Create Account</span>
+
         <div class="form-group">
-          <input type="text" class="form-control" name="username" placeholder="Full Name" required>
+          <input type="text" class="form-control" name="username" placeholder="Full Name">
         </div>
         <div class="form-group">
-          <input required type="email" class="form-control" name="email" placeholder="Email Address">
+          <input type="email" class="form-control" name="email" placeholder="Email Address">
+        </div>
+
+
+        <!-- <div class="form-group">
+          <input type="text" class="form-control" name="phone" placeholder="Phone">
+        </div> -->
+
+        <div class="form-group">
+          <input type="password" class="form-control" name="password" placeholder="Password" id="passwd_reg">
         </div>
         <div class="form-group">
-          <input required type="text" class="form-control" name="phone" placeholder="Phone">
-        </div>
-        <div class="form-group">
-          <input required type="password" class="form-control" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-          <input required type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
+          <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
         </div>
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" name="ckeck" id="form-checkbox">
-          <label class="custom-control-label" for="form-checkbox">I agree to the <a href="../../static/Terms & Conditions.docx">Terms &
+          <label class="custom-control-label" for="form-checkbox">I agree to the <a
+              href="../../static/Terms & Conditions.docx">Terms &
               Conditions</a></label>
         </div>
         <button type="submit" class="btn btn-primary">Create Account</button>
@@ -55,6 +60,8 @@
       <h2>Already have an account? <a href="{% url 'home:login' %}">Sign in here</a></h2>
     </div>
   </div>
+
 </div>
+
 
 {% endblock %}
