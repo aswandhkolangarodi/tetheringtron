@@ -15,23 +15,23 @@ import math, random
 from django.http import HttpResponse
 from .helpers import send_forget_password_mail
 from .mixins import MessageHandler
-from .forms import UserPhone
+# from .forms import UserPhone
 
 
-def generateOTP() :
-    digits = "0123456789"
-    OTP = ""
-    for i in range(4) :
-        OTP += digits[math.floor(random.random() * 10)]
-    return OTP
+# def generateOTP() :
+#     digits = "0123456789"
+#     OTP = ""
+#     for i in range(4) :
+#         OTP += digits[math.floor(random.random() * 10)]
+#     return OTP
 
-def send_otp(request):
-    email=request.POST.get("email")
-    o=generateOTP()
-    print('otp:',o)
-    htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
-    send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
-    return HttpResponse(o)
+# def send_otp(request):
+#     email=request.POST.get("email")
+#     o=generateOTP()
+#     print('otp:',o)
+#     htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
+#     send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
+#     return HttpResponse(o)
 
         
 
@@ -42,7 +42,7 @@ def signup(request):
     if request.method == 'POST':
         first_name = request.POST.get('username')
         email = request.POST.get('email')
-        # phone = request.POST.get('phone')
+        phone = request.POST.get('phone')
         password = request.POST.get('password')
         confirm_password=request.POST.get('confirm_password')
         check=request.POST.get('ckeck')
@@ -59,11 +59,11 @@ def signup(request):
                 messages.success(request, 'Username is taken.')
                 return redirect('/signup')
 
-            # if User.objects.filter(phone = phone).first():
-            #     messages.success(request, 'Number is taken.')
-            #     return redirect('/signup')
+            if User.objects.filter(phone = phone).first():
+                messages.success(request, 'Number is taken.')
+                return redirect('/signup')
             
-            user_obj = User(first_name = first_name , email = email)
+            user_obj = User(first_name = first_name , email = email,phone=phone)
             print(user_obj)
             user_obj.set_password(password)
             user_obj.save()
@@ -125,32 +125,32 @@ def verify(request , auth_token):
             profile_obj.is_verified = True
             profile_obj.save()
             messages.success(request, 'Your account has been verified.')
-            return redirect(f'/member/phone/{auth_token}')
+            return redirect('/member/login')
         else:
             return redirect('/error')
     except Exception as e:
         print(e)
         return redirect('/')
 
-def phone_number_verification(request, token):
-   form=UserPhone(request.POST)
-   user=Profile.objects.get(auth_token=token)
+# def phone_number_verification(request, token):
+#    form=UserPhone(request.POST)
+#    user=Profile.objects.get(auth_token=token)
    
-   if request.method == "POST":
+#    if request.method == "POST":
         
-        form=UserPhone(request.POST)
-        # print(form)
-        if form.is_valid():
-            phone_number=form.save()
+#         form=UserPhone(request.POST)
+#         # print(form)
+#         if form.is_valid():
+#             phone_number=form.save()
             
-            User.objects.filter(email=user).update(phone=phone_number.phone)
-            phone_number.delete()
-            print('...............',user.user.email)
-            return redirect(f'/member/phone/{token}')
-        else:
-            return render(request, "home/phone.html",{'form':form})
-   form=UserPhone()
-   return render(request, 'home/phone.html',{'form':form})
+#             User.objects.filter(email=user).update(phone=phone_number.phone)
+#             phone_number.delete()
+#             print('...............',user.user.email)
+            # return redirect(f'/member/phone/{token}')
+#         else:
+#             return render(request, "home/phone.html",{'form':form})
+#    form=UserPhone()
+#    return render(request, 'home/phone.html',{'form':form})
 
 
 def error_page(request):
@@ -171,7 +171,7 @@ def sent_mail(request):
 
 def send_mail_after_registration(email , token):
     subject = 'Your accounts need to be verified'
-    message = f'Hi paste the link to verify your account http://127.0.0.1:8000/verify/{token}'
+    message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     send_mail(subject, message , email_from ,recipient_list )
@@ -214,11 +214,12 @@ def login_attempt(request):
             member_profile.otp=random.randint(1000,9999)
             member_profile.save()
             print(login_user.phone)
-            message_handler=MessageHandler(login_user.phone, member_profile.otp).send_otp()
-            messages.success(request,"OTP is send to registered Phone number")
-            return redirect(f'/member/otp/{member_profile.uid}')
-            # login(request , user)
-            # return redirect('/member/dashboard')
+            # message_handler=MessageHandler(login_user.phone, member_profile.otp).send_otp()
+            # print(member_profile.otp)
+            # messages.success(request,"OTP is send to registered Phone number")
+            # return redirect(f'/member/otp/{member_profile.uid}')
+            login(request , user)
+            return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
 def otp(request, uid):

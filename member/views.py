@@ -5,19 +5,23 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
-
 from .models import Kyc
-# from .forms import Kyc
-
-
 from .forms import KycForm
+import base64
+from django.core.files.base import ContentFile
+from django.conf import settings
 
-# Create your views here.
+
+# create transaction imports
+
+from .pyCoinPayments import CoinPayments
+
 
 @login_required(login_url="/member/login")
 def index(request):
-    
+
     user=User.objects.get(email=request.user)
+    
     alert = Announcement.objects.filter().order_by('-id')
     # kyc_obj=Kyc.objects.get(user=user)
     # if kyc_obj is None:
@@ -26,6 +30,21 @@ def index(request):
     profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
+# create transaction
+    if request.method == "POST":
+        amount = request.POST['amount']
+        currency1 = request.POST['currency1']
+   
+        crypto_client = CoinPayments(settings.COINPAYMENT_PUBLICKEY,settings.COINPAYMENT_PRIVATEKEY)
+        create_transaction_params = {
+        'amount' : amount,
+        'currency1' : currency1,
+        'currency2' : 'TRX',
+        'buyer_email': request.user
+        }
+        transaction= crypto_client.create_transaction(create_transaction_params)
+        print(transaction)
+        return render(f"/{transaction.result.checkout_url}")
 
     context ={
         'recs_count':recs_count,
@@ -73,8 +92,8 @@ def coin_details(request):
     return render(request, 'member/coin-details.html',context)
 
 def kyc_main(request):
-    user_id=request.session['userid']
-    #  if request.POST.get('action') == 'kyc_main':
+    user_id=request.user.id
+    print(user_id)
     if request.method == 'POST' and request.FILES:
         country=request.POST['country']
         city =request.POST['city']
@@ -82,21 +101,31 @@ def kyc_main(request):
         address=request.POST['address']
         pin=request.POST['pin']
         idproof_document=request.FILES['idproof_document']
-        selfi=request.FILES['selfi']
+        member_image=request.FILES['member_image']
         user=User.objects.get(id=user_id)
-        kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, live_photo=selfi)
+        kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, member_image=member_image)
         kyc_obj.save()
+        return redirect(f'/member/selfie/{user_id}')
+    return render(request, 'member/kycnew.html')
+
+
+
+
+def selfie(request,user):
+    user_id=User.objects.get(id=user)
+    print('user_id:',user_id)
+    if request.method == 'POST':
+        image_data = request.POST['imgurl']
+        format, imgstr = image_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name="Username" + '.' + ext)
+     
+        image_data = Kyc.objects.filter(user=user_id).update(live_photo=data)
+        
         return redirect('/member/dashboard')
-    return render(request, 'member/kycnew.html')
+    return render(request, 'member/selfie.html')
 
-def kyc(request):
 
-    form = KycForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()   
-    context= {
-        "form":form,
-    }
-    return render(request, 'member/kycnew.html')
 
+
+ 

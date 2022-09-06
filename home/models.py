@@ -7,6 +7,7 @@ from datetime import datetime
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 import uuid
+# from phonenumber_field.modelfields import PhoneNumberField
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -44,7 +45,7 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
-    phone=models.CharField(max_length=15)
+    phone=models.CharField(max_length=100,null=True)
     user_img = models.ImageField(upload_to='user')
     kyc_status=models.BooleanField(default=False)
     member_status= models.BooleanField(default=True)

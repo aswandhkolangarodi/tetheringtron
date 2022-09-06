@@ -5,23 +5,29 @@
 
 
 
-   
+
 
 
 
 <div class="content-body">
     <div class="container-fluid">
-        
+
         {% for alert in alert|slice:":1" %}
         <div class="alert alert-primary alert-dismissible fade show">
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-           
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+
             <strong>Alert! </strong> {{alert.Alert}}
-            
+
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             </button>
         </div>
-    
+
         {% endfor %}
 
         <div class="form-head mb-sm-5 mb-3 d-flex flex-wrap align-items-center">
@@ -139,7 +145,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="col-md-4 col-6 text-center">
                         <a href="javascript:void(0);" class="btn my-2 btn-secondary btn-lg px-4 " data-bs-toggle="modal"
@@ -147,12 +153,12 @@
                     </div>
                     <div class="col-md-4 col-6 text-center">
                         <a href="javascript:void(0);" class="btn my-2 btn-success btn-lg px-4 " data-bs-toggle="modal"
-                        data-bs-target="#withdraw"><i
-                                class="fa fa-usd"></i> withdraw</a>
+                            data-bs-target="#withdraw"><i class="fa fa-usd"></i> withdraw</a>
                     </div>
                     <div class="col-md-4 col-12  text-center">
-                        <button type="button" class="btn btn-rounded btn-info mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#share"><span
-                                class="btn-icon-start text-info"><i class="fa fa-share-alt color-secondary"></i>
+                        <button type="button" class="btn btn-rounded btn-info mt-3 mb-3" data-bs-toggle="modal"
+                            data-bs-target="#share"><span class="btn-icon-start text-info"><i
+                                    class="fa fa-share-alt color-secondary"></i>
                             </span>Share</button>
                     </div>
                     <div class="col-xl-12">
@@ -345,7 +351,7 @@
                                                         <span class="badge badge-warning">Withdraw</span>
                                                     </td>
                                                 </tr>
-                                             
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -512,7 +518,7 @@
                                                         <span class="badge badge-danger">Canceled</span>
                                                     </td>
                                                 </tr>
-                                             
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -679,7 +685,7 @@
                                                         <span class="badge badge-danger">Canceled</span>
                                                     </td>
                                                 </tr>
-                                             
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -707,20 +713,31 @@
                 </button>
             </div>
             <div class="modal-body">
-                   
-                    <div class="">
-                        <div class="basic-form">
-                            <form>
-                                <div class="mb-3">
-                                    <input type="number" class="form-control input-default " placeholder="Deposit Amount">
-                                </div>
-                               
-                                <div class="modal-footer "><button type="button" class="btn btn-primary">Deposit</button></div>
-                            </form>
-                        </div>
+
+                <div class="">
+                    <div class="basic-form">
+                        <form method="post">
+                            {% csrf_token %}
+                            <select class="me-sm-2 default-select form-control wide my-2" id="inlineFormCustomSelect"
+                                tabindex="null" name="currency1">
+                                <option selected="">Choose...</option>
+                                <option value="USD">USD</option>
+                            </select>
+
+
+
+                            <div class="mb-3">
+
+                                <input type="number" name="amount" class="form-control input-default " placeholder="Deposit Amount">
+                            </div>
+
+                            <div class="modal-footer "><button type="submit" class="btn btn-primary">Deposit</button>
+                            </div>
+                        </form>
                     </div>
+                </div>
             </div>
-           
+
         </div>
     </div>
 </div>
@@ -738,47 +755,48 @@
                 </button>
             </div>
             <div class="modal-body">
-                   
-                    <div class="">
-                        <div class="basic-form">
-                            <form>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control input-default " placeholder="withdraw Amount">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control input-default" placeholder="TRX Address">
-                                </div>
-                                <div class="modal-footer "><button type="button" class="btn btn-primary">Withdraw</button></div>
-                            </form>
-                        </div>
+
+                <div class="">
+                    <div class="basic-form">
+                        <form>
+                            <div class="mb-3">
+                                <input type="text" class="form-control input-default " placeholder="withdraw Amount">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control input-default" placeholder="TRX Address">
+                            </div>
+                            <div class="modal-footer "><button type="button" class="btn btn-primary">Withdraw</button>
+                            </div>
+                        </form>
                     </div>
+                </div>
             </div>
-           
+
         </div>
     </div>
 </div>
 
 
 <script>
-     (document.querySelector(".sweet-success-cancel").onclick = function () {
-            swal(
-                {
-                    title: "Confirm",
-                    text: "Are you sure you want to log out",
-                    type: "warning",
-                    showCancelButton: !0,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Log Out",
-                    cancelButtonText: "cancel",
-                    closeOnConfirm: !1,
-                    closeOnCancel: !1,
-                },
-                function (e) {
-                    
-                    e ? swal("Deleted !!", "Hey, your imaginary file has been deleted !!", "success") : swal("Cancelled !!", "Hey, your imaginary file is safe !!", "error");
-                }
-            );
-        })
+    (document.querySelector(".sweet-success-cancel").onclick = function () {
+        swal(
+            {
+                title: "Confirm",
+                text: "Are you sure you want to log out",
+                type: "warning",
+                showCancelButton: !0,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Log Out",
+                cancelButtonText: "cancel",
+                closeOnConfirm: !1,
+                closeOnCancel: !1,
+            },
+            function (e) {
+
+                e ? swal("Deleted !!", "Hey, your imaginary file has been deleted !!", "success") : swal("Cancelled !!", "Hey, your imaginary file is safe !!", "error");
+            }
+        );
+    })
 
 
 </script>

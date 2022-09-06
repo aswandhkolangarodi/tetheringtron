@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'phonenumbers',
+    
     
     'home',
     'trxadmin',
     'member',
+    # 'phonenumber_field',
 
 ]
 
@@ -142,3 +143,9 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'aswandhk2000@gmail.com'
 EMAIL_HOST_PASSWORD = 'mhhgipcmhyjivdgc'
+
+
+# coinpayment keys
+
+COINPAYMENT_PUBLICKEY = "993ff690a1b137fc405c9ee1f05caf2cecec6539a382051445e3931a7857fbb8"
+COINPAYMENT_PRIVATEKEY = "4f5fA72bEaDDAe0667fF8b8ec647136D970aF27ed39E9a919b581780019c5BFa"

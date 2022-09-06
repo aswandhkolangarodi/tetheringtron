@@ -20,8 +20,9 @@ class Kyc(models.Model):
     city = models.CharField(max_length=100)
     pin = models.IntegerField()
     id_proof = models.CharField(max_length=100)
-    id_proof_file = models.ImageField(upload_to='proof')
-    live_photo = models.ImageField(upload_to='live photo')
+    id_proof_file = models.ImageField(upload_to='proof',null=True)
+    member_image = models.ImageField(upload_to="member_image",null=True)
+    live_photo = models.FileField(upload_to='live photo', null=True)
 
 
 

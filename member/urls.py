@@ -12,6 +12,7 @@ urlpatterns = [
    path('kyc/', views.kyc_home, name='kyc'),
    path('coin-details/', views.coin_details, name='coin-details'),
    path('kyc_main/', views.kyc_main, name='kyc_main'),
+   path('selfie/<str:user>', views.selfie, name='selfie'),
    # path('coinpayment', views.CryptoPayments.createTransaction)
 
 ]
