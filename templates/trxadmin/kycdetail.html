@@ -7,11 +7,11 @@
     <div class="container-fluid">
         <div class="row">
             
-             
-            <div class="col-lg-6 order-lg-2 mb-4">
-                <div>
-                    <img src="{% static 'trxadmin/images/selfi.jpg' %}" alt="" class="selfie">
-                </div>
+            
+            <!-- <div class="col-lg-6 order-lg-2 mb-4">
+               
+                    <img src="{{kyc_details.user.user_img.url}}" alt="" class="selfie">
+                
                <div>
                 <a href="{% static 'trxadmin/images/selfi.jpg' %}" class="text-center downloadselfibutton " download>
                     <img src="{% static 'trxadmin/icons/Vector.svg' %}" alt="">
@@ -19,13 +19,13 @@
 
                </div>
               
-            </div> 
+            </div>  -->
             <div class="col-xl-6 col-xxl-6 col-sm-6">
                 <div class="card user-card text-center">
                     <div class="card-body pb-0">
                         <div class="d-flex mb-3 align-items-center">
                             <div class="dz-media me-3">
-                                <img src="{% static 'trxadmin/images/Untitled-1.jpg' %}" alt="">
+                                <img src="{{kyc_details.member_image.url}}" alt="">
                             </div>
                             <div>
                                 <h5 class="title"><a href="javascript:void(0);">Thomas Djons</a></h5>
@@ -57,7 +57,21 @@
                 </div>
             </div> 
            
-            
+            <div class="col-xl-6">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="{{kyc_details.live_photo.url}}" alt="">
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="{{kyc_details.id_proof_file.url}}" alt="">
+                </div>
+            </div>
+            <!-- <div class="col-xl-6">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="{{kyc_details.member_image.url}}" alt="">
+                </div>
+            </div> -->
 </div>
 </div>
 
