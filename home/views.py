@@ -233,13 +233,13 @@ def login_attempt(request):
         else:
             login_user=User.objects.get(email=email)
             member_profile=Profile.objects.get(user=user)
-            member_profile.otp=random.randint(1000,9999)
+            member_profile.otp=random.randint(100000,999999)
             member_profile.save()
             print(login_user.phone)
             # message_handler=MessageHandler(login_user.phone, member_profile.otp).send_otp()
-            # print(member_profile.otp)
-            # messages.success(request,"OTP is send to registered Phone number")
-            # return redirect(f'/member/otp/{member_profile.uid}')
+            print(member_profile.otp)
+            messages.success(request,"OTP is send to registered Phone number")
+            return redirect(f'/member/otp/{member_profile.uid}')
             login(request , user)
             return redirect('/member/dashboard')
     return render(request , 'home/login.html')
@@ -249,16 +249,16 @@ def login_attempt(request):
 
 
 def otp(request, uid):
-    # if request.method == 'POST':
-    #     otp=request.POST['otp']
-    #     user=Profile.objects.get(uid=uid)
+    if request.method == 'POST':
+        otp=request.POST['otp']
+        user=Profile.objects.get(uid=uid)
         
-    #     login_user=User.objects.get(email=user)
-    #     if otp == user.otp:
-    #         login(request , login_user)
-    #         return redirect('/member/dashboard')
-    #     messages.success(request,'Wrong OTP')
-    #     return redirect(f'/member/otp/{user.uid}')
+        login_user=User.objects.get(email=user)
+        if otp == user.otp:
+            login(request , login_user)
+            return redirect('/member/dashboard')
+        messages.success(request,'Wrong OTP')
+        return redirect(f'/member/otp/{user.uid}')
     return render(request,'home/otp.html')
 
 @login_required(login_url="/member/login")
