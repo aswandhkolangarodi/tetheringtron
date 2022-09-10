@@ -62,6 +62,10 @@ def index(request):
     
 
 def profile(request):
+    if request.method == 'POST':
+        img = request.FILES['user_img']
+        profile = User(user_img = img,email = request.user)
+        profile.save()
     return render(request, 'member/profile.html')
 
 def transactions(request):

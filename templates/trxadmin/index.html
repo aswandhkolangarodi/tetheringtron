@@ -11,7 +11,9 @@
 
         <div class="content-body">
 			<div class="container-fluid">
-			
+			 <div class="d-flex align-items-center flex-wrap me-auto">
+                <h5 class="dashboard_bar">Dashboard</h5>
+            </div>
 				<div class="row">
 					<div class="col-xl-4 col-sm-6 m-t35">
 						<div class="card card-coin">
@@ -56,35 +58,147 @@
 					</div> -->
 				</div>
 
-
+<!-- coin chart -->
 
 <div class="row" style="margin: 0px;">
-					
-<!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-    <div id="tradingview_f9e8d"></div>
-    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/TRXUSDT/?exchange=BINANCE" rel="noopener" target="_blank"><span class="blue-text">TRXUSDT Chart</span></a> by TradingView</div>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script type="text/javascript">
-    new TradingView.widget(
-    {
-    "width": 980,
-    "height": 610,
-    "symbol": "BINANCE:TRXUSDT",
-    "interval": "1",
-    "timezone": "exchange",
-    "theme": "light",
-    "style": "2",
-    "locale": "en",
-    "toolbar_bg": "#f1f3f6",
-    "enable_publishing": false,
-    "allow_symbol_change": true,
-    "container_id": "tradingview_f9e8d"
-  }
-    );
-    </script>
-  </div>
-  <!-- TradingView Widget END -->
+	<div class="col-xl-12 col-sm-6 m-t35">
+
+
+		<div class="card">
+			<div class="card-header">
+				<h4 class="card-title">Deposite History</h4>
+			</div>
+
+
+			<div class="card-body">
+				<div class="table-responsive">
+					<div id="example4_wrapper" class="dataTables_wrapper no-footer">
+
+						<table id="example4" class="display dataTable no-footer" style="min-width: 845px"
+							role="grid" aria-describedby="example4_info">
+							<thead>
+								<tr role="row">
+									<th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-sort="ascending"
+										aria-label="Roll No: activate to sort column descending"
+										style="width: 56.5469px;">Date</th>
+									<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-label="Payment Type : activate to sort column ascending"
+										style="width: 108.531px;">Order Id</th>
+									<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-label="Student Name: activate to sort column ascending"
+										style="width: 123.984px;">name</th>
+									
+									<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-label="Payment Type : activate to sort column ascending"
+										style="width: 108.531px;">Deposite Amount</th>
+
+									
+									
+								</tr>
+							</thead>
+							<tbody>
+								{% for kyc_list in kyc_list %}
+								<tr role="row" class="odd">
+									<td class="sorting_1">{{forloop.counter}}</td>
+									<td>{{kyc_list.user.first_name}}</td>
+									<td>{{kyc_list.country}}</td>
+									<td>{{kyc_list.user.phone}}</td>
+									<!-- <td><span class="badge badge-success">Aprooved</span></td> -->
+									<td>
+										<div class="d-flex action-button">
+
+											<a href="{% url 'trxadmin:kycdetail' kyc_list.user.id %}"
+												class="btn btn-info btn-xs light px-2">
+												View
+											</a>
+
+										</div>
+									</td>
+
+								</tr>
+							  
+								{% endfor %}
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+		
+	</div>
+	<div class="col-xl-12 col-sm-6 m-t35">
+
+
+		<div class="card">
+			<div class="card-header">
+				<h4 class="card-title">Withdrawal Request</h4>
+			</div>
+
+
+			<div class="card-body">
+				<div class="table-responsive">
+					<div id="example4_wrapper" class="dataTables_wrapper no-footer">
+
+						<table id="example4" class="display dataTable no-footer" style="min-width: 845px"
+							role="grid" aria-describedby="example4_info">
+							<thead>
+								<tr role="row">
+									<th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-sort="ascending"
+										aria-label="Roll No: activate to sort column descending"
+										style="width: 56.5469px;">Date</th>
+									<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-label="Payment Type : activate to sort column ascending"
+										style="width: 108.531px;">Order Id</th>
+									<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-label="Student Name: activate to sort column ascending"
+										style="width: 123.984px;">name</th>
+									
+									<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+										colspan="1" aria-label="Payment Type : activate to sort column ascending"
+										style="width: 108.531px;">Withdrawal Amount</th>
+
+									
+									
+								</tr>
+							</thead>
+							<tbody>
+								{% for kyc_list in kyc_list %}
+								<tr role="row" class="odd">
+									<td class="sorting_1">{{forloop.counter}}</td>
+									<td>{{kyc_list.user.first_name}}</td>
+									<td>{{kyc_list.country}}</td>
+									<td>{{kyc_list.user.phone}}</td>
+									<!-- <td><span class="badge badge-success">Aprooved</span></td> -->
+									<td>
+										<div class="d-flex action-button">
+
+											<a href="{% url 'trxadmin:kycdetail' kyc_list.user.id %}"
+												class="btn btn-info btn-xs light px-2">
+												View
+											</a>
+
+										</div>
+									</td>
+
+								</tr>
+							  
+								{% endfor %}
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+		
+	</div>
 					
 				</div>
 

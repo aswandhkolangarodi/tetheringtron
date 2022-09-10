@@ -77,6 +77,9 @@ def notifications(request):
 def singlenotification(request):
     return render(request, 'trxadmin/singlenotification.html')
 
+def reward(request):
+    return render(request, 'trxadmin/reward.html')
+
 
 def kyclist(request):
     kyc_list=Kyc.objects.all()

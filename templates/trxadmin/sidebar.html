@@ -8,15 +8,15 @@
 
         <div class="deznav">
             <div class="deznav-scroll">
-                <div class="main-profile">
+                <!-- <div class="main-profile">
                     <div class="image-bx">
                       
                         <img src="{% static 'trxadmin/images/Untitled-1.jpg' %}" alt="" class="logo-abbr">
-                        <!-- <a href="javascript:void(0);"><i class="fa fa-cog" aria-hidden="true"></i></a> -->
+                        <a href="javascript:void(0);"><i class="fa fa-cog" aria-hidden="true"></i></a>
                     </div>
                     <h5 class="name"><span class="font-w400">Hello,</span> Marquez</h5>
                     <p class="email">marquezzzz@mail.com</p>
-                </div>
+                </div> -->
                 <ul class="metismenu" id="menu">
                     <li class="nav-label first">Main Menu</li>
                     <li  {% if is_index %} class="mm-active" {% endif %}><a class=" ai-icon " href="{% url 'trxadmin:Trxadmin' %}" aria-expanded="false">
@@ -26,37 +26,39 @@
                        
                     </li>
                     
-                    <li  {% if is_share %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:share' %}" aria-expanded="false">
+                    <!-- <li  {% if is_share %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:share' %}" aria-expanded="false">
                     <i class="flaticon-061-puzzle"></i>
                     <span class="nav-text">Share</span>
                 </a>
                
 
-            </li>
+            </li> -->
                    
                             <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:member' %}" aria-expanded="false">
                             <i class="flaticon-381-network"></i>
-                            <span class="nav-text">Member's</span>
+                            <span class="nav-text">KYC Varification</span>
                         </a>
                        
         
                     </li>
-                    <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:kyclist' %}" aria-expanded="false">
-                        <i class="flaticon-049-copy"></i>
-                        <span class="nav-text">KYC Varification</span>
-                    </a>
-                   
-    
-                </li>
+              
     
                
                 <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
                     <i class="flaticon-049-copy"></i>
-                    <span class="nav-text">Coin deatails</span>
+                    <span class="nav-text">Coin Details</span>
                 </a>
                
 
             </li>
+
+            <li  {% if is_reward %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:reward' %}" aria-expanded="false">
+                <i class="flaticon-049-copy"></i>
+                <span class="nav-text">Reward</span>
+            </a>
+           
+
+        </li>
             <li  {% if is_announcement %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:announcement' %}" aria-expanded="false">
                 <i class="flaticon-003-diamond"></i>
                 <span class="nav-text">Create Announcement</span>
