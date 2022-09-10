@@ -28,7 +28,7 @@
                         </div>
                         <div class="profile-info">
                             <div class="profile-photo">
-                                <a class="test-popup-link" href="../static/images/1.jpg">
+                                <a class="test-popup-link" >
                                     {% if user.user_img %}
                                     <img src="{{user.user_img.url}}" class="img-fluid rounded-circle test-popup-link"
                                         alt="" style="width: 100px;height: 88px;" />
@@ -72,7 +72,7 @@
                             <div class="custom-tab-1">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item"><a href="#my-posts" data-bs-toggle="tab"
-                                            class="nav-link active show">Posts</a>
+                                            class="nav-link active show">Photo</a>
                                     </li>
                                     <!-- <li class="nav-item"><a href="#about-me" data-bs-toggle="tab" class="nav-link">About Me</a>
                                     </li> -->
@@ -84,7 +84,7 @@
                                     <div id="my-posts" class="tab-pane fade active show">
                                         <div class="my-post-content pt-3">
                                             <div class="post-input">
-
+                                                <p>Upload Profile Photo</p>
                                                 <a href="javascript:void(0);" class="btn btn-primary light me-1 px-3"
                                                     data-bs-toggle="modal" data-bs-target="#cameraModal"><i
                                                         class="fa fa-camera m-0"></i> </a>
