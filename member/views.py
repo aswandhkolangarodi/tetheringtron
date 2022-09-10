@@ -19,14 +19,8 @@ from .pyCoinPayments import CoinPayments
 
 @login_required(login_url="/member/login")
 def index(request):
-    
     user=User.objects.get(email=request.user)
-    
     alert = Announcement.objects.filter().order_by('-id')
-    # kyc_obj=Kyc.objects.get(user=user)
-    # if kyc_obj is None:
-    #     message.success('Complete KYC to live on Tethering Tron')
-    #     return redirect('/member/kyc')
     profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
