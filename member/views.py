@@ -31,25 +31,25 @@ def index(request):
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
 # create transaction
-    if request.method == "POST":
-        test_id=uuid.uuid4()
-        amount = request.POST['amount']
-        currency2 = request.POST['currency1']
-        crypto_client = CoinPayments(settings.COINPAYMENT_PUBLICKEY,settings.COINPAYMENT_PRIVATEKEY)
-        create_transaction_params = {
-        'amount' : amount,
-        'currency1' : currency2,
-        'currency2' : 'TRX',
-        'buyer_email': request.user,
-        'success_url': 'http://127.0.0.1:8000/member/success/{test_id}',
-        'cancel_url': 'http://127.0.0.1:8000/member/cancel/{test_id}'
+    # if request.method == "POST":
+    #     test_id=uuid.uuid4()
+    #     amount = request.POST['amount']
+    #     currency2 = request.POST['currency1']
+    #     crypto_client = CoinPayments(settings.COINPAYMENT_PUBLICKEY,settings.COINPAYMENT_PRIVATEKEY)
+    #     create_transaction_params = {
+    #     'amount' : amount,
+    #     'currency1' : currency2,
+    #     'currency2' : 'TRX',
+    #     'buyer_email': request.user,
+    #     'success_url': 'http://127.0.0.1:8000/member/success/{test_id}',
+    #     'cancel_url': 'http://127.0.0.1:8000/member/cancel/{test_id}'
 
         
-        }
-        transaction= crypto_client.create_transaction(create_transaction_params)
-        transaction_log=Transaction(user=request.user,amount=transaction['result']['amount'],address=transaction['result']['address'],txn_id=transaction['result']['txn_id'],test_id=test_id)
-        transaction_log.save()
-        return redirect(f"{transaction['result']['checkout_url']}")
+    #     }
+    #     transaction= crypto_client.create_transaction(create_transaction_params)
+    #     transaction_log=Transaction(user=request.user,amount=transaction['result']['amount'],address=transaction['result']['address'],txn_id=transaction['result']['txn_id'],test_id=test_id)
+    #     transaction_log.save()
+    #     return redirect(f"{transaction['result']['checkout_url']}")
 
     context ={
         'recs_count':recs_count,
@@ -64,8 +64,11 @@ def index(request):
 def profile(request):
     if request.method == 'POST':
         img = request.FILES['user_img']
-        profile = User(user_img = img,email = request.user)
+        print(img)
+        profile = User.objects.get(email = request.user)
+        profile.user_img = img
         profile.save()
+        return redirect('/member/profile/')
     return render(request, 'member/profile.html')
 
 def transactions(request):

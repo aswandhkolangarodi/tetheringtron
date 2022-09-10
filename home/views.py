@@ -240,8 +240,8 @@ def login_attempt(request):
             print(member_profile.otp)
             messages.success(request,"OTP is send to registered Phone number")
             return redirect(f'/member/otp/{member_profile.uid}')
-            login(request , user)
-            return redirect('/member/dashboard')
+            # login(request , user)
+            # return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
 

@@ -41,7 +41,7 @@
                             </div>
                             <div class="profile-details">
                                 <div class="profile-name px-3 pt-2">
-                                    <h4 class="text-primary mb-0">{{ user.username}}</h4>
+                                    <h4 class="text-primary mb-0">{{user.first_name}}</h4>
                                     <p>Member</p>
                                 </div>
                                 <div class="profile-email px-2 pt-2">
@@ -100,12 +100,13 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <form method="post" enctype="multipart/form-data">
-{% csrf_token %}
+                                                                    {% csrf_token %}
                                                                     <div class="input-group mb-3">
                                                                         <span class="input-group-text">Upload</span>
                                                                         <div class="form-file">
                                                                             <input type="file"
-                                                                                class="form-file-input form-control" name="user_img">
+                                                                                class="form-file-input form-control"
+                                                                                name="user_img">
                                                                         </div>
                                                                     </div>
                                                                     <button type="submit"

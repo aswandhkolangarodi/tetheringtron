@@ -46,7 +46,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
     phone=models.CharField(max_length=100,null=True)
-    user_img = models.ImageField(upload_to='user')
+    user_img = models.ImageField(upload_to='user',null=True , blank=True)
     kyc_status=models.BooleanField(default=False)
     member_status= models.BooleanField(default=True)
 
