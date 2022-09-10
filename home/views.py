@@ -69,7 +69,11 @@ def signup(request):
             user_obj.save()
             auth_token = str(uuid.uuid4())
             profile_obj = Profile.objects.create(user = user_obj , auth_token = auth_token)
-            
+            profile_obj.otp = random.randint(100000,999999)
+            profile_obj.save()
+            # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+            # messages.success(request, "We have send an OTP to your phone")
+            # return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
             if profile_id is not None:
                 recommended_by_profile = Profile.objects.get(id=profile_id)
                 print(recommended_by_profile)
@@ -83,19 +87,37 @@ def signup(request):
                 print(recommended_by_profile)
                 registered_profile.recommended_by = recommended_by_profile.user
                 registered_profile.save()
-                send_mail_after_registration(email , auth_token)
+                # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+                messages.success(request, "We have send an OTP to your phone")
+                return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
             else:
                 profile_obj.save()
-                send_mail_after_registration(email , auth_token)
+                # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+                messages.success(request, "We have send an OTP to your phone")
+                return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
 
             
-            return redirect('/sent-mail')
+            # return redirect('/sent-mail')
 
         except Exception as e:
             print(e)
 
 
     return render(request,'home/signup.html')
+
+def signup_otp(request, token):
+    member_profile=Profile.objects.get(auth_token = token)
+    if request.method == 'POST':
+        otp=request.POST['otp']
+        user=Profile.objects.get(auth_token=token)
+        
+        if otp == member_profile.otp:
+            send_mail_after_registration(user , token)
+            return redirect('/sent-mail')
+        messages.success(request,'Wrong OTP')
+        return redirect(f'/member/signup-otp/{user.auth_token}')
+    return render(request, 'home/otp.html')
+
 
 def main_view(request,*args,**kwargs):
     code = str(kwargs.get('ref_code'))
@@ -222,17 +244,21 @@ def login_attempt(request):
             return redirect('/member/dashboard')
     return render(request , 'home/login.html')
 
+
+
+
+
 def otp(request, uid):
-    if request.method == 'POST':
-        otp=request.POST['otp']
-        user=Profile.objects.get(uid=uid)
+    # if request.method == 'POST':
+    #     otp=request.POST['otp']
+    #     user=Profile.objects.get(uid=uid)
         
-        login_user=User.objects.get(email=user)
-        if otp == user.otp:
-            login(request , login_user)
-            return redirect('/member/dashboard')
-        messages.success(request,'Wrong OTP')
-        return redirect(f'/member/otp/{user.uid}')
+    #     login_user=User.objects.get(email=user)
+    #     if otp == user.otp:
+    #         login(request , login_user)
+    #         return redirect('/member/dashboard')
+    #     messages.success(request,'Wrong OTP')
+    #     return redirect(f'/member/otp/{user.uid}')
     return render(request,'home/otp.html')
 
 @login_required(login_url="/member/login")
