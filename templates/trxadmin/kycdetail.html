@@ -95,10 +95,15 @@
                
             </h4>
             <div class="text-center">
+          
+            {% if  kyc_details.status == 1 %}
             <a href="#" class="btn btn-danger">Reject<span class="btn-icon-end"><i class="fas fa-times"></i></span>
             </a>
-            <a href="#" class="btn btn-success">Approve <span class="btn-icon-end"><i class="fa fa-check"></i></span>
+            {% else %}
+            <a href="{% url 'trxadmin:kyc_approve' kyc_details.id %}" class="btn btn-success">Approve <span class="btn-icon-end"><i class="fa fa-check"></i></span>
             </a>
+           
+            {% endif %}
 
         </div>
         

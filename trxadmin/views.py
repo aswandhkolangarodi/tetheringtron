@@ -99,11 +99,12 @@ def kyclist(request):
 def kycdetail(request,user_id):
     user_kyc=User.objects.get(id=user_id)
     # print('user',user)
-    kyc = Kyc.objects.get(user=user_kyc)
+    kyc = Kyc.objects.filter(user=user_kyc).last()
     profile=Profile.objects.get(user=user_kyc)
     context={
         'kyc_details':kyc,
-        'profile':profile
+        'profile':profile,
+        
     }
     return render(request, 'trxadmin/kycdetail.html',context)
 
@@ -127,6 +128,11 @@ def unblock(request,user_id):
     }
     
     return render(request,'trxadmin/member.html',context)
+
+def kyc_approove(request, user_id):
+    user=Kyc.objects.filter(id=user_id).update(status=True)
+    return redirect('/trxadmin/member')
+
 
 @login_required(login_url="/member/login")
 def logout_admin(request):

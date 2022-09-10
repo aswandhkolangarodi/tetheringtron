@@ -18,6 +18,8 @@ urlpatterns = [
     path("kycdetail/<str:user_id>",views.kycdetail,name='kycdetail'),
     path('block/<str:user_id>', views.block, name="block"),
     path('unblock/<str:user_id>', views.unblock, name="unblock"),
+    path('kyc-approve/<str:user_id>', views.kyc_approove, name="kyc_approve"),
     path('logout', views.logout_admin , name='logout_admin'),
-    path('reward', views.reward, name='reward')
+    path('reward', views.reward, name='reward'),
+    
 ]

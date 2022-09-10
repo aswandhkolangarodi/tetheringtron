@@ -24,6 +24,7 @@ class Kyc(models.Model):
     id_proof_file = models.ImageField(upload_to='proof',null=True)
     member_image = models.ImageField(upload_to="member_image",null=True)
     live_photo = models.FileField(upload_to='live photo', null=True,blank=True)
+    status= models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.user)
