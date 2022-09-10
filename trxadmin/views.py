@@ -97,11 +97,12 @@ def kyclist(request):
 
 
 def kycdetail(request,user_id):
-    user_id=User.objects.get(id=user_id)
-    user = Kyc.objects.get(user=user_id)
-    profile=Profile.objects.get(user=user_id)
+    user_kyc=User.objects.get(id=user_id)
+    # print('user',user)
+    kyc = Kyc.objects.get(user=user_kyc)
+    profile=Profile.objects.get(user=user_kyc)
     context={
-        'kyc_details':user,
+        'kyc_details':kyc,
         'profile':profile
     }
     return render(request, 'trxadmin/kycdetail.html',context)
