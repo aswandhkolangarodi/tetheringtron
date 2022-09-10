@@ -78,6 +78,13 @@ def singlenotification(request):
     return render(request, 'trxadmin/singlenotification.html')
 
 def reward(request):
+    if request.method == "POST":
+        youtube = request.POST['youtubereffer']
+        reffer = request.POST['reffer']
+        reffer_obj = AddReward(refer_reward=reffer,youtube_reward=youtube)
+        reffer_obj.save()
+
+
     return render(request, 'trxadmin/reward.html')
 
 

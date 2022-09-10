@@ -78,6 +78,7 @@ def rewards(request):
     
     user=User.objects.get(email=request.user)
     reward=Profile.objects.get(user=user)
+    add_reward = AddReward.objects.all().last()
     if request.method == 'POST':
         youtube = request.POST['youtube']
         print(youtube)
@@ -87,6 +88,7 @@ def rewards(request):
     context ={
         'is_rewards':True,
         'reward' : reward,
+        'add_reward':add_reward
         
         
     }

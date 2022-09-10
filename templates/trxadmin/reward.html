@@ -17,15 +17,19 @@
                                 <h5 class="card-title">Add reward</h5>
                             </div>
                             <div class="card-body">
-        
+                        <form method="post">
+                            {% csrf_token %}
                                 <p class="card-text">Add Youtube and Referral Earings here</p>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="Referrals">
+                                    <input type="text" class="form-control" placeholder="add referral coins in TRX" name="reffer">
                                 </div>
                                 <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="youtube">
+                                    <input type="text" class="form-control" placeholder="add coins for youtube referral in TRX" name="youtubereffer">
                                 </div>
-                                <a href="javascript:void(0);" class="btn btn-primary" type="submit">Submit</a>
+                                
+                                <button  class="btn btn-primary" type="submit">Submit</button>
+                            </form>
+
                             </div>
                            
                         </div>
