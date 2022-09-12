@@ -52,7 +52,7 @@
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" name="ckeck" id="form-checkbox">
           <label class="custom-control-label" for="form-checkbox">I agree to the <a
-              href="../../static/Terms & Conditions.docx">Terms &
+              href="{% url 'home:terms_conditions' %}">Terms &
               Conditions</a></label>
         </div>
         <button type="submit" class="btn btn-primary">Create Account</button>

@@ -680,6 +680,8 @@ header .nav-link.btn {
 .landing-sub-content a:hover {
     background: #b21212;
     border: 1px solid #b21212;
+    color: #fff;
+    text-decoration: none;
 }
 
 footer.landing-footer img {

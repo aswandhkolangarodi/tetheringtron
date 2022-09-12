@@ -62,11 +62,16 @@
                                         <td>{{members.recommended_by.first_name}}</td>
                                         <td>{{members.user.phone}}</td>
                                         <td>
-                                            {% if members.user.kyc_status == 0 %}
-                                            <span class="badge badge-warning">Pending</span>
+                                            {% if members.status == "Approved" %}
+                                            <span class="badge badge-success">{{members.status}}</span>
+
+                                            {% elif members.status == "Waiting for approvel" %}
+                                            <span class="badge badge-warning">{{members.status}}</span>
                                             {% else %}
-                                            <span class="badge badge-success">Aprooved</span>
-                                            {% endif %}
+                                            <span class="badge badge-danger">{{members.status}}</span>
+
+
+                                           {% endif %}
                                         </td>
                                         
                                         

@@ -175,6 +175,9 @@ def verify(request , auth_token):
 #    return render(request, 'home/phone.html',{'form':form})
 
 
+def terms_conditions(request):
+    return render(request, 'home/terms_conditions.html')
+
 def error_page(request):
     return  render(request , 'error.html')
 

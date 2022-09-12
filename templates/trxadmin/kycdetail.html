@@ -6,20 +6,9 @@
 <div class="content-body">
     <div class="container-fluid">
         <div class="row">
-            
-            
-            <!-- <div class="col-lg-6 order-lg-2 mb-4">
-               
-                    <img src="{{kyc_details.user.user_img.url}}" alt="" class="selfie">
-                
-               <div>
-                <a href="{% static 'trxadmin/images/selfi.jpg' %}" class="text-center downloadselfibutton " download>
-                    <img src="{% static 'trxadmin/icons/Vector.svg' %}" alt="">
-                </a>
 
-               </div>
-              
-            </div>  -->
+
+
             <div class="col-xl-6 col-xxl-6 col-sm-6">
                 <div class="card user-card text-center">
                     <div class="card-body pb-0">
@@ -28,7 +17,8 @@
                                 <img src="{{kyc_details.member_image.url}}" alt="">
                             </div>
                             <div>
-                                <h5 class="title"><a href="javascript:void(0);">Thomas Djons</a></h5>
+                                <h5 class="title text-capitalize"><a
+                                        href="javascript:void(0);">{{kyc_details.user.first_name}}</a></h5>
                                 <!-- <span class="text-primary">Senior Developer</span> -->
                             </div>
                         </div>
@@ -51,12 +41,12 @@
                                 <span class="text-black desc-text ms-2">{{profile.recommended_by}}</span>
                             </li>
                         </ul>
-                      
+
                     </div>
-                   
+
                 </div>
-            </div> 
-           
+            </div>
+
             <div class="col-xl-6">
                 <div class="card">
                     <img class="card-img-top img-fluid" src="{{kyc_details.live_photo.url}}" alt="">
@@ -72,49 +62,74 @@
                     <img class="card-img-top img-fluid" src="{{kyc_details.member_image.url}}" alt="">
                 </div>
             </div> -->
-</div>
-</div>
-
-<div class="row">           
-    <div class="col-lg-12 order-lg-2 mb-4">
-        <h4 class="d-flex justify-content-between align-items-center mb-3">
-            
-           
-        </h4>
-      
-    
-      
-    </div> 
-    
+        </div>
     </div>
 
-    <div class="row">           
+    <div class="row">
         <div class="col-lg-12 order-lg-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
-                
-               
+
+
             </h4>
-            <div class="text-center">
-          
-            {% if  kyc_details.status == 1 %}
-            <a href="#" class="btn btn-danger">Reject<span class="btn-icon-end"><i class="fas fa-times"></i></span>
-            </a>
-            {% else %}
-            
-            <a href="" class="btn btn-success">Approve <span class="btn-icon-end"><i class="fa fa-check"></i></span>
-            </a>
-           
-            {% endif %}
+
+
 
         </div>
-        
-          
-        </div> 
-        
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 order-lg-2 mb-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+
+
+            </h4>
+            <div class="text-center">
+
+
+                <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reject">Reject<span
+                        class="btn-icon-end"><i class="fas fa-times"></i></span>
+                </a>
+
+
+                <a href="{% url 'trxadmin:kyc_approve' kyc_details.id %}" class="btn btn-success">Approve <span
+                        class="btn-icon-end"><i class="fa fa-check"></i></span>
+                </a>
+
+
+
+            </div>
+
+
         </div>
+
+    </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="reject">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject KYC</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'trxadmin:kyc_reject' kyc_details.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="text" class="form-control input-default " name="reson" placeholder="Enter reson" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
-
-            {% endblock %} 
+{% endblock %}

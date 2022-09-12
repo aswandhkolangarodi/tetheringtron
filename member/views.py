@@ -24,6 +24,8 @@ def index(request):
     profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
+    kyc_check = Kyc.objects.filter(user=request.user).exists()
+    kyc_status = Kyc.objects.filter(user=request.user).last()
 # create transaction
     # if request.method == "POST":
     #     test_id=uuid.uuid4()
@@ -50,6 +52,8 @@ def index(request):
         'user':user,
         'alert':alert,
         'my_recs':my_recs,
+        'kyc_check':kyc_check,
+        'kyc_status':kyc_status,
         'is_index':True
     }
     return render(request, 'member/index.html', context)
@@ -112,7 +116,7 @@ def kyc_main(request):
         idproof_document=request.FILES['idproof_document']
         member_image=request.FILES['member_image']
         user=User.objects.get(id=user_id)
-        kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, member_image=member_image)
+        kyc_obj=Kyc(user=user, country=country, address=address, city=city, pin=pin, id_proof=idproof_name, id_proof_file=idproof_document, member_image=member_image, status="Waiting for approvel")
         kyc_obj.save()
         return redirect(f'/member/selfie/')
     return render(request, 'member/kycnew.html')

@@ -13,6 +13,7 @@ urlpatterns = [
     # path('member/login/otp', views.send_otp, name='send-otp'),
     path('logout' , views.logout, name='logout'),
     path("signup",views.signup,name='signup'),
+    path('terms-conditions', views.terms_conditions, name="terms_conditions"),
     path("FAQ",views.faq,name='FAQ'),
     path('verify/<auth_token>' , views.verify , name="verify"),
     path('sent-mail', views.sent_mail, name='sent_mail'),

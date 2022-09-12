@@ -24,7 +24,8 @@ class Kyc(models.Model):
     id_proof_file = models.ImageField(upload_to='proof',null=True)
     member_image = models.ImageField(upload_to="member_image",null=True)
     live_photo = models.FileField(upload_to='live photo', null=True,blank=True)
-    status= models.BooleanField(default=False)
+    status= models.CharField(default="pending",max_length=50)
+    reson = models.CharField(max_length=200, null=True, blank=True, default="")
 
     def __str__(self):
         return str(self.user)

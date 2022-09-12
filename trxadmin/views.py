@@ -38,7 +38,7 @@ def share(request):
     return render(request,'trxadmin/share.html',context)
 
 def member(request):
-    members= Profile.objects.all()
+    members= Kyc.objects.all()
     context={
         "is_member":True,
         "members":members
@@ -130,9 +130,14 @@ def unblock(request,user_id):
     return render(request,'trxadmin/member.html',context)
 
 def kyc_approove(request, user_id):
-    user=Kyc.objects.filter(id=user_id).update(status=True)
+    user=Kyc.objects.filter(id=user_id).update(status="Approved")
     return redirect('/trxadmin/member')
 
+def kyc_reject(request, user_id):
+    if request.method == "POST":
+        reson = request.POST['reson']
+        user=Kyc.objects.filter(id=user_id).update(status="Rejected", reson=reson)
+    return redirect('/trxadmin/member')
 
 @login_required(login_url="/member/login")
 def logout_admin(request):
