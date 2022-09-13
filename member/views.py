@@ -14,7 +14,6 @@ from django.conf import settings
 import uuid
 # create transaction imports
 
-from .pyCoinPayments import CoinPayments
 
 
 @login_required(login_url="/member/login")

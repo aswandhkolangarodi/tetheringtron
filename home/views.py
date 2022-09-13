@@ -87,12 +87,12 @@ def signup(request):
                 print(recommended_by_profile)
                 registered_profile.recommended_by = recommended_by_profile.user
                 registered_profile.save()
-                # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+                message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
             else:
                 profile_obj.save()
-                # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+                message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
 
@@ -239,7 +239,7 @@ def login_attempt(request):
             member_profile.otp=random.randint(100000,999999)
             member_profile.save()
             print(login_user.phone)
-            # message_handler=MessageHandler(login_user.phone, member_profile.otp).send_otp()
+            message_handler=MessageHandler(login_user.phone, member_profile.otp).send_otp()
             print(member_profile.otp)
             messages.success(request,"OTP is send to registered Phone number")
             return redirect(f'/member/otp/{member_profile.uid}')
