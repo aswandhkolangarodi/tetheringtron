@@ -17,6 +17,12 @@ from .helpers import send_forget_password_mail
 from .mixins import MessageHandler
 # from .forms import UserPhone
 
+# html email required stuff
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 # def generateOTP() :
 #     digits = "0123456789"
@@ -193,13 +199,25 @@ def faq(request):
 def sent_mail(request):
     return render(request, 'home/token_sent.html')
 
-
 def send_mail_after_registration(email , token):
+    html_content = render_to_string("home/email_template.html",{'title':'send mail','content':token})
+    text_content = strip_tags(html_content)
     subject = 'Your accounts need to be verified'
-    message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
+    # message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
-    send_mail(subject, message , email_from ,recipient_list )
+    email_obj = EmailMultiAlternatives(subject, text_content, email_from, recipient_list)
+    email_obj.attach_alternative(html_content, "text/")
+    email_obj.send()
+    # send_mail(subject, text_content , email_from ,recipient_list )
+    
+# def send_mail_after_registration(email , token):
+    
+#     subject = 'Your accounts need to be verified'
+#     message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
+#     email_from = settings.EMAIL_HOST_USER
+#     recipient_list = [email]
+#     send_mail(subject, message , email_from ,recipient_list )
 
 
 def error_page(request):
