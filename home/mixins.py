@@ -3,8 +3,7 @@ import pyotp
 from django.conf import settings
 import time
 
-ACCOUNT_SID = "ACb9b60800ed9b7c42b7a6effdac22b7d0"
-AUTH_TOKEN = "af28c30e9b97df06323be940ba19a740"
+
 class MessageHandler:
     phone_number=None
     otp=None
@@ -16,12 +15,12 @@ class MessageHandler:
     def send_otp(self):
         
         
-        client = Client(ACCOUNT_SID, AUTH_TOKEN) 
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN) 
 
         message = client.messages.create(  
                                
                                 body=f'Your otp for verification is {self.otp}',   
-                                from_='+12184007822',  
+                                from_='+9718000320738',  
                                 to=self.phone_number
                             ) 
 
