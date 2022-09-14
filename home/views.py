@@ -23,6 +23,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from .forms import RegistrationForm
+
+# OTP
+import pyotp
 
 # def generateOTP() :
 #     digits = "0123456789"
@@ -39,10 +43,13 @@ from django.utils.html import strip_tags
 #     send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
 #     return HttpResponse(o)
 
-        
+def demo_regi(request):
+    user_form = RegistrationForm()
+    return render(request,'home/registration.html',{'form':user_form})
 
 
 def signup(request):
+    
     profile_id= request.session.get("ref_profile")
     # print('profile_id',profile_id)
     if request.method == 'POST':
@@ -73,10 +80,8 @@ def signup(request):
             print(user_obj)
             user_obj.set_password(password)
             user_obj.save()
-            auth_token = str(uuid.uuid4())
-            profile_obj = Profile.objects.create(user = user_obj , auth_token = auth_token)
-            profile_obj.otp = random.randint(100000,999999)
-            profile_obj.save()
+            user_secret_key = pyotp.random_base32()
+            profile_obj = Profile.objects.create(user = user_obj , auth_token = user_secret_key)
             # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
             # messages.success(request, "We have send an OTP to your phone")
             # return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
@@ -93,12 +98,12 @@ def signup(request):
                 print(recommended_by_profile)
                 registered_profile.recommended_by = recommended_by_profile.user
                 registered_profile.save()
-                message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+                
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
             else:
-                profile_obj.save()
-                message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+                # profile_obj.save()
+                # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
 
@@ -113,16 +118,24 @@ def signup(request):
 
 def signup_otp(request, token):
     member_profile=Profile.objects.get(auth_token = token)
+    otp = pyotp.TOTP(token, interval=120)
+    recent_otp = otp.now()
+    message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
     if request.method == 'POST':
-        otp=request.POST['otp']
-        user=Profile.objects.get(auth_token=token)
+        enter_otp=request.POST['otp']
+        verification = otp.verify(enter_otp)
         
-        if otp == member_profile.otp:
-            send_mail_after_registration(user , token)
+        
+        # if otp == member_profile.otp:
+        #     send_mail_after_registration(user , token)
+        #     return redirect('/sent-mail')
+        # messages.success(request,'Wrong OTP')
+        if verification == True:
+            send_mail_after_registration(member_profile , token)
             return redirect('/sent-mail')
         messages.success(request,'Wrong OTP')
-        return redirect(f'/member/signup-otp/{user.auth_token}')
-    return render(request, 'home/otp.html')
+        return redirect(f'/member/signup-otp/{member_profile.auth_token}')
+    return render(request, 'home/otp.html',{'token':token})
 
 
 def main_view(request,*args,**kwargs):

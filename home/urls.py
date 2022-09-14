@@ -22,7 +22,7 @@ urlpatterns = [
     path('member/change-password/<token>/' , views.ChangePassword , name="change_password"),
     path('member/forgetpassword', views.forgetpassword, name='forgetpassword'),
     path('member/signup-otp/<token>', views.signup_otp, name="signup_otp"),
-    path('member/otp/<uid>',views.otp, name='otp')
-    # path('send_otp',views.send_otp)
+    path('member/otp/<uid>',views.otp, name='otp'),
+    path('demoregi',views.demo_regi, name="demoregi")
 
 ]

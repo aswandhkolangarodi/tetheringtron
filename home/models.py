@@ -7,7 +7,7 @@ from datetime import datetime
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 import uuid
-# from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.modelfields import PhoneNumberField
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):

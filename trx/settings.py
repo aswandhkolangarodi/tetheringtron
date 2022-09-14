@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'home',
     'trxadmin',
     'member',
-    # 'phonenumber_field',
+    'phonenumber_field',
 
 ]
 
