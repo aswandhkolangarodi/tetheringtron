@@ -81,6 +81,7 @@ def signup(request):
             user_obj.set_password(password)
             user_obj.save()
             user_secret_key = pyotp.random_base32()
+            print('user_secret_key',user_secret_key)
             profile_obj = Profile.objects.create(user = user_obj , auth_token = user_secret_key)
             # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
             # messages.success(request, "We have send an OTP to your phone")
@@ -103,7 +104,7 @@ def signup(request):
             else:
                
                 messages.success(request, "We have send an OTP to your phone")
-                return redirect(f'/member/signup-otp/{profile_obj.user.auth_token}')
+                return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
 
             
             # return redirect('/sent-mail')
