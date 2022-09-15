@@ -98,14 +98,12 @@ def signup(request):
                 print(recommended_by_profile)
                 registered_profile.recommended_by = recommended_by_profile.user
                 registered_profile.save()
-                
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
             else:
-                # profile_obj.save()
-                # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
+               
                 messages.success(request, "We have send an OTP to your phone")
-                return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
+                return redirect(f'/member/signup-otp/{profile_obj.user.auth_token}')
 
             
             # return redirect('/sent-mail')
@@ -118,23 +116,24 @@ def signup(request):
 
 def signup_otp(request, token):
     member_profile=Profile.objects.get(auth_token = token)
-    otp = pyotp.TOTP(token, interval=120)
+    otp = pyotp.TOTP(token, interval=300)
+    print('asdfghjk',otp)
     recent_otp = otp.now()
-    message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
     if request.method == 'POST':
         enter_otp=request.POST['otp']
         verification = otp.verify(enter_otp)
-        
-        
-        # if otp == member_profile.otp:
-        #     send_mail_after_registration(user , token)
-        #     return redirect('/sent-mail')
-        # messages.success(request,'Wrong OTP')
         if verification == True:
             send_mail_after_registration(member_profile , token)
             return redirect('/sent-mail')
-        messages.success(request,'Wrong OTP')
-        return redirect(f'/member/signup-otp/{member_profile.auth_token}')
+        elif verification == False:
+            messages.success(request,'OTP Expired')
+            return redirect(f'/member/signup-otp/{member_profile.auth_token}')
+        else:
+            messages.success(request,'Wrong OTP')
+            return redirect(f'/member/signup-otp/{member_profile.auth_token}')
+    else:
+        message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
+        print('recent_otp',recent_otp)
     return render(request, 'home/otp.html',{'token':token})
 
 
@@ -173,27 +172,6 @@ def verify(request , auth_token):
         print(e)
         return redirect('/')
 
-# def phone_number_verification(request, token):
-#    form=UserPhone(request.POST)
-#    user=Profile.objects.get(auth_token=token)
-   
-#    if request.method == "POST":
-        
-#         form=UserPhone(request.POST)
-#         # print(form)
-#         if form.is_valid():
-#             phone_number=form.save()
-            
-#             User.objects.filter(email=user).update(phone=phone_number.phone)
-#             phone_number.delete()
-#             print('...............',user.user.email)
-            # return redirect(f'/member/phone/{token}')
-#         else:
-#             return render(request, "home/phone.html",{'form':form})
-#    form=UserPhone()
-#    return render(request, 'home/phone.html',{'form':form})
-
-
 def terms_conditions(request):
     return render(request, 'home/terms_conditions.html')
 
@@ -220,7 +198,7 @@ def send_mail_after_registration(email , token):
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     email_obj = EmailMultiAlternatives(subject, text_content, email_from, recipient_list)
-    email_obj.attach_alternative(html_content, "text/")
+    email_obj.attach_alternative(html_content, "text/html")
     email_obj.send()
     # send_mail(subject, text_content , email_from ,recipient_list )
     
@@ -267,13 +245,9 @@ def login_attempt(request):
         else:
             login_user=User.objects.get(email=email)
             member_profile=Profile.objects.get(user=user)
-            member_profile.otp=random.randint(100000,999999)
-            member_profile.save()
-            print(login_user.phone)
-            message_handler=MessageHandler(login_user.phone, member_profile.otp).send_otp()
             print(member_profile.otp)
             messages.success(request,"OTP is send to registered Phone number")
-            return redirect(f'/member/otp/{member_profile.uid}')
+            return redirect(f'/member/otp/{member_profile.auth_token}')
             # login(request , user)
             # return redirect('/member/dashboard')
     return render(request , 'home/login.html')
@@ -282,18 +256,27 @@ def login_attempt(request):
 
 
 
-def otp(request, uid):
+def otp(request, token):
+    print('hi')
+    member_profile=Profile.objects.get(auth_token = token)
+    otp = pyotp.TOTP(token, interval=300)
+    recent_otp = otp.now()
     if request.method == 'POST':
-        otp=request.POST['otp']
-        user=Profile.objects.get(uid=uid)
-        
-        login_user=User.objects.get(email=user)
-        if otp == user.otp:
-            login(request , login_user)
+        enter_otp=request.POST['otp']
+        verification = otp.verify(enter_otp)
+        if verification == True:
+            login(request , member_profile.user)
             return redirect('/member/dashboard')
-        messages.success(request,'Wrong OTP')
-        return redirect(f'/member/otp/{user.uid}')
-    return render(request,'home/otp.html')
+        elif verification == False:
+            messages.success(request,'OTP Expired')
+            return redirect(f'/member/otp/{token}')
+        else:
+            messages.success(request,'Wrong OTP')
+            return redirect(f'/member/otp/{token}')
+    else:
+        message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
+    return render(request,'home/otp.html',{'token':token})
+
 
 @login_required(login_url="/member/login")
 def logout(request):

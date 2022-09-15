@@ -28,12 +28,5 @@ class MessageHandler:
 
 
 
-# if __name__ == '_main_':
-#     send_otp()
-
-# def generateOTP() :
-#     totp = pyotp.TOTP('base32secret3232')
-#     otp=totp.now() 
-#     return otp
 
 
