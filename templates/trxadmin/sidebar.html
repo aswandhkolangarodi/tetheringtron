@@ -67,14 +67,21 @@
    
 
         </li>
-      
+        
                     
-                   
+        <li  {% if is_contact %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:contact' %}" aria-expanded="false">
+            <i class="flaticon-049-copy"></i>
+            <span class="nav-text">Enquiries</span>
+        </a>
+       
+
+
+    </li>      
                         
                            
                        
                       
-                    </li>
+          
         
                    
             </div>

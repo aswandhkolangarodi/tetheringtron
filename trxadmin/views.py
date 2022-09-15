@@ -2,7 +2,7 @@ from multiprocessing import context
 from urllib import request
 from django.shortcuts import render,redirect
 from member.models import Kyc
-from home.models import Profile, User
+from home.models import Contact, Profile, User
 from member.views import profile
 from .models import *
 from django.contrib.auth import logout as django_logout
@@ -143,3 +143,12 @@ def kyc_reject(request, user_id):
 def logout_admin(request):
     django_logout(request)
     return redirect('/member/login')
+
+
+def contact(request):
+    contact = Contact.objects.all()
+    context = {
+        "is_contact":True,
+        "contact" : contact
+    }
+    return render(request,'trxadmin/enquiry.html',context)

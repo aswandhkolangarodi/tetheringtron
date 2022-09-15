@@ -294,12 +294,18 @@ def about(request):
      return render(request,'home/about.html',context)
 
 def contactus(request):
-     context={
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+        contact = Contact(name=name,email=email,message=message)
+        contact.save()
+    context={
             "is_contactus":True,
 
         }
   
-     return render(request,'home/contactus.html',context)
+    return render(request,'home/contactus.html',context)
 
 
 def ChangePassword(request , token):

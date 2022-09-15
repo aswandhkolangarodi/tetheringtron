@@ -1,0 +1,60 @@
+{% extends 'trxadmin/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="content-body">
+    <div class="container-fluid">
+
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Enquiries</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="example4_wrapper" class="dataTables_wrapper no-footer">
+
+                            <table id="example4" class="display dataTable no-footer" style="min-width: 845px"
+                                role="grid" aria-describedby="example4_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-sort="ascending"
+                                            aria-label="Roll No: activate to sort column descending"
+                                            style="width: 56.5469px;">name</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Student Name: activate to sort column ascending"
+                                            style="width: 123.984px;">Email :</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Invoice number: activate to sort column ascending"
+                                            style="width: 119.078px;">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contact in contact %}
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">{{ contact.name }}</td>
+                                        <td>{{ contact.email }}</td>
+                                        <td>{{ contact.message }}</td>
+                                        
+                                
+
+                                    </tr>
+                                  
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

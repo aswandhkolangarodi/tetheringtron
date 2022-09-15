@@ -31,26 +31,22 @@
 
             <div class="vh-130 d-flex justify-content-centerv " >
                 <div class="form-access my-auto">
-                  <form>
+                  <form method="post">
+                    {% csrf_token %}
                     <span> Contact us</span>
                     <div class="form-group">
                         
-                        <input type="text" class="form-control" placeholder="Your name">
+                        <input type="text" class="form-control" placeholder="Your name" name="name">
                       </div>
-                      <div class="form-group">
-                        
-                        <input type="text" class="form-control" placeholder="Phone number">
-                      </div>
+                      
                     <div class="form-group">
                         
-                      <input type="email" class="form-control" placeholder="Email Address">
+                      <input type="email" class="form-control" placeholder="Email Address" name="email">
                     </div>
                     <div class="form-group">
-                      <textarea type="text" class="form-control" placeholder="your message">
+                      <textarea type="text" class="form-control" placeholder="your message" name="message">
                         </textarea>
                     </div>
-                    
-                   
                     <button type="submit" class="btn btn-primary">Send</button>
                   </form>
                  

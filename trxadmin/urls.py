@@ -22,5 +22,6 @@ urlpatterns = [
     path('kyc-reject/<str:user_id>', views.kyc_reject, name="kyc_reject"),
     path('logout', views.logout_admin , name='logout_admin'),
     path('reward', views.reward, name='reward'),
+    path('contact', views.contact, name='contact'),
     
 ]
