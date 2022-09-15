@@ -57,11 +57,7 @@ def signup(request):
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
-        confirm_password=request.POST.get('confirm_password')
         check=request.POST.get('ckeck')
-        if password != confirm_password:
-            messages.success(request,'Password Must Be Same')
-            return redirect('/signup')
 
         if check is None:
             messages.success(request,'check Terms And condition')

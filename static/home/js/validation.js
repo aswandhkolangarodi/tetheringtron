@@ -1,5 +1,16 @@
-
-
+var value = $("#password_reg").val();
+$.validator.addMethod("checklower", function (value) {
+    return /[a-z]/.test(value);
+});
+$.validator.addMethod("checkupper", function (value) {
+    return /[A-Z]/.test(value);
+});
+$.validator.addMethod("checkdigit", function (value) {
+    return /[0-9]/.test(value);
+});
+$.validator.addMethod("pwcheck", function (value) {
+    return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[A-Z]/.test(value);
+});
 $('#signup').validate({
     errorClass: 'errors',
     rules: {
@@ -19,17 +30,18 @@ $('#signup').validate({
         },
 
         password: {
+            minlength: 6,
+            maxlength: 30,
+            required: true,
+            //pwcheck: true,
             checklower: true,
             checkupper: true,
-            checkdigit: true,
-            required: true,
-            minlength: 8,
-            maxlength: 30,
-            
+            checkdigit: true
+
         },
         confirm_password: {
-            
-            equalTo: "#passwd_reg",
+
+            equalTo: "#password_reg",
         }
     },
     messages: {
@@ -48,13 +60,18 @@ $('#signup').validate({
 
         },
         password: {
-            required: "Please enter password",
+            pwcheck: "Password is not strong enough",
+            checklower: "Need atleast 1 lowercase alphabet",
+            checkupper: "Need atleast 1 uppercase alphabet",
+            checkdigit: "Need atleast 1 digit"
         },
-        confirm_password:{
-            equalTo:"Password must be same"
+        confirm_password: {
+            equalTo: "Password must be same"
         }
     },
-    SubmitHandler: function (form) {
+    submitHandler: function (form) {
+        console.log('test');
         form.submit();
+    
     }
 })
