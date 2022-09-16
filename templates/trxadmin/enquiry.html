@@ -23,6 +23,10 @@
                                         <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-sort="ascending"
                                             aria-label="Roll No: activate to sort column descending"
+                                            style="width: 56.5469px;">Date & Time</th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-sort="ascending"
+                                            aria-label="Roll No: activate to sort column descending"
                                             style="width: 56.5469px;">name</th>
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Student Name: activate to sort column ascending"
@@ -35,9 +39,11 @@
                                 <tbody>
                                     {% for contact in contact %}
                                     <tr role="row" class="odd">
-                                        <td class="sorting_1">{{ contact.name }}</td>
+                                        <td class="sorting_1">{{ contact.date_time }}</td>
+                                        <td>{{ contact.name }}</td>
                                         <td>{{ contact.email }}</td>
                                         <td>{{ contact.message }}</td>
+                                        
                                         
                                 
 
