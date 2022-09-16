@@ -13,7 +13,8 @@ urlpatterns = [
    path('coin-details/', views.coin_details, name='coin-details'),
    path('kyc_main/', views.kyc_main, name='kyc_main'),
    path('selfie/', views.selfie, name='selfie'),
-   path('success/<str:test_id>', views.payment_success, name="success"),
-   path('cancel/<str:test_id>', views.payment_cancel, name="cancel"),
+   # path('success/<str:test_id>', views.paymentSuccess, name="success"),
+   # path('cancel/<str:test_id>', views.paymentCancel, name="cancel"),
 
+   # path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
 ]

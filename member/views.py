@@ -1,3 +1,4 @@
+from audioop import reverse
 from email import message
 from multiprocessing import context
 from unittest import result
@@ -122,14 +123,47 @@ def selfie(request):
 
 
 
-def payment_success(request,test_id):
-    transactions_log=Transaction.objects.filter(test_id=test_id).update(payment_status="success")
-    return redirect('/member/dashboard')
+
+# #  stripe payment
+
+# import stripe
+# # This is your test secret API key.
+# stripe.api_key = settings.STRIPE_SECRET_KEY
+
+# class CreateCheckoutSessionView(generic.View):
+#     def post(self, *args, **kwargs):
+#         host = self.request.get_host()
 
 
-def payment_cancel(request,test_id):
-    transactions_log=Transaction.objects.filter(test_id=test_id).update(payment_status="cancel")
-    return redirect('/member/dashboard')
+#         checkout_session = stripe.checkout.Session.create(
+#             line_items=[
+#                 {
+#                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+#                     "price_data": {
+#                         "unit_amount" : 1000,
+#                         "product_data":{
+#                             "name" : "example order"
+
+#                         },
+#                     },
+#                     "quantity" : 1,
+#                 },
+#             ],
+#             mode='payment',
+#             # success_url="http://{}{}".format(host,reverse('member:payment-success')),
+#             # cancel_url="http://{}{}".format(host,reverse('member:payment-success'))',
+#         )
+#         return redirect(checkout_session.url, code=303)
 
 
- 
+# def paymentSuccess(request,testid):
+#     context = {
+#         "payment_status" : "success"
+#     }
+#     return render(request,"member/index.html",context)
+
+# def paymentCancel(request,testid):
+#     context = {
+#         "payment_status" : "cancel"
+#     }
+#     return render(request,"member/index.html",context)
