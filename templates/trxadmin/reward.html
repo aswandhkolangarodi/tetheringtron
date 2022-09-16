@@ -5,38 +5,171 @@
 <!--**********************************
             Content body start
         ***********************************-->
-        
-        <div class="content-body">
-            <div class="container-fluid">
-                
 
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card text-center">
-                            <div class="card-header">
-                                <h5 class="card-title">Add reward</h5>
-                            </div>
-                            <div class="card-body">
-                        <form method="post">
-                            {% csrf_token %}
-                                <p class="card-text">Add Youtube and Referral Earings here</p>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="add referral coins in TRX" name="reffer">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" placeholder="add coins for youtube referral in TRX" name="youtubereffer">
-                                </div>
-                                
-                                <button  class="btn btn-primary" type="submit">Submit</button>
-                            </form>
+<div class="content-body">
+    <div class="container-fluid">
+
+
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Youtube</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div id="example4_wrapper" class="dataTables_wrapper no-footer">
+
+                                <table id="example4" class="display dataTable no-footer" style="min-width: 845px"
+                                    role="grid" aria-describedby="example4_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1" aria-sort="ascending"
+                                                aria-label="Roll No: activate to sort column descending"
+                                                style="width: 56.5469px;">Member Name :</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1" aria-label="Student Name: activate to sort column ascending"
+                                                style="width: 123.984px;">Email :</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Invoice number: activate to sort column ascending"
+                                                style="width: 119.078px;">Youtube link</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Invoice number: activate to sort column ascending"
+                                                style="width: 119.078px;">Action</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Invoice number: activate to sort column ascending"
+                                                style="width: 119.078px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for youtube in youtube %}
+                                        <tr role="row" class="odd">
+                                            <td class="sorting_1">{{youtube.user.first_name}}</td>
+                                            <td>{{youtube.user.email}}</td>
+                                            <td><a href="{{youtube.youtube}}" class="btn btn-info"
+                                                    target="_blank">video</a></td>
+                                           
+
+                                            <th>
+                                                {% if youtube.status == "given" %}
+                                            <span class="badge badge-success">{{youtube.status}}</span>
+
+                                            {% elif youtube.status == "Waiting for approvel" %}
+                                            <span class="badge badge-warning">{{youtube.status}}</span>
+                                            {% else %}
+                                            <span class="badge badge-danger">{{youtube.status}}</span>
+
+
+                                           {% endif %}
+                                            </th>
+                                            <td><a href="{% url 'trxadmin:reward_reject' youtube.id %}" class="btn btn-danger">X</a>
+                                                <a href="{% url 'trxadmin:reward_given' youtube.id %}" class="btn btn-success">given</a>
+                                            </td>
+                                        </tr>
+
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
 
                             </div>
-                           
                         </div>
                     </div>
-                    
                 </div>
+            </div>
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Referral</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div id="example4_wrapper" class="dataTables_wrapper no-footer">
 
-                </div></div>
+                                <table id="example4" class="display dataTable no-footer" style="min-width: 845px"
+                                    role="grid" aria-describedby="example4_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1" aria-sort="ascending"
+                                                aria-label="Roll No: activate to sort column descending"
+                                                style="width: 56.5469px;">Member Name :</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1" aria-label="Student Name: activate to sort column ascending"
+                                                style="width: 123.984px;">Email :</th>
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Invoice number: activate to sort column ascending"
+                                                style="width: 119.078px;">Youtube link</th>
+
+                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Invoice number: activate to sort column ascending"
+                                                style="width: 119.078px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for kyc_list in kyc_list %}
+                                        <tr role="row" class="odd">
+                                            <td class="sorting_1">{{forloop.counter}}</td>
+                                            <td>{{kyc_list.user.first_name}}</td>
+                                            <td>{{kyc_list.country}}</td>
+                                            <td>{{kyc_list.user.phone}}</td>
+                                            <!-- <td><span class="badge badge-success">Aprooved</span></td> -->
+                                            <td>
+                                                <div class="d-flex action-button">
+
+                                                    <a href="{% url 'trxadmin:kycdetail' kyc_list.user.id %}"
+                                                        class="btn btn-info btn-xs light px-2">
+                                                        View
+                                                    </a>
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <h5 class="card-title">Add reward</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <p class="card-text">Add Youtube and Referral Earings here</p>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="add referral coins in TRX"
+                                    name="reffer">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control"
+                                    placeholder="add coins for youtube referral in TRX" name="youtubereffer">
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

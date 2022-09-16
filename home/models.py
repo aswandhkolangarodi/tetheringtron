@@ -57,6 +57,7 @@ class User(AbstractUser):
 
 class Reward(models.Model):
     youtube = models.TextField(max_length=1000)
+    status  = models.CharField(max_length=100, default="waiting for approval")
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
 
 

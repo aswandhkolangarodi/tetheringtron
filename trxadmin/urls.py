@@ -23,5 +23,7 @@ urlpatterns = [
     path('logout', views.logout_admin , name='logout_admin'),
     path('reward', views.reward, name='reward'),
     path('contact', views.contact, name='contact'),
+    path('reward-given/<str:id>', views.reward_given, name='reward_given'),
+    path('reward-reject/<str:id>', views.reward_reject, name='reward_reject'),
     
 ]

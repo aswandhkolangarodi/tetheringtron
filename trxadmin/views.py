@@ -2,7 +2,7 @@ from multiprocessing import context
 from urllib import request
 from django.shortcuts import render,redirect
 from member.models import Kyc
-from home.models import Contact, Profile, User
+from home.models import Contact, Profile, Reward, User
 from member.views import profile
 from .models import *
 from django.contrib.auth import logout as django_logout
@@ -78,15 +78,25 @@ def singlenotification(request):
     return render(request, 'trxadmin/singlenotification.html')
 
 def reward(request):
+    youtube = Reward.objects.all()
     if request.method == "POST":
         youtube = request.POST['youtubereffer']
         reffer = request.POST['reffer']
         reffer_obj = AddReward(refer_reward=reffer,youtube_reward=youtube)
         reffer_obj.save()
 
+    context = {
+        "youtube":youtube
+    }
+    return render(request, 'trxadmin/reward.html',context)
 
-    return render(request, 'trxadmin/reward.html')
+def reward_given(request, id):
+    Reward.objects.filter(id=id).update(status="given")
+    return redirect('/trxadmin/reward')
 
+def reward_reject(request, id):
+    Reward.objects.filter(id=id).update(status="rejected")
+    return redirect('/trxadmin/reward')
 
 def kyclist(request):
     kyc_list=Kyc.objects.all()
