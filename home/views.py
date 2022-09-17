@@ -1,18 +1,13 @@
-
-import profile
 from .models import Profile
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from .models import *
 import uuid
 from django.conf import settings
-from django.core.mail import send_mail
 from django.contrib.auth import authenticate,login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-import math, random
-from django.http import HttpResponse
 from .helpers import send_forget_password_mail
 from .mixins import MessageHandler
 # from .forms import UserPhone
@@ -23,35 +18,12 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-from .forms import RegistrationForm
-
 # OTP
 import pyotp
 
-# def generateOTP() :
-#     digits = "0123456789"
-#     OTP = ""
-#     for i in range(4) :
-#         OTP += digits[math.floor(random.random() * 10)]
-#     return OTP
-
-# def send_otp(request):
-#     email=request.POST.get("email")
-#     o=generateOTP()
-#     print('otp:',o)
-#     htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
-#     send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
-#     return HttpResponse(o)
-
-def demo_regi(request):
-    user_form = RegistrationForm()
-    return render(request,'home/registration.html',{'form':user_form})
-
 
 def signup(request):
-    
     profile_id= request.session.get("ref_profile")
-    # print('profile_id',profile_id)
     if request.method == 'POST':
         first_name = request.POST.get('username')
         email = request.POST.get('email')
@@ -79,9 +51,7 @@ def signup(request):
             user_secret_key = pyotp.random_base32()
             print('user_secret_key',user_secret_key)
             profile_obj = Profile.objects.create(user = user_obj , auth_token = user_secret_key)
-            # message_handler=MessageHandler(user_obj.phone, profile_obj.otp).send_otp()
-            # messages.success(request, "We have send an OTP to your phone")
-            # return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
+
             if profile_id is not None:
                 recommended_by_profile = Profile.objects.get(id=profile_id)
                 print(recommended_by_profile)
@@ -91,19 +61,14 @@ def signup(request):
                 registered_user = User.objects.get(id=instance.id)
                 print('registered_user id',registered_user)
                 registered_profile = Profile.objects.get(user=registered_user)
-                print('....................')
                 print(recommended_by_profile)
                 registered_profile.recommended_by = recommended_by_profile.user
                 registered_profile.save()
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
             else:
-               
                 messages.success(request, "We have send an OTP to your phone")
                 return redirect(f'/member/signup-otp/{profile_obj.auth_token}')
-
-            
-            # return redirect('/sent-mail')
 
         except Exception as e:
             print(e)
@@ -133,7 +98,7 @@ def signup_otp(request, token):
         print('recent_otp',recent_otp)
     return render(request, 'home/otp.html',{'token':token})
 
-
+# Referral
 def main_view(request,*args,**kwargs):
     code = str(kwargs.get('ref_code'))
     try:
@@ -150,6 +115,7 @@ def main_view(request,*args,**kwargs):
         }
     return render(request,'home/index.html',context)
 
+# email verification
 def verify(request , auth_token):
     try:
         profile_obj = Profile.objects.filter(auth_token = auth_token).first()
@@ -169,21 +135,6 @@ def verify(request , auth_token):
         print(e)
         return redirect('/')
 
-def terms_conditions(request):
-    return render(request, 'home/terms_conditions.html')
-
-def error_page(request):
-    return  render(request , 'error.html')
-
-
-def faq(request):
-    context={
-            "is_faq":True,
-
-        }
-  
-    return render(request,'home/faq.html',context)
-
 def sent_mail(request):
     return render(request, 'home/token_sent.html')
 
@@ -191,27 +142,17 @@ def send_mail_after_registration(email , token):
     html_content = render_to_string("home/email_template.html",{'title':'send mail','content':token})
     text_content = strip_tags(html_content)
     subject = 'Your accounts need to be verified'
-    # message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email]
     email_obj = EmailMultiAlternatives(subject, text_content, email_from, recipient_list)
     email_obj.attach_alternative(html_content, "text/html")
     email_obj.send()
-    # send_mail(subject, text_content , email_from ,recipient_list )
     
-# def send_mail_after_registration(email , token):
-    
-#     subject = 'Your accounts need to be verified'
-#     message = f'Hi paste the link to verify your account https://tetheringtron.geany.website/verify/{token}'
-#     email_from = settings.EMAIL_HOST_USER
-#     recipient_list = [email]
-#     send_mail(subject, message , email_from ,recipient_list )
-
-
 def error_page(request):
     return  render(request , 'home/error.html')
 
 
+# login
 def login_attempt(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -250,9 +191,7 @@ def login_attempt(request):
     return render(request , 'home/login.html')
 
 
-
-
-
+# login otp
 def otp(request, token):
     print('hi')
     member_profile=Profile.objects.get(auth_token = token)
@@ -274,77 +213,7 @@ def otp(request, token):
         message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
     return render(request,'home/otp.html',{'token':token})
 
-
-@login_required(login_url="/member/login")
-def logout(request):
-    django_logout(request)
-    return redirect('/member/login')
-
- 
-
-
-
-def about(request):
-
-     context={
-            "is_about":True,
-
-        }
-        
-     return render(request,'home/about.html',context)
-
-def contactus(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        message = request.POST['message']
-        contact = Contact(name=name,email=email,message=message)
-        contact.save()
-    context={
-            "is_contactus":True,
-
-        }
-  
-    return render(request,'home/contactus.html',context)
-
-
-def ChangePassword(request , token):
-    context = {}
-    try:
-        profile_obj = Profile.objects.filter(forget_password_token = token).first()
-        context = {'user_id' : profile_obj.user.id}
-        
-        if request.method == 'POST':
-            new_password = request.POST.get('new_password')
-            confirm_password = request.POST.get('reconfirm_password')
-            user_id = request.POST.get('user_id')
-            
-            if user_id is  None:
-                messages.success(request, 'No user id found.')
-                return redirect(f'/member/change-password/{token}/')
-                
-            
-            if  new_password != confirm_password:
-                messages.success(request, 'both should  be equal.')
-                return redirect(f'/member/change-password/{token}/')
-                         
-            
-            user_obj = User.objects.get(id = user_id)
-            user_obj.set_password(new_password)
-            user_obj.save()
-            messages.success(request, 'Password Reset Successfully.')
-            return redirect('/member/login')
-            
-            
-            
-        
-        
-    except Exception as e:
-        print(e)
-    return render(request , 'home/change-password.html' , context)
-
-
-
+# forget password
 def forgetpassword(request):
     try:
         if request.method == 'POST':
@@ -362,37 +231,62 @@ def forgetpassword(request):
             send_forget_password_mail(user_obj.email , token)
             messages.success(request, 'An email is sent.')
             return redirect('/member/forgetpassword')
-                
-    
-    
     except Exception as e:
         print(e)
     return render(request , 'home/forget-password.html')
 
-
-
-
-
-# def generateOTP() :
-#     digits = "123456789"
-#     OTP = ""
-#     for i in range(4) :
-#         OTP += digits[math.floor(random.random() * 10)]
-#     return OTP
-
-# def send_otp(request):
-#     email=request.POST.get("email")
-#     password=request.POST.get("password")
-#     print(email)
-#     o=generateOTP()
-#     htmlgen = '<p>Your OTP is <strong>'+o+'</strong></p>'
-#     send_mail('OTP request',o,'<gmail id>',[email],fail_silently=False,html_message=htmlgen)
-#     return HttpResponse(o)
+def ChangePassword(request , token):
+    context = {}
+    try:
+        profile_obj = Profile.objects.filter(forget_password_token = token).first()
+        context = {'user_id' : profile_obj.user.id}
         
-# def login(request):
-#      return render(request, 'home/login.html')
+        if request.method == 'POST':
+            new_password = request.POST.get('new_password')
+            user_id = request.POST.get('user_id')
+            if user_id is  None:
+                messages.success(request, 'No user id found.')
+                return redirect(f'/member/change-password/{token}/')
+            user_obj = User.objects.get(id = user_id)
+            user_obj.set_password(new_password)
+            user_obj.save()
+            messages.success(request, 'Password Reset Successfully.')
+            return redirect('/member/login')
+    except Exception as e:
+        print(e)
+    return render(request , 'home/change-password.html' , context)
 
 
+def terms_conditions(request):
+    return render(request, 'home/terms_conditions.html')
+
+def error_page(request):
+    return  render(request , 'error.html')
 
 
+def faq(request):
+    return render(request,'home/faq.html')
 
+
+def about(request):
+     return render(request,'home/about.html')
+
+
+def contactus(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+        contact = Contact(name=name,email=email,message=message)
+        contact.save()
+    context={
+            "is_contactus":True,
+
+        }
+    return render(request,'home/contactus.html',context)
+
+# logout
+@login_required(login_url="/member/login")
+def logout(request):
+    django_logout(request)
+    return redirect('/member/login')

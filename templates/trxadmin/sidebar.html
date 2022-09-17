@@ -26,15 +26,9 @@
                        
                     </li>
                     
-                    <!-- <li  {% if is_share %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:share' %}" aria-expanded="false">
-                    <i class="flaticon-061-puzzle"></i>
-                    <span class="nav-text">Share</span>
-                </a>
-               
-
-            </li> -->
+    
                    
-                            <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:member' %}" aria-expanded="false">
+                            <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:kyc' %}" aria-expanded="false">
                             <i class="flaticon-381-network"></i>
                             <span class="nav-text">KYC Verification</span>
                         </a>
@@ -42,7 +36,13 @@
         
                     </li>
               
+                    <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:members' %}" aria-expanded="false">
+                        <i class="flaticon-381-network"></i>
+                        <span class="nav-text">Members</span>
+                    </a>
+                   
     
+                </li>
                
                 <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
                     <i class="flaticon-049-copy"></i>

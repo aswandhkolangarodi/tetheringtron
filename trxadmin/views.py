@@ -8,10 +8,6 @@ from .models import *
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
 
-# from tetheringtron.member.models import Kycform
-
-# Create your views here.
-
 
 def Trxadmin(request):
     members=Profile.objects.all().count()
@@ -24,27 +20,14 @@ def Trxadmin(request):
         
     return render(request,'trxadmin/index.html',context)
 
-def base(request):
-    return render(request,'trxadmin/base.html')
 
-
-def Adminprofile(request):
-    return render(request,'trxadmin/profile.html')
-
-def share(request):
-    context={
-        "is_share":True,
-    }
-    return render(request,'trxadmin/share.html',context)
-
-def member(request):
+def kyc(request):
     members= Kyc.objects.all()
     context={
         "is_member":True,
         "members":members
     }
-    return render(request,'trxadmin/member.html',context)
-    # return render(request,'trxadmin/member.html',context)
+    return render(request,'trxadmin/kyc.html',context)
 
 def coindetails(request):
     context={
@@ -63,13 +46,6 @@ def announcement(request):
         "announcement":announcement
     }
     return render(request, 'trxadmin/announcement.html',context)
-
-def shareprofile(request):
-    
-    return render(request, 'trxadmin/shareprofile.html')
-
-def memberprofile(request):
-    return render(request, 'trxadmin/member profile.html')
 
 def notifications(request):
     return render(request, 'trxadmin/notifications.html')
@@ -98,12 +74,12 @@ def reward_reject(request, id):
     Reward.objects.filter(id=id).update(status="rejected")
     return redirect('/trxadmin/reward')
 
-def kyclist(request):
-    kyc_list=Kyc.objects.all()
+def members(request):
+    members=Kyc.objects.all()
     context={
-        'kyc_list':kyc_list
+        'members':members
     }
-    return render(request, 'trxadmin/kyclist.html',context)
+    return render(request, 'trxadmin/members.html',context)
 
 
 def kycdetail(request,user_id):

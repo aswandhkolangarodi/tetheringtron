@@ -51,23 +51,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for kyc_list in kyc_list %}
+                                    {% for members in members %}
                                     <tr role="row" class="odd">
                                         <td class="sorting_1">{{forloop.counter}}</td>
-                                        <td>{{kyc_list.user.first_name}}</td>
-                                        <td>{{kyc_list.country}}</td>
-                                        <td>{{kyc_list.user.phone}}</td>
-                                        <!-- <td><span class="badge badge-success">Aprooved</span></td> -->
-                                        <td>
-                                            <div class="d-flex action-button">
-
-                                                <a href="{% url 'trxadmin:kycdetail' kyc_list.user.id %}"
-                                                    class="btn btn-info btn-xs light px-2">
-                                                    View
-                                                </a>
-
-                                            </div>
-                                        </td>
+                                        <td>{{members.user.first_name}}</td>
+                                        <td>{{members.country}}</td>
+                                        <td>{{members.user.phone}}</td>
+                                        
 
                                     </tr>
                                   

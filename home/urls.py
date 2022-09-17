@@ -5,12 +5,9 @@ app_name= 'home'
 
 urlpatterns = [
     path("",views.main_view,name='index'),
-
-
     path("about",views.about,name='about'),
     path("contactus",views.contactus,name='contactus'),
     path("member/login",views.login_attempt,name='login'),
-    # path('member/login/otp', views.send_otp, name='send-otp'),
     path('logout' , views.logout, name='logout'),
     path("signup",views.signup,name='signup'),
     path('terms-conditions', views.terms_conditions, name="terms_conditions"),
@@ -23,6 +20,5 @@ urlpatterns = [
     path('member/forgetpassword', views.forgetpassword, name='forgetpassword'),
     path('member/signup-otp/<token>', views.signup_otp, name="signup_otp"),
     path('member/otp/<token>',views.otp, name='otp'),
-    path('demoregi',views.demo_regi, name="demoregi")
 
 ]

@@ -13,7 +13,6 @@ from home.models import User
 
 
 class Kyc(models.Model):
-    
     user = models.ForeignKey(User, on_delete=models.PROTECT,blank=True,null=True)
     country = models.CharField(max_length=50)
     date=models.DateTimeField(auto_now_add=True,null=True)

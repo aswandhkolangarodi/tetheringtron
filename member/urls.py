@@ -16,5 +16,5 @@ urlpatterns = [
    # path('success/<str:test_id>', views.paymentSuccess, name="success"),
    # path('cancel/<str:test_id>', views.paymentCancel, name="cancel"),
 
-   # path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
+   path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
 ]

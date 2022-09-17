@@ -1,20 +1,13 @@
-from audioop import reverse
-from email import message
-from multiprocessing import context
-from unittest import result
-from django import views
+from locale import currency
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
 from .models import Kyc, Transaction
-from .forms import KycForm
 import base64
 from django.core.files.base import ContentFile
 from django.conf import settings
-import uuid
-# create transaction imports
-
+import stripe
 
 
 @login_required(login_url="/member/login")
@@ -25,10 +18,7 @@ def index(request):
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
     kyc_check = Kyc.objects.filter(user=request.user).exists()
-    kyc_status = Kyc.objects.filter(user=request.user).last()
-# create transaction
-   
-
+    kyc_status = Kyc.objects.filter(user=request.user).last()   
     context ={
         'recs_count':recs_count,
         'user':user,
@@ -51,14 +41,8 @@ def profile(request):
         return redirect('/member/profile/')
     return render(request, 'member/profile.html')
 
-def transactions(request):
-    context ={
-        'is_transactions':True
-    }
-    return render(request, 'member/transactions.html',context)
 
 def rewards(request):
-    
     user=User.objects.get(email=request.user)
     reward=Profile.objects.get(user=user)
     add_reward = AddReward.objects.all().last()
@@ -72,8 +56,6 @@ def rewards(request):
         'is_rewards':True,
         'reward' : reward,
         'add_reward':add_reward
-        
-        
     }
     return render(request, 'member/rewards.html',context)
 
@@ -103,9 +85,6 @@ def kyc_main(request):
         return redirect(f'/member/selfie/')
     return render(request, 'member/kycnew.html')
 
-
-
-
 def selfie(request):
     user=request.user
     
@@ -121,39 +100,28 @@ def selfie(request):
         return redirect('/member/dashboard')
     return render(request, 'member/selfie.html')
 
-
+def transactions(request):
+    context ={
+        'is_transactions':True
+    }
+    return render(request, 'member/transactions.html',context)
 
 
 # #  stripe payment
 
-# import stripe
-# # This is your test secret API key.
-# stripe.api_key = settings.STRIPE_SECRET_KEY
-
-# class CreateCheckoutSessionView(generic.View):
-#     def post(self, *args, **kwargs):
-#         host = self.request.get_host()
-
-
-#         checkout_session = stripe.checkout.Session.create(
-#             line_items=[
-#                 {
-#                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-#                     "price_data": {
-#                         "unit_amount" : 1000,
-#                         "product_data":{
-#                             "name" : "example order"
-
-#                         },
-#                     },
-#                     "quantity" : 1,
-#                 },
-#             ],
-#             mode='payment',
-#             # success_url="http://{}{}".format(host,reverse('member:payment-success')),
-#             # cancel_url="http://{}{}".format(host,reverse('member:payment-success'))',
-#         )
-#         return redirect(checkout_session.url, code=303)
+def CreateCheckoutSessionView(request):
+    if request.method == "POST":
+        curreny = request.POST['currency']
+        amount = request.POST['amount'] 
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        initiate = stripe.PaymentIntent.create(
+                amount=amount,
+                currency=curreny,
+                payment_method_types=['card'],
+                )
+        print(initiate)
+        client_secret = initiate['client_secret']
+    return render(request, 'member/checkout.html', {'client_secret':client_secret})
 
 
 # def paymentSuccess(request,testid):

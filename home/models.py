@@ -1,20 +1,14 @@
-from email.policy import default
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from .utils import generate_ref_code
-from datetime import datetime
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 import uuid
-from phonenumber_field.modelfields import PhoneNumberField
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
-    """Define a model manager for User model with no username field."""
-
     def _create_user(self, email, password=None, **extra_fields):
-        """Create and save a User with the given email and password."""
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
@@ -29,7 +23,6 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Create and save a SuperUser with the given email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -54,16 +47,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
 
-
-class Reward(models.Model):
-    youtube = models.TextField(max_length=1000)
-    status  = models.CharField(max_length=100, default="waiting for approval")
-    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
-
-
-
-
-    
 class Profile(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
     code = models.CharField(max_length=12,blank=True)
@@ -94,7 +77,10 @@ class Profile(models.Model):
             self.code = code 
         super().save(*args,**kwargs)
 
-
+class Reward(models.Model):
+    youtube = models.TextField(max_length=1000)
+    status  = models.CharField(max_length=100, default="waiting for approval")
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
 
 
 class Contact(models.Model):
