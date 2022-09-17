@@ -101,4 +101,4 @@ class Contact(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     message = models.CharField(max_length=1000)
-    date_time = models.DateTimeField(auto_now_add=True)
+    date_time = models.DateTimeField(auto_now_add=True, null=True)
