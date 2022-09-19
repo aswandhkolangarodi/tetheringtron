@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-
 app_name= 'member'
 
 urlpatterns = [
@@ -15,6 +14,5 @@ urlpatterns = [
    path('selfie/', views.selfie, name='selfie'),
    # path('success/<str:test_id>', views.paymentSuccess, name="success"),
    # path('cancel/<str:test_id>', views.paymentCancel, name="cancel"),
-
-   path('create-checkout-session/', views.CreateCheckoutSessionView, name='create-checkout-session'),
+   path('create-checkout-session2/', views.create_checkout_session, name="create_checkout_session2")
 ]

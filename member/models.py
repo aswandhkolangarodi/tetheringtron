@@ -28,7 +28,7 @@ class Kyc(models.Model):
 
     def __str__(self):
         return str(self.user)
-   
+
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     test_id =models.UUIDField()

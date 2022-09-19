@@ -1,4 +1,3 @@
-from locale import currency
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
@@ -109,26 +108,41 @@ def transactions(request):
 
 # #  stripe payment
 
-def CreateCheckoutSessionView(request):
-    if request.method == "POST":
-        curreny = request.POST['currency']
-        amount = request.POST['amount'] 
+def create_checkout_session(request):
+    test_id = uuid.uuid4()
+    if request.method == 'POST':
+        amount = int(request.POST['amount'])*100
+        selected_currency = request.POST['currency']
+
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        initiate = stripe.PaymentIntent.create(
-                amount=amount,
-                currency=curreny,
-                payment_method_types=['card'],
-                )
-        print(initiate)
-        client_secret = initiate['client_secret']
-    return render(request, 'member/checkout.html', {'client_secret':client_secret})
+        session = stripe.checkout.Session.create(
+           payment_method_types = ['card'],
+           line_items = [{
+            'price_data':{
+                'currency': selected_currency,
+                'product_data':{
+                    'name':'TRON'
+                },
+                'unit_amount': amount,
 
+            },
+            'quantity':1,
+           }],
+           mode = 'payment',
+           success_url = 'http://127.0.0.1:8000/member/dashboard/success/',
+           cancel_url = 'http://127.0.0.1:8000/member/dashboard/cancel/',
+        #    success_url = 'http://127.0.0.1:8000/member/dashboard/success/{test_id}',
+        #    cancel_url = 'http://127.0.0.1:8000/member/dashboard/cancel/{test_id}',
+        )
+        print(session)
+        # if session:
+        #     transaction = Transaction(user = request.user, test_id = test_id, amount=amount/100)
+        #     transaction.save()
+    return redirect(session.url, code = 303)
 
-# def paymentSuccess(request,testid):
-#     context = {
-#         "payment_status" : "success"
-#     }
-#     return render(request,"member/index.html",context)
+# def paymentSuccess(request,test_id):
+#     Transaction.objects.filter(test_id = test_id).update(payment_status = "success")
+#     return redirect('/member/dashboard/')
 
 # def paymentCancel(request,testid):
 #     context = {
