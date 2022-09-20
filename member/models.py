@@ -33,9 +33,9 @@ class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     test_id =models.UUIDField()
     amount = models.FloatField()
-    address = models.CharField(max_length=300)
+    mode = models.CharField(max_length=300)
     txn_id = models.CharField(max_length=300)
-    payment_status = models.CharField(max_length=100,default="waiting for payment")
+    payment_status = models.CharField(max_length=100)
 
     
 

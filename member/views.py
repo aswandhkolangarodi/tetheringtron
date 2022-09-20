@@ -1,3 +1,4 @@
+from email import message
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
@@ -7,6 +8,7 @@ import base64
 from django.core.files.base import ContentFile
 from django.conf import settings
 import stripe
+from django.contrib import messages
 
 
 @login_required(login_url="/member/login")
@@ -109,11 +111,11 @@ def transactions(request):
 # #  stripe payment
 
 def create_checkout_session(request):
-    test_id = uuid.uuid4()
+    
     if request.method == 'POST':
         amount = int(request.POST['amount'])*100
         selected_currency = request.POST['currency']
-
+        test_id = uuid.uuid4()
         stripe.api_key = settings.STRIPE_SECRET_KEY
         session = stripe.checkout.Session.create(
            payment_method_types = ['card'],
@@ -129,23 +131,23 @@ def create_checkout_session(request):
             'quantity':1,
            }],
            mode = 'payment',
-           success_url = 'http://127.0.0.1:8000/member/dashboard/success/',
-           cancel_url = 'http://127.0.0.1:8000/member/dashboard/cancel/',
-        #    success_url = 'http://127.0.0.1:8000/member/dashboard/success/{test_id}',
-        #    cancel_url = 'http://127.0.0.1:8000/member/dashboard/cancel/{test_id}',
+           success_url = f'http://127.0.0.1:8000/member/success/{test_id}',
+           cancel_url = f'http://127.0.0.1:8000/member/cancel/{test_id}',
         )
         print(session)
-        # if session:
-        #     transaction = Transaction(user = request.user, test_id = test_id, amount=amount/100)
-        #     transaction.save()
+        if session:
+            transaction = Transaction(user = request.user, test_id = test_id, amount = amount/100,txn_id = session.id ,payment_status = session.payment_status, mode = "deposit")
+            transaction.save()
     return redirect(session.url, code = 303)
 
-# def paymentSuccess(request,test_id):
-#     Transaction.objects.filter(test_id = test_id).update(payment_status = "success")
-#     return redirect('/member/dashboard/')
+def paymentSuccess(request,test_id):
+    Transaction.objects.filter(test_id = test_id).update(payment_status = "success")
+    messages.success(request, 'Password Reset Successfully.')
+    return redirect('/member/dashboard/')
 
-# def paymentCancel(request,testid):
-#     context = {
-#         "payment_status" : "cancel"
-#     }
-#     return render(request,"member/index.html",context)
+def paymentCancel(request,test_id):
+    Transaction.objects.filter(test_id = test_id).update(payment_status = "cancel")
+    context = {
+        "payment_status" : "cancel"
+    }
+    return render(request,"member/index.html",context)
