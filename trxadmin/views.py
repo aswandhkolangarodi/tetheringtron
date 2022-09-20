@@ -116,14 +116,14 @@ def unblock(request,user_id):
     return render(request,'trxadmin/member.html',context)
 
 def kyc_approove(request, user_id):
-    user=Kyc.objects.filter(id=user_id).update(status="Approved")
-    return redirect('/trxadmin/member')
+    user=Kyc.objects.filter(id=user_id).update(status="approved")
+    return redirect('/trxadmin/kyc')
 
 def kyc_reject(request, user_id):
     if request.method == "POST":
         reson = request.POST['reson']
-        user=Kyc.objects.filter(id=user_id).update(status="Rejected", reson=reson)
-    return redirect('/trxadmin/member')
+        user=Kyc.objects.filter(id=user_id).update(status="rejected", reson=reson)
+    return redirect('/trxadmin/kyc')
 
 @login_required(login_url="/member/login")
 def logout_admin(request):

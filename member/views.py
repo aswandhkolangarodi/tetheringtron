@@ -1,4 +1,3 @@
-from email import message
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
@@ -9,7 +8,8 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 import stripe
 from django.contrib import messages
-
+from datetime import  datetime
+from django.utils import timezone
 
 @login_required(login_url="/member/login")
 def index(request):
@@ -19,7 +19,15 @@ def index(request):
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
     kyc_check = Kyc.objects.filter(user=request.user).exists()
-    kyc_status = Kyc.objects.filter(user=request.user).last()   
+    kyc_status = Kyc.objects.filter(user=request.user).last()
+    today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+    today_transactions = Transaction.objects.filter(user=request.user , date__range=(today_min, today_max)).order_by('-date')
+    all_transactions = Transaction.objects.filter(user=request.user).order_by('-date')
+    total_deposit = 0
+    total_deposit_qs = Transaction.objects.filter(user=request.user, mode = "Deposit")
+    for deposit in total_deposit_qs:
+        total_deposit += deposit.amount
     context ={
         'recs_count':recs_count,
         'user':user,
@@ -27,6 +35,9 @@ def index(request):
         'my_recs':my_recs,
         'kyc_check':kyc_check,
         'kyc_status':kyc_status,
+        'transactions':today_transactions,
+        'all_transactions':all_transactions,
+        'total_deposit':total_deposit,
         'is_index':True
     }
     return render(request, 'member/index.html', context)
@@ -61,6 +72,9 @@ def rewards(request):
     return render(request, 'member/rewards.html',context)
 
 def kyc_home(request):
+    kyc_check = Kyc.objects.all().last()
+    if kyc_check.status == "approved":
+          return redirect('/member/dashboard/')
     return render(request, 'member/kyc-home.html')
 
 def coin_details(request):
@@ -70,6 +84,9 @@ def coin_details(request):
     return render(request, 'member/coin-details.html',context)
 
 def kyc_main(request):
+    kyc_check = Kyc.objects.all().last()
+    if kyc_check.status == "approved":
+        return redirect('/member/dashboard/')
     user_id=request.user.id
     print(user_id)
     if request.method == 'POST' and request.FILES:
@@ -111,43 +128,46 @@ def transactions(request):
 # #  stripe payment
 
 def create_checkout_session(request):
-    
-    if request.method == 'POST':
-        amount = int(request.POST['amount'])*100
-        selected_currency = request.POST['currency']
-        test_id = uuid.uuid4()
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        session = stripe.checkout.Session.create(
-           payment_method_types = ['card'],
-           line_items = [{
-            'price_data':{
-                'currency': selected_currency,
-                'product_data':{
-                    'name':'TRON'
-                },
-                'unit_amount': amount,
+    kyc_check = Kyc.objects.all().last()        
+    if kyc_check.status == "approved":
+        if request.method == 'POST':
+            amount = int(request.POST['amount'])*100
+            selected_currency = request.POST['currency']
+            test_id = uuid.uuid4()
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            session = stripe.checkout.Session.create(
+            payment_method_types = ['card'],
+            line_items = [{
+                'price_data':{
+                    'currency': selected_currency,
+                    'product_data':{
+                        'name':'TRON'
+                    },
+                    'unit_amount': amount,
 
-            },
-            'quantity':1,
-           }],
-           mode = 'payment',
-           success_url = f'http://127.0.0.1:8000/member/success/{test_id}',
-           cancel_url = f'http://127.0.0.1:8000/member/cancel/{test_id}',
-        )
-        print(session)
-        if session:
-            transaction = Transaction(user = request.user, test_id = test_id, amount = amount/100,txn_id = session.id ,payment_status = session.payment_status, mode = "deposit")
-            transaction.save()
+                },
+                'quantity':1,
+            }],
+            mode = 'payment',
+            success_url = f'http://127.0.0.1:8000/member/success/{test_id}',
+            cancel_url = f'http://127.0.0.1:8000/member/cancel/{test_id}',
+            )
+            print(session)
+            if session:
+                transaction = Transaction(user = request.user, test_id = test_id, amount = amount/100,txn_id = session.id ,payment_status = session.payment_status, mode = "Deposit")
+                transaction.save()
+    else:
+        messages.warning(request, "Complte KYC")
+        return redirect('/member/dashboard/')
     return redirect(session.url, code = 303)
 
 def paymentSuccess(request,test_id):
-    Transaction.objects.filter(test_id = test_id).update(payment_status = "success")
-    messages.success(request, 'Password Reset Successfully.')
+    transaction = Transaction.objects.filter(test_id = test_id).last()
+    transaction.payment_status = "success"
+    amount = str(transaction.amount)
+    messages.success(request, "Payment of " + amount + " successfull")
     return redirect('/member/dashboard/')
 
 def paymentCancel(request,test_id):
     Transaction.objects.filter(test_id = test_id).update(payment_status = "cancel")
-    context = {
-        "payment_status" : "cancel"
-    }
-    return render(request,"member/index.html",context)
+    return render(request,"member/index.html")

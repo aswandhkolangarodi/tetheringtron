@@ -16,7 +16,7 @@
             </strong>
             <div class="mt-3"><a href="{% url 'member:kyc' %}" class="btn btn-light">Checkout</a></div>
         </div>
-        {% elif kyc_status.status == "Rejected" %}
+        {% elif kyc_status.status == "rejected" %}
         <div class="alert alert-danger solid alert-square text-center"><strong>
                 <h4 class="text-light">KYC Submission is Rejected for the following resons</h4>
             </strong>
@@ -25,6 +25,39 @@
         </div>
 
         {% endif %}
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+            <div class="alert alert-warning alert-dismissible fade show">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <strong>Warning!</strong> {{message}}.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                </button>
+            </div>
+            {% endif %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success alert-dismissible fade show">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <strong>Success!</strong> {{ message }}.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                </button>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+
         {% for alert in alert|slice:":1" %}
         <div class="alert alert-primary alert-dismissible fade show">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
@@ -40,8 +73,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             </button>
         </div>
-
         {% endfor %}
+
 
         <div class="form-head mb-sm-5 mb-3 d-flex flex-wrap align-items-center">
             <h2 class="font-w600 title mb-2 me-auto ">Dashboard</h2>
@@ -60,7 +93,7 @@
                             <div class="card-info">
                                 <p class="mb-1 text-white fs-14">Total Deposit</p>
                                 <div class="d-flex justify-content-between">
-                                    <h2 class="num-text text-white mb-5 font-w600">2000 TRX</h2>
+                                    <h2 class="num-text text-white mb-5 font-w600">{{total_deposit}} TRX</h2>
                                     <?xml version="1.0" encoding="utf-8"?>
                                     <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
                                     <svg version="1.1" height="36" width="36" id="Layer_1"
@@ -184,17 +217,13 @@
                                 <div class="card-action card-tabs mb-3 style-1">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" data-bs-toggle="tab" href="#today">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#today">
                                                 Today
                                             </a>
                                         </li>
+                                       
                                         <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="tab" href="#Weekly">
-                                                Weekly
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-bs-toggle="tab" href="#all">
+                                            <a class="nav-link active" data-bs-toggle="tab" href="#all">
                                                 All
                                             </a>
                                         </li>
@@ -206,9 +235,19 @@
                                     <div class="table-responsive">
                                         <table class="table shadow-hover card-table border-no tbl-btn short-one">
                                             <tbody>
+                                                {% for transactions in transactions %}
                                                 <tr>
                                                     <td>
                                                         <span>
+                                                            {% if transactions.mode == "Deposit" %}
+                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <rect width="63" height="63" rx="14" fill="#747474" />
+                                                            <path
+                                                                d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
+                                                                fill="white" stroke="white" />
+                                                        </svg>
+                                                        {% else %}
                                                             <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <rect width="63" height="63" rx="14" fill="#71B945" />
@@ -216,6 +255,7 @@
                                                                     d="M40.6186 32.7207L40.6186 32.7207L40.6353 39.6289C40.6354 39.6328 40.6354 39.6363 40.6353 39.6396M40.6186 32.7207L40.1353 39.6341L40.6353 39.635C40.6353 39.6481 40.6347 39.6583 40.6345 39.6627L40.6344 39.6642C40.6346 39.6609 40.6351 39.652 40.6353 39.6407C40.6353 39.6403 40.6353 39.64 40.6353 39.6396M40.6186 32.7207C40.6167 31.9268 39.9717 31.2847 39.1777 31.2866C38.3838 31.2885 37.7417 31.9336 37.7436 32.7275L37.7436 32.7275L37.7519 36.1563M40.6186 32.7207L37.7519 36.1563M40.6353 39.6396C40.6329 40.4282 39.9931 41.0705 39.2017 41.0726C39.2 41.0726 39.1983 41.0727 39.1965 41.0727L39.1944 41.0727L39.1773 41.0726L32.2834 41.056L32.2846 40.556L32.2834 41.056C31.4897 41.054 30.8474 40.4091 30.8494 39.615C30.8513 38.8211 31.4964 38.179 32.2903 38.1809L32.2903 38.1809L35.719 38.1892L22.5364 25.0066C21.975 24.4452 21.975 23.5351 22.5364 22.9737C23.0978 22.4123 24.0079 22.4123 24.5693 22.9737L37.7519 36.1563M40.6353 39.6396C40.6353 39.6376 40.6353 39.6356 40.6353 39.6336L37.7519 36.1563M39.1964 41.0726C39.1957 41.0726 39.1951 41.0726 39.1944 41.0726L39.1964 41.0726Z"
                                                                     fill="white" stroke="white" />
                                                             </svg>
+                                                            {% endif %}
                                                         </span>
                                                     </td>
                                                     <td class="wspace-no">
@@ -251,298 +291,46 @@
                                                         <span class="font-w600 text-black">Tron</span>
                                                     </td>
                                                     <td>
-                                                        <span class="text-black">06:24:45 AM</span>
+                                                        <span class="text-black">{{transactions.date}}</span>
                                                     </td>
                                                     <td>
-                                                        <span class="font-w600 text-black">+$5,553</span>
+                                                        <span class="font-w600 text-black">{{transactions.amount}}</span>
                                                     </td>
-                                                    <td><span class="badge badge-success">Deposit</span></td>
+                                                    <td>
+                                                        {% if transactions.mode == "Deposit" %}
+                                                        <span class="badge badge-success">{{transactions.mode}}</span>
+                                                        {% else %}
+                                                        <span class="badge badge-warning">{{transactions.mode}}</span>
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#747474" />
-                                                                <path
-                                                                    d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
+                                                {% endfor %}
+                                              
 
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                        <span class="font-w600 text-black">Tron</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">+$5,553</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-warning">Withdraw</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#FF5757" />
-                                                                <path
-                                                                    d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
-
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                        <span class="font-w600 text-black">Tron</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">-$912</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-warning">Withdraw</span>
-                                                    </td>
-                                                </tr>
 
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="Weekly">
-                                    <div class="table-responsive">
-                                        <table class="table shadow-hover card-table border-no tbl-btn short-one">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#71B945" />
-                                                                <path
-                                                                    d="M40.6186 32.7207L40.6186 32.7207L40.6353 39.6289C40.6354 39.6328 40.6354 39.6363 40.6353 39.6396M40.6186 32.7207L40.1353 39.6341L40.6353 39.635C40.6353 39.6481 40.6347 39.6583 40.6345 39.6627L40.6344 39.6642C40.6346 39.6609 40.6351 39.652 40.6353 39.6407C40.6353 39.6403 40.6353 39.64 40.6353 39.6396M40.6186 32.7207C40.6167 31.9268 39.9717 31.2847 39.1777 31.2866C38.3838 31.2885 37.7417 31.9336 37.7436 32.7275L37.7436 32.7275L37.7519 36.1563M40.6186 32.7207L37.7519 36.1563M40.6353 39.6396C40.6329 40.4282 39.9931 41.0705 39.2017 41.0726C39.2 41.0726 39.1983 41.0727 39.1965 41.0727L39.1944 41.0727L39.1773 41.0726L32.2834 41.056L32.2846 40.556L32.2834 41.056C31.4897 41.054 30.8474 40.4091 30.8494 39.615C30.8513 38.8211 31.4964 38.179 32.2903 38.1809L32.2903 38.1809L35.719 38.1892L22.5364 25.0066C21.975 24.4452 21.975 23.5351 22.5364 22.9737C23.0978 22.4123 24.0079 22.4123 24.5693 22.9737L37.7519 36.1563M40.6353 39.6396C40.6353 39.6376 40.6353 39.6356 40.6353 39.6336L37.7519 36.1563M39.1964 41.0726C39.1957 41.0726 39.1951 41.0726 39.1944 41.0726L39.1964 41.0726Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
-
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-
-                                                        <span class="font-w600 text-black">Tron</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">+$5,553</span>
-                                                    </td>
-                                                    <td><span class="badge badge-success">Completed</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#747474" />
-                                                                <path
-                                                                    d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
-
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                        <span class="font-w600 text-black">Tron</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">+$5,553</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-warning">Pending</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#FF5757" />
-                                                                <path
-                                                                    d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
-
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                        <span class="font-w600 text-black">Tron</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">-$912</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-danger">Canceled</span>
-                                                    </td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                               
                                 <div class="tab-pane fade" id="all">
                                     <div class="table-responsive">
                                         <table class="table shadow-hover card-table border-no tbl-btn short-one">
                                             <tbody>
+                                               
+                                                {% for all_transactions in all_transactions %}
                                                 <tr>
                                                     <td>
                                                         <span>
+                                                            {% if all_transactions.mode == "Deposit" %}
+                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <rect width="63" height="63" rx="14" fill="#747474" />
+                                                            <path
+                                                                d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
+                                                                fill="white" stroke="white" />
+                                                        </svg>
+                                                        {% else %}
                                                             <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
                                                                 <rect width="63" height="63" rx="14" fill="#71B945" />
@@ -550,6 +338,7 @@
                                                                     d="M40.6186 32.7207L40.6186 32.7207L40.6353 39.6289C40.6354 39.6328 40.6354 39.6363 40.6353 39.6396M40.6186 32.7207L40.1353 39.6341L40.6353 39.635C40.6353 39.6481 40.6347 39.6583 40.6345 39.6627L40.6344 39.6642C40.6346 39.6609 40.6351 39.652 40.6353 39.6407C40.6353 39.6403 40.6353 39.64 40.6353 39.6396M40.6186 32.7207C40.6167 31.9268 39.9717 31.2847 39.1777 31.2866C38.3838 31.2885 37.7417 31.9336 37.7436 32.7275L37.7436 32.7275L37.7519 36.1563M40.6186 32.7207L37.7519 36.1563M40.6353 39.6396C40.6329 40.4282 39.9931 41.0705 39.2017 41.0726C39.2 41.0726 39.1983 41.0727 39.1965 41.0727L39.1944 41.0727L39.1773 41.0726L32.2834 41.056L32.2846 40.556L32.2834 41.056C31.4897 41.054 30.8474 40.4091 30.8494 39.615C30.8513 38.8211 31.4964 38.179 32.2903 38.1809L32.2903 38.1809L35.719 38.1892L22.5364 25.0066C21.975 24.4452 21.975 23.5351 22.5364 22.9737C23.0978 22.4123 24.0079 22.4123 24.5693 22.9737L37.7519 36.1563M40.6353 39.6396C40.6353 39.6376 40.6353 39.6356 40.6353 39.6336L37.7519 36.1563M39.1964 41.0726C39.1957 41.0726 39.1951 41.0726 39.1944 41.0726L39.1964 41.0726Z"
                                                                     fill="white" stroke="white" />
                                                             </svg>
+                                                            {% endif %}
                                                         </span>
                                                     </td>
                                                     <td class="wspace-no">
@@ -585,119 +374,20 @@
                                                         <span class="font-w600 text-black">Tron</span>
                                                     </td>
                                                     <td>
-                                                        <span class="text-black">06:24:45 AM</span>
+                                                        <span class="text-black">{{all_transactions.date}}</span>
                                                     </td>
                                                     <td>
-                                                        <span class="font-w600 text-black">+$5,553</span>
-                                                    </td>
-                                                    <td><span class="badge badge-success">Completed</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#747474" />
-                                                                <path
-                                                                    d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
-
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                        <span class="font-w600 text-black">Tron</span>
+                                                        <span class="font-w600 text-black">{{all_transactions.amount}}</span>
                                                     </td>
                                                     <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">+$5,553</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-warning">Pending</span>
+                                                        {% if all_transactions.mode == "Deposit" %}
+                                                        <span class="badge badge-success">{{all_transactions.mode}}</span>
+                                                        {% else %}
+                                                        <span class="badge badge-warning">{{all_transactions.mode}}</span>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        <span>
-                                                            <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                <rect width="63" height="63" rx="14" fill="#FF5757" />
-                                                                <path
-                                                                    d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
-                                                                    fill="white" stroke="white" />
-                                                            </svg>
-                                                        </span>
-                                                    </td>
-                                                    <td class="wspace-no">
-                                                        <?xml version="1.0" encoding="utf-8"?>
-                                                        <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                                                        <svg class="me-1" width="24" height="24" version="1.1"
-                                                            id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                                                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                            viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
-                                                            xml:space="preserve">
-                                                            <style type="text/css">
-                                                                .st0 {
-                                                                    fill: #FFFFFF;
-                                                                }
-
-                                                                .st1 {
-                                                                    fill: #b21212;
-                                                                }
-                                                            </style>
-                                                            <g>
-                                                                <path class="st0"
-                                                                    d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
-                                                                <g>
-                                                                    <g>
-                                                                        <path class="st1"
-                                                                            d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
-                                                                        l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
-                                                                    </g>
-                                                                </g>
-                                                            </g>
-                                                        </svg>
-                                                        <span class="font-w600 text-black">Tron</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-black">06:24:45 AM</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="font-w600 text-black">-$912</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-danger">Canceled</span>
-                                                    </td>
-                                                </tr>
+                                                {% endfor %}
 
                                             </tbody>
                                         </table>
@@ -789,10 +479,12 @@
 
                             <div class="mb-3">
 
-                                <input type="number" name="amount" class="form-control input-default " placeholder="Deposit Amount">
+                                <input type="number" name="amount" class="form-control input-default "
+                                    placeholder="Deposit Amount">
                             </div>
 
-                            <div class="modal-footer "><button type="submit" class="btn btn-primary" id="checkout-button">Deposit</button>
+                            <div class="modal-footer "><button type="submit" class="btn btn-primary"
+                                    id="checkout-button">Deposit</button>
                             </div>
                         </form>
                     </div>
