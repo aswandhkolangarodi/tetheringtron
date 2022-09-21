@@ -21,5 +21,6 @@ urlpatterns = [
     path('contact', views.contact, name='contact'),
     path('reward-given/<str:id>', views.reward_given, name='reward_given'),
     path('reward-reject/<str:id>', views.reward_reject, name='reward_reject'),
+    path('earning', views.earning, name='earning'),
     
 ]

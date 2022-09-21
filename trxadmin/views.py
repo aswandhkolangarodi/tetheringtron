@@ -130,3 +130,9 @@ def contact(request):
 
 def handler404(request, exception):
     return render(request, "member/404.html", status=404)
+
+def earning(request):
+    context={
+        "is_earning":True,
+    }
+    return render(request,"trxadmin/earning.html",context)

@@ -1,0 +1,127 @@
+{% extends 'trxadmin/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="col-xl-12 col-lg-12 input-danger">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Textarea</h4>
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form method="post">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="ZvCTPiXNhD9fh1QgMicqDvtsjkPFQouI1ZQa1aj1ZZBizHZ0vdpzfBjHA97TQmnY">
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="4" id="comment" name="announcement"></textarea>
+                            </div>
+                            <button type="submit" class="btn  btn-square btn-danger">Submit</button>
+                        </form>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Fees Collection</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="example4_wrapper" class="dataTables_wrapper no-footer">
+
+                            <table id="example4" class="display dataTable no-footer" style="min-width: 845px"
+                                role="grid" aria-describedby="example4_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-sort="ascending"
+                                            aria-label="Roll No: activate to sort column descending"
+                                            style="width: 56.5469px;">sl/no</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Student Name: activate to sort column ascending"
+                                            style="width: 123.984px;">Member Name :</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Invoice number: activate to sort column ascending"
+                                            style="width: 119.078px;">Recommended by</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Fees Type : activate to sort column ascending"
+                                            style="width: 79.5938px;">Phone </th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Fees Type : activate to sort column ascending"
+                                            style="width: 79.5938px;">KYC Status </th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Payment Type : activate to sort column ascending"
+                                            style="width: 108.531px;">Action </th>
+                                        <!-- <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Status : activate to sort column ascending"
+                                            style="width: 70.7969px;">Status </th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Date: activate to sort column ascending"
+                                            style="width: 75.0312px;">Date</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
+                                            colspan="1" aria-label="Amount: activate to sort column ascending"
+                                            style="width: 59.4375px;">Amount</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for members in members %}
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">{{forloop.counter}}</td>
+                                        <td>
+                                            <h6>{{members.user.first_name}}</h6>
+                                            <span>{{members.user}}</span>
+
+                                        </td>
+                                        <td>{{members.recommended_by.first_name}}</td>
+                                        <td>{{members.user.phone}}</td>
+                                        <td>
+                                            {% if members.status == "approved" %}
+                                            <span class="badge badge-success">{{members.status}}</span>
+
+                                            {% elif members.status == "Waiting for approvel" %}
+                                            <span class="badge badge-warning">{{members.status}}</span>
+                                            {% else %}
+                                            <span class="badge badge-danger">{{members.status}}</span>
+
+
+                                           {% endif %}
+                                        </td>
+                                        
+                                        
+
+                                        <td>
+                                            <div class="d-flex action-button">
+
+                                                <a href="{% url 'trxadmin:kycdetail' members.user.id %}"
+                                                    class="btn btn-info btn-xs light px-2">
+                                                    View
+                                                </a>
+
+                                              
+
+                                                
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}
