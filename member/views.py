@@ -171,3 +171,8 @@ def paymentSuccess(request,test_id):
 def paymentCancel(request,test_id):
     Transaction.objects.filter(test_id = test_id).update(payment_status = "cancel")
     return render(request,"member/index.html")
+
+
+
+def handler404(request, exception):
+    return render(request, "member/404.html", status=404)
