@@ -44,13 +44,7 @@
     
                 </li>
                
-                <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
-                    <i class="flaticon-049-copy"></i>
-                    <span class="nav-text">Coin Details</span>
-                </a>
-               
-
-            </li>
+             
 
             <li  {% if is_reward %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:reward' %}" aria-expanded="false">
                 <i class="flaticon-003-diamond"></i>
@@ -78,8 +72,14 @@
 
     </li>      
                         
-                           
-                       
+    <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
+        <i class="flaticon-049-copy"></i>
+        <span class="nav-text">Coin Details</span>
+    </a>
+   
+
+</li>                   
+                </ul>                  
                       
           
         

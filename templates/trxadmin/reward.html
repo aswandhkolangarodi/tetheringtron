@@ -27,18 +27,16 @@
                                             <th class="sorting_asc" tabindex="0" aria-controls="example4" rowspan="1"
                                                 colspan="1" aria-sort="ascending"
                                                 aria-label="Roll No: activate to sort column descending"
-                                                style="width: 56.5469px;">Member Name :</th>
-                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                                colspan="1" aria-label="Student Name: activate to sort column ascending"
-                                                style="width: 123.984px;">Email :</th>
+                                                style="width: 56.5469px;">Member:</th>
+                                            
                                             <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                                 colspan="1"
                                                 aria-label="Invoice number: activate to sort column ascending"
-                                                style="width: 119.078px;">Youtube link</th>
+                                                style="width: 119.078px;">link</th>
                                             <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                                 colspan="1"
                                                 aria-label="Invoice number: activate to sort column ascending"
-                                                style="width: 119.078px;">Action</th>
+                                                style="width: 119.078px;">Status</th>
                                             <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                                 colspan="1"
                                                 aria-label="Invoice number: activate to sort column ascending"
@@ -49,16 +47,19 @@
                                         {% for youtube in youtube %}
                                         <tr role="row" class="odd">
                                             <td class="sorting_1">{{youtube.user.first_name}}</td>
-                                            <td>{{youtube.user.email}}</td>
-                                            <td><a href="{{youtube.youtube}}" class="btn btn-info"
-                                                    target="_blank">video</a></td>
+                                           
+                                            <td>
+                                                <a href="{{youtube.youtube}}" class="btn btn-info"
+                                                    target="_blank">video</a>
+                                                    {{youtube.date}}
+                                                </td>
                                            
 
                                             <th>
-                                                {% if youtube.status == "given" %}
+                                            {% if youtube.status == "given" %}
                                             <span class="badge badge-success">{{youtube.status}}</span>
 
-                                            {% elif youtube.status == "Waiting for approvel" %}
+                                            {% elif youtube.status == "waiting for approval" %}
                                             <span class="badge badge-warning">{{youtube.status}}</span>
                                             {% else %}
                                             <span class="badge badge-danger">{{youtube.status}}</span>
@@ -66,8 +67,11 @@
 
                                            {% endif %}
                                             </th>
-                                            <td><a href="{% url 'trxadmin:reward_reject' youtube.id %}" class="btn btn-danger">X</a>
-                                                <a href="{% url 'trxadmin:reward_given' youtube.id %}" class="btn btn-success">given</a>
+                                            <td>
+                                                {% if youtube.status == "waiting for approval" %}
+                                                <a href="{% url 'trxadmin:reward_reject' youtube.id %}" class="btn btn-danger"><i class="fas fa-times"></i></a>
+                                                <a href="{% url 'trxadmin:reward_given' youtube.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
+                                                {% endif %}
                                             </td>
                                         </tr>
 
@@ -144,12 +148,12 @@
             <div class="col-xl-12">
                 <div class="card text-center">
                     <div class="card-header">
-                        <h5 class="card-title">Add reward</h5>
+                        <h5 class="card-title">Add Reward Amount</h5>
                     </div>
                     <div class="card-body">
                         <form method="post">
                             {% csrf_token %}
-                            <p class="card-text">Add Youtube and Referral Earings here</p>
+                            <p class="card-text">Add the reward amont you are willing to pay</p>
                             <div class="mb-3">
                                 <input type="text" class="form-control" placeholder="add referral coins in TRX"
                                     name="reffer">

@@ -80,6 +80,7 @@ class Profile(models.Model):
 class Reward(models.Model):
     youtube = models.TextField(max_length=1000)
     status  = models.CharField(max_length=100, default="waiting for approval")
+    date = models.DateField(auto_now_add=True,null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
 
 

@@ -85,7 +85,8 @@
 
             </h4>
             <div class="text-center">
-
+                
+                {% if kyc_details.status == 'Waiting for approvel' %}
 
                 <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reject">Reject<span
                         class="btn-icon-end"><i class="fas fa-times"></i></span>
@@ -96,7 +97,7 @@
                         class="btn-icon-end"><i class="fa fa-check"></i></span>
                 </a>
 
-
+                {% endif %}
 
             </div>
 

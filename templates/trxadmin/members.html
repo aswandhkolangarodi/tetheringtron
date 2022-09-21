@@ -29,25 +29,15 @@
                                             style="width: 123.984px;">Member Name :</th>
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Invoice number: activate to sort column ascending"
-                                            style="width: 119.078px;">Country</th>
+                                            style="width: 119.078px;">Email</th>
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Fees Type : activate to sort column ascending"
                                             style="width: 79.5938px;">Phone </th>
-                                        <!-- <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                            colspan="1" aria-label="Fees Type : activate to sort column ascending"
-                                            style="width: 79.5938px;">KYC Status </th> -->
+                                       
                                         <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                             colspan="1" aria-label="Payment Type : activate to sort column ascending"
                                             style="width: 108.531px;">Action </th>
-                                        <!-- <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                            colspan="1" aria-label="Status : activate to sort column ascending"
-                                            style="width: 70.7969px;">Status </th>
-                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                            colspan="1" aria-label="Date: activate to sort column ascending"
-                                            style="width: 75.0312px;">Date</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                            colspan="1" aria-label="Amount: activate to sort column ascending"
-                                            style="width: 59.4375px;">Amount</th> -->
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,9 +45,21 @@
                                     <tr role="row" class="odd">
                                         <td class="sorting_1">{{forloop.counter}}</td>
                                         <td>{{members.user.first_name}}</td>
-                                        <td>{{members.country}}</td>
+                                        <td>{{members.user.email}}</td>
                                         <td>{{members.user.phone}}</td>
-                                        
+                                        <td>
+                                            {% if members.user.member_status == 1 %}
+                                                <a  href="{% url 'trxadmin:block' members.user.id %}"
+                                                    class="btn btn-danger btn-xs light px-2">
+                                                    Block
+                                                </a>
+                                                {% else %}
+                                                <a href="{% url 'trxadmin:unblock' members.user.id %}"
+                                                    class="btn  btn-success btn-xs light px-2">
+                                                    unblock
+                                                </a>
+                                                {% endif %}
+                                        </td>
 
                                     </tr>
                                   

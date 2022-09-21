@@ -62,7 +62,7 @@
                                         <td>{{members.recommended_by.first_name}}</td>
                                         <td>{{members.user.phone}}</td>
                                         <td>
-                                            {% if members.status == "Approved" %}
+                                            {% if members.status == "approved" %}
                                             <span class="badge badge-success">{{members.status}}</span>
 
                                             {% elif members.status == "Waiting for approvel" %}
@@ -86,17 +86,7 @@
 
                                               
 
-                                                {% if members.user.member_status == 1 %}
-                                                <a  href="{% url 'trxadmin:block' members.user.id %}"
-                                                    class="btn btn-danger btn-xs light px-2">
-                                                    Block
-                                                </a>
-                                                {% else %}
-                                                <a href="{% url 'trxadmin:unblock' members.user.id %}"
-                                                    class="btn  btn-success btn-xs light px-2">
-                                                    unblock
-                                                </a>
-                                                {% endif %}
+                                                
                                             </div>
                                         </td>
 

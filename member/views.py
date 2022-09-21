@@ -4,6 +4,7 @@ from home.models import *
 from trxadmin.models import *
 from .models import Kyc, Transaction
 import base64
+from django.contrib.auth import logout as django_logout
 from django.core.files.base import ContentFile
 from django.conf import settings
 import stripe
@@ -13,7 +14,14 @@ from django.utils import timezone
 
 @login_required(login_url="/member/login")
 def index(request):
+    
     user=User.objects.get(email=request.user)
+
+    if user.member_status == False:
+        django_logout(request)
+        return redirect('/')
+
+    reward=Profile.objects.get(user=user)
     alert = Announcement.objects.filter().order_by('-id')
     profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
@@ -31,6 +39,7 @@ def index(request):
     context ={
         'recs_count':recs_count,
         'user':user,
+        'reward' : reward,
         'alert':alert,
         'my_recs':my_recs,
         'kyc_check':kyc_check,

@@ -24,7 +24,7 @@ def Trxadmin(request):
 def kyc(request):
     members= Kyc.objects.all()
     context={
-        "is_member":True,
+        "is_kyc":True,
         "members":members
     }
     return render(request,'trxadmin/kyc.html',context)
@@ -75,7 +75,7 @@ def reward_reject(request, id):
     return redirect('/trxadmin/reward')
 
 def members(request):
-    members=Kyc.objects.all()
+    members=Profile.objects.all()
     context={
         'members':members
     }
@@ -96,24 +96,13 @@ def kycdetail(request,user_id):
 
 
 def block(request,user_id):
-    members= Profile.objects.all()
     block_obj=User.objects.filter(id=user_id).update(member_status=False)
-    context={
-        "is_member":True,
-        "members":members
-    }
-    
-    return render(request,'trxadmin/member.html',context)
+    return redirect('/trxadmin/members')
     
 def unblock(request,user_id):
-    members= Profile.objects.all()
     unblock_obj=User.objects.filter(id=user_id).update(member_status=True)
-    context={
-        "is_member":True,
-        "members":members
-    }
+    return redirect('/trxadmin/members')
     
-    return render(request,'trxadmin/member.html',context)
 
 def kyc_approove(request, user_id):
     user=Kyc.objects.filter(id=user_id).update(status="approved")
