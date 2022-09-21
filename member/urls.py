@@ -12,9 +12,13 @@ urlpatterns = [
    path('coin-details/', views.coin_details, name='coin-details'),
    path('kyc_main/', views.kyc_main, name='kyc_main'),
    path('selfie/', views.selfie, name='selfie'),
+   path('selfie/', views.selfie, name='selfie'),
+
+
 
 # Stripe
    path('create-checkout-session2/', views.create_checkout_session, name="create_checkout_session2"),
    path('success/<str:test_id>', views.paymentSuccess, name="success"),
    path('cancel/<str:test_id>', views.paymentCancel, name="cancel"),
 ]
+

@@ -127,3 +127,6 @@ def contact(request):
         "contact" : contact
     }
     return render(request,'trxadmin/enquiry.html',context)
+
+def handler404(request, exception):
+    return render(request, "member/404.html", status=404)

@@ -290,3 +290,7 @@ def contactus(request):
 def logout(request):
     django_logout(request)
     return redirect('/member/login')
+
+
+def handler404(request, exception):
+    return render(request, "member/404.html", status=404)
