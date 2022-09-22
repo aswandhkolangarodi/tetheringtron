@@ -5,6 +5,8 @@ app_name= 'trxadmin'
 
 urlpatterns = [
     path("dashboard",views.Trxadmin,name='Trxadmin'),
+    path("trade-status-update/<str:id>", views.trade_status_update, name="trade_status_update"),
+    path('withdrow-request-status/<str:id>', views.withdrow_request_status , name="withdrow_request_status"),
     path("kyc",views.kyc,name='kyc'),
     path("coindetails",views.coindetails,name='coindetails'),
     path("announcement",views.announcement,name='announcement'),
