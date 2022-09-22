@@ -17,8 +17,10 @@ urlpatterns = [
 
 
 # Stripe
-   path('create-checkout-session2/', views.create_checkout_session, name="create_checkout_session2"),
+   path('create-checkout-session/', views.create_checkout_session, name="create_checkout_session2"),
    path('success/<str:test_id>', views.paymentSuccess, name="success"),
    path('cancel/<str:test_id>', views.paymentCancel, name="cancel"),
+   # withdrow
+   path('withdrow', views.withdraw, name="withdrow")
 ]
 

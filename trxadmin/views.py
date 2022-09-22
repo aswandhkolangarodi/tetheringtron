@@ -1,7 +1,7 @@
 from multiprocessing import context
 from urllib import request
 from django.shortcuts import render,redirect
-from member.models import Kyc
+from member.models import Kyc,TotalEarnings, Withdrow,Transaction
 from home.models import Contact, Profile, Reward, User
 from member.views import profile
 from .models import *
@@ -11,15 +11,32 @@ from django.contrib.auth.decorators import login_required
 
 def Trxadmin(request):
     members=Profile.objects.all().count()
-    
+    withdrow_req = Withdrow.objects.all()
+    deposit_list = Transaction.objects.all().order_by("-date")
+    total_deposit = 0
+    total_deposit_qs = Transaction.objects.filter(payment_status = "success")
+    for deposits in total_deposit_qs:
+        total_deposit += deposits.amount
     context={
         "members":members,
+        "total_deposit":total_deposit,
+        "deposit_list":deposit_list,
+        "withdrow_req":withdrow_req,
         "is_index":True,
     }
 
         
     return render(request,'trxadmin/index.html',context)
 
+
+def trade_status_update(request, id):
+    Transaction.objects.filter(id=id).update(trade_status = True)
+    return redirect('/trxadmin/dashboard')
+
+
+def withdrow_request_status(request, id):
+    Withdrow.objects.filter(id=id).update(status = "given")
+    return redirect('/trxadmin/dashboard')
 
 def kyc(request):
     members= Kyc.objects.all()
@@ -67,6 +84,14 @@ def reward(request):
     return render(request, 'trxadmin/reward.html',context)
 
 def reward_given(request, id):
+    user = Reward.objects.get(id = id)
+    total_earnings_obj = TotalEarnings.objects.filter(user = user.user).last()
+    if total_earnings_obj is None:
+        TotalEarnings.objects.create(user = user.user, earnings = 0)
+    total_earnings= TotalEarnings.objects.filter(user = user.user).last()
+    reward_price_obj = AddReward.objects.all().last()
+    total_earnings.earnings += float(reward_price_obj.youtube_reward)
+    total_earnings.save()
     Reward.objects.filter(id=id).update(status="given")
     return redirect('/trxadmin/reward')
 

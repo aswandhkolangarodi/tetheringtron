@@ -6,3 +6,5 @@ from member.models import *
 
 admin.site.register(Kyc)
 admin.site.register(Transaction)
+admin.site.register(TotalEarnings)
+admin.site.register(Withdrow)

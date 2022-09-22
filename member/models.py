@@ -34,14 +34,30 @@ class Transaction(models.Model):
     test_id =models.UUIDField()
     amount = models.FloatField()
     date = models.DateTimeField(auto_now_add=True,null=True)
-    mode = models.CharField(max_length=300)
     txn_id = models.CharField(max_length=300)
     payment_status = models.CharField(max_length=100)
+    trade_status = models.BooleanField(default=False)
 
+    def __str__(self):
+        return str(self.user)
 
+class TotalEarnings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    earnings = models.FloatField()
+    
+    def __str__(self):
+        return str(self.user)
+
+class Withdrow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    amount = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    trx_address = models.CharField(max_length=500)
+    status = models.CharField(max_length=100, default="pending")
     
 
-
+    def __str__(self):
+        return str(self.user)
 
 
     
