@@ -13,6 +13,8 @@ urlpatterns = [
    path('kyc_main/', views.kyc_main, name='kyc_main'),
    path('selfie/', views.selfie, name='selfie'),
    path('selfie/', views.selfie, name='selfie'),
+   path('announcement_is_seen/<str:id>', views.announcement_is_seen, name='announcement_is_seen'),
+
 
 
 

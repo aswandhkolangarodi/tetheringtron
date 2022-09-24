@@ -1,8 +1,10 @@
+from multiprocessing.sharedctypes import Value
+from statistics import mode
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
-from .models import Kyc, TotalEarnings, Transaction,Withdrow
+from .models import Kyc, TotalEarnings, Deposit,Withdrow,Transactions
 import base64
 from django.contrib.auth import logout as django_logout
 from django.core.files.base import ContentFile
@@ -12,6 +14,10 @@ from django.contrib import messages
 from datetime import  datetime
 from django.utils import timezone
 import random
+from django.db.models import Q
+import requests
+
+
 @login_required(login_url="/member/login")
 def index(request):
     user=User.objects.get(email=request.user)
@@ -20,7 +26,7 @@ def index(request):
         return redirect('/')
 
     reward=Profile.objects.get(user=user)
-    alert = Announcement.objects.filter().order_by('-id')
+    alert = Announcement.objects.filter(user = request.user,is_seen =False).last()
     profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
@@ -28,13 +34,16 @@ def index(request):
     kyc_status = Kyc.objects.filter(user=request.user).last()
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
-    today_transactions = Transaction.objects.filter(user=request.user , date__range=(today_min, today_max)).order_by('-date')
-    all_transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-    total_deposit = 0
-    total_deposit_qs = Transaction.objects.filter(user=request.user,payment_status = "success")
+    today_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested"),user=request.user, date__range=(today_min, today_max)).order_by('-date')
+    all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested") ,user=request.user).order_by('-date')
     total_earnings = TotalEarnings.objects.filter(user = request.user).last()
+    # total deposit of a member
+    total_deposit = 0
+    total_deposit_qs = Deposit.objects.filter(user=request.user,payment_status = "success")
     for deposit in total_deposit_qs:
         total_deposit += deposit.amount
+    
+    trans = Transactions.objects.filter(mode = "deposit").last()
     context ={
         'recs_count':recs_count,
         'user':user,
@@ -155,6 +164,9 @@ def create_checkout_session(request):
             if request.method == 'POST':
                 amount = int(request.POST['amount'])*100
                 selected_currency = request.POST['currency']
+                live_tron = requests.get(url = f"https://min-api.cryptocompare.com/data/price?fsym=TRX&tsyms={selected_currency}").json()
+                tron_value = live_tron.get(selected_currency)
+                print(tron_value)
                 test_id = uuid.uuid4()
                 stripe.api_key = settings.STRIPE_SECRET_KEY
                 session = stripe.checkout.Session.create(
@@ -177,11 +189,15 @@ def create_checkout_session(request):
                 print(session)
                 if session:
                     id_generator=str(random.randint(10000000000,99999999999999999999))
-                    txn_id = "TETH"+id_generator
-                    transaction = Transaction(user = request.user, test_id = test_id, amount = amount/100,txn_id = txn_id ,payment_status = session.payment_status)
-                    transaction.save()
+                    txn_id = "TETH-D"+id_generator
+                    deposit = Deposit(user = request.user ,test_id = test_id, amount = round(amount/(100*tron_value), 3)  ,txn_id = txn_id)
+                    deposit.save()
+                    Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
+        elif kyc_check_last.status == "waiting for approval":
+            messages.warning(request , "Your KYC under Verification please wait")
+            return redirect('/member/dashboard/')
         else:
-            messages.warning(request, "Your KYC Request is Rejected")
+            messages.warning(request, "Your KYC verification is rejected")
             return redirect('/member/dashboard/')
     else:
         messages.warning(request, "Complte KYC To Activate Your Wallet")
@@ -189,36 +205,56 @@ def create_checkout_session(request):
     return redirect(session.url, code = 303)
 
 def paymentSuccess(request,test_id):
-    transaction = Transaction.objects.filter(test_id = test_id).last()
-    transaction.payment_status = "success"
-    transaction.save()
-    amount = str(transaction.amount)
-    messages.success(request, "Payment of " + amount + " successfull")
+    deposit = Deposit.objects.filter(test_id = test_id).last()
+    deposit.payment_status = "success"
+    deposit.save()
+    amount = str(deposit.amount)
+    Transactions.objects.filter(test_id = test_id).update(deposit_status = "success")
+    messages.success(request, "Payment of " + amount + "TRX successfull")
     return redirect('/member/dashboard/')
 
 def paymentCancel(request,test_id):
-    Transaction.objects.filter(test_id = test_id).update(payment_status = "cancel")
-    return render(request,"member/index.html")
+    Deposit.objects.filter(test_id = test_id).update(payment_status = "cancel")
+    Transactions.objects.filter(test_id = test_id).update(deposit_status = "cancel")
+    return redirect('/member/dashboard/')
 
 def withdraw(request):
-    kyc_check = Kyc.objects.all().last()        
-    if kyc_check.status == "approved":
-        if request.method == "POST":
-            amount = float(request.POST['amount'])
-            trx_address = request.POST['trx_address']
-            total_earnings = TotalEarnings.objects.filter(user=request.user).last()
-            if amount > total_earnings.earnings:
-                messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
-                return redirect('/member/dashboard/')
-            else:
-                Withdrow.objects.create(user = request.user, amount = amount, trx_address = trx_address)
-                total_earnings.earnings -= amount
-                total_earnings.save()
-                return redirect('/member/dashboard/')
+    kyc_check = Kyc.objects.filter(user=request.user).exists()
+    if kyc_check :
+        kyc_check_last = Kyc.objects.filter(user = request.user).last()       
+        if kyc_check_last.status == "approved":
+            if request.method == "POST":
+                amount = float(request.POST['withdraw_amount'])
+                trx_address = request.POST['trx_address']
+                earnings_exist = TotalEarnings.objects.filter(user = request.user).exists()
+                if earnings_exist:
+                    total_earnings = TotalEarnings.objects.filter(user=request.user).last()
+                    if amount > total_earnings.earnings:
+                        messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
+                        return redirect('/member/dashboard/')
+                    else:
+                        id_generator=str(random.randint(10000000000,99999999999999999999))
+                        txn_id = "TETH-W"+id_generator
+                        withdrow = Withdrow(user = request.user , amount = amount, trx_address = trx_address, txn_id=txn_id)
+                        withdrow.save()
+                        total_earnings.earnings -= amount
+                        total_earnings.save()
+                        Transactions(user = request.user ,withdrow = withdrow , mode = "withdrow",withdrowal_status ="requested" ).save()
+                        messages.success(request , "Withdrow request is send successfully.The amount will be credited with in 24 houre ")
+                        return redirect('/member/dashboard/')
+                else:
+                    messages.warning(request , "Your account has insufficient funds.Retry after checking your balance")
+        elif kyc_check_last.status == "Waiting for approvel":
+            messages.warning(request , "Your KYC under Verification please wait")
+        else:
+            messages.warning(request , "Your KYC Request is rejected")
     else:
         messages.warning(request, "Complte KYC")
     return redirect('/member/dashboard')
 
 def handler404(request, exception):
     return render(request, "member/404.html", status=404)
-    
+
+def announcement_is_seen(request,id):
+    Announcement.objects.filter(id=id).update(is_seen = True)
+    return redirect('/member/dashboard')

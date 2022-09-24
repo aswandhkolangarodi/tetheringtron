@@ -1,20 +1,21 @@
 from multiprocessing import context
 from urllib import request
 from django.shortcuts import render,redirect
-from member.models import Kyc,TotalEarnings, Withdrow,Transaction
+from member.models import Kyc,TotalEarnings, Transactions, Withdrow,Deposit
 from home.models import Contact, Profile, Reward, User
-from member.views import profile
+from member.views import profile, transactions
 from .models import *
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
+from datetime import  datetime
 
 def Trxadmin(request):
     members=Profile.objects.all().count()
     withdrow_req = Withdrow.objects.all()
-    deposit_list = Transaction.objects.all().order_by("-date")
+    deposit_list = Transactions.objects.filter(deposit_status = "success", mode = "deposit")
     total_deposit = 0
-    total_deposit_qs = Transaction.objects.filter(payment_status = "success")
+    total_deposit_qs = Deposit.objects.filter(payment_status = "success")
     for deposits in total_deposit_qs:
         total_deposit += deposits.amount
     context={
@@ -30,7 +31,9 @@ def Trxadmin(request):
 
 
 def trade_status_update(request, id):
-    Transaction.objects.filter(id=id).update(trade_status = True)
+    transaction_obj = Transactions.objects.filter(id = id).last()
+    transaction_obj.deposit.trade_status = True
+    transaction_obj.deposit.save()
     return redirect('/trxadmin/dashboard')
 
 
@@ -54,10 +57,13 @@ def coindetails(request):
 
 def announcement(request):
     announcement = Announcement.objects.filter().order_by('-id')
+    users = Profile.objects.all()
     if request.method == 'POST':
+        Announcement.objects.all().delete()
         alert = request.POST['announcement']
-        aler_obj = Announcement(Alert=alert)
-        aler_obj.save()
+        for user in users:
+            aler_obj = Announcement(Alert=alert, user = user.user)
+            aler_obj.save()
     context={
         "is_announcement":True,
         "announcement":announcement

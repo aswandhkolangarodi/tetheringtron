@@ -73,10 +73,10 @@
                 </button>
             </div>
             <div class="modal-body" >
-                <form method="post">
+                <form method="post" id="youtube_reffer">
                   {% csrf_token %}
                     <div class="mb-3">
-                        <input type="url" name="youtube" class="form-control input-default " placeholder="Video URL here">
+                        <input type="url" name="youtube" name="youtube" class="form-control input-default " placeholder="Video URL here">
                     </div>
                     <div class="text-center">
                         <button  type="submit" class="btn btn-primary">Sent</button>

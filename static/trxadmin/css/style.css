@@ -101,7 +101,9 @@
       position:relative;
   }
 }
-
+.errors{
+  color: red;
+}
 .selfi{
   position:relative;
 }

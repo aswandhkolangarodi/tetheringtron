@@ -148,18 +148,18 @@
             <div class="col-xl-12">
                 <div class="card text-center">
                     <div class="card-header">
-                        <h5 class="card-title">Add Reward Amount</h5>
+                        <h5 class="card-title">Add the reward amont you are willing to pay</h5>
                     </div>
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" id="reward">
                             {% csrf_token %}
-                            <p class="card-text">Add the reward amont you are willing to pay</p>
+                            
                             <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="add referral coins in TRX"
+                                <input  type="text" class="form-control" placeholder="add referral coins in TRX"
                                     name="reffer">
                             </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control"
+                                <input  type="text" class="form-control"
                                     placeholder="add coins for youtube referral in TRX" name="youtubereffer">
                             </div>
 

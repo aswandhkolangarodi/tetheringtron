@@ -66,7 +66,7 @@
 
 				<div class="card">
 					<div class="card-header">
-						<h4 class="card-title">Deposite History</h4>
+						<h4 class="card-title">Deposite History - Today</h4>
 					</div>
 
 
@@ -102,10 +102,7 @@
 												colspan="1"
 												aria-label="Payment Type : activate to sort column ascending"
 												style="width: 108.531px;">Amount</th>
-											<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-												colspan="1"
-												aria-label="Payment Type : activate to sort column ascending"
-												style="width: 108.531px;">Status</th>
+											
 											<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
 												colspan="1"
 												aria-label="Payment Type : activate to sort column ascending"
@@ -123,7 +120,7 @@
 										<tr role="row" class="odd">
 
 											<td class="sorting_1">{{forloop.counter}}</td>
-											<td>{{deposit_list.txn_id}}</td>
+											<td>{{deposit_list.deposit.txn_id}}</td>
 											<td>{{deposit_list.date|date:"M d, Y"}}</td>
 											<td>{{deposit_list.date.time}}</td>
 											<td>
@@ -132,31 +129,20 @@
 											</td>
 											
 											<td>
-												<h6>{{deposit_list.amount}} <strong>TRX</strong></h6>
+												<h6>{{deposit_list.deposit.amount}} <strong>TRX</strong></h6>
 											</td>
+										
 											<td>
-												{% if deposit_list.payment_status == "success" %}
-												<span class="badge badge-success">{{deposit_list.payment_status}}</span>
-
-												{% elif deposit_list.payment_status == "unpaid" %}
-												<span class="badge badge-warning">{{deposit_list.payment_status}}</span>
-												{% else %}
-												<span class="badge badge-danger">{{deposit_list.payment_status}}</span>
-
-
-												{% endif %}
-											</td>
-											<td>
-												{% if deposit_list.trade_status == 0 %}
+												{% if deposit_list.deposit.trade_status == 0 %}
 												<span class="badge light badge-warning">Pending</span>
 												
-												{% elif deposit_list.trade_status == 1 %}
+												{% elif deposit_list.deposit.trade_status == 1 %}
 												<span class="badge light badge-success">Done</span>
 												
 												{% endif %}
 											</td>
 											<td>
-												{% if deposit_list.trade_status == 0 %}
+												{% if deposit_list.deposit.trade_status == 0 %}
 												<a href="{% url 'trxadmin:trade_status_update' deposit_list.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
 												{% endif %}
 											</td>

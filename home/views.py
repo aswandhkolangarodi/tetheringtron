@@ -183,7 +183,6 @@ def login_attempt(request):
         else:
             login_user=User.objects.get(email=email)
             member_profile=Profile.objects.get(user=user)
-            print(member_profile.otp)
             messages.success(request,"OTP is send to registered Phone number")
             return redirect(f'/member/otp/{member_profile.auth_token}')
             # login(request , user)
@@ -212,6 +211,18 @@ def otp(request, token):
     else:
         message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
     return render(request,'home/otp.html',{'token':token})
+
+
+# re send otp 
+
+def resend_otp(request , token):
+    user = Profile.objects.filter(auth_token = token).last()
+    user_secret_key = pyotp.random_base32()
+    print("user_secret_key",user_secret_key)
+    user.auth_token = user_secret_key
+    user.save()
+    return redirect(f'/member/otp/{user_secret_key}')
+
 
 # forget password
 def forgetpassword(request):

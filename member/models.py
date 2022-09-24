@@ -29,11 +29,10 @@ class Kyc(models.Model):
     def __str__(self):
         return str(self.user)
 
-class Transaction(models.Model):
+class Deposit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     test_id =models.UUIDField()
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True,null=True)
     txn_id = models.CharField(max_length=300)
     payment_status = models.CharField(max_length=100)
     trade_status = models.BooleanField(default=False)
@@ -51,8 +50,8 @@ class TotalEarnings(models.Model):
 class Withdrow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     amount = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     trx_address = models.CharField(max_length=500)
+    txn_id = models.CharField(max_length=300, null=True)
     status = models.CharField(max_length=100, default="pending")
     
 
@@ -60,8 +59,17 @@ class Withdrow(models.Model):
         return str(self.user)
 
 
-    
+class Transactions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    test_id =models.UUIDField(null=True)
+    deposit = models.ForeignKey(Deposit , on_delete=models.CASCADE, blank=True,null=True)
+    withdrow = models.ForeignKey(Withdrow , on_delete=models.CASCADE, blank=True,null=True)
+    mode = models.CharField(max_length=50, null=True)
+    date = models.DateTimeField(auto_now_add=True,null=True, blank=True) 
+    deposit_status = models.CharField(max_length=100, null=True, default="unpaid")
+    withdrowal_status = models.CharField(max_length=100, null=True, default="pending")
 
-
+    def __str__(self):
+        return str(self.user)
     
   

@@ -20,5 +20,6 @@ urlpatterns = [
     path('member/forgetpassword', views.forgetpassword, name='forgetpassword'),
     path('member/signup-otp/<token>', views.signup_otp, name="signup_otp"),
     path('member/otp/<token>',views.otp, name='otp'),
+    path('member/resend_otp/<token>', views.resend_otp, name="resend_otp")
 
 ]

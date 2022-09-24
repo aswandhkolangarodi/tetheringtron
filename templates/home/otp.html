@@ -33,10 +33,10 @@
        
         
         <div class="form-group">
-          <input required type="text" class="form-control" name="otp" placeholder="OTP valid for 2 minutes">
+          <input required type="text" class="form-control" name="otp" placeholder="OTP valid for 5 minutes">
         </div>
         <div class="form-group text-right">
-          <a href="{% url 'home:signup_otp' token %}" class="btn btn-sm text-white">Resent</a>
+          <a href="{% url 'home:resend_otp' token %}" class="btn btn-sm text-white">Resent</a>
         </div>
         <button type="submit" class="btn btn-primary">Verify</button>
       </form>

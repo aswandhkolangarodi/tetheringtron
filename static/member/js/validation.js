@@ -55,3 +55,94 @@
         }
 
         });
+
+
+// deposit 
+
+$("#deposit_form").validate({
+    errorClass: 'errors',
+    rules: {
+        currency: {
+            required: true,
+        },
+        amount: {
+            required: true,
+            number : true,
+            
+
+        },
+    },
+    messages: {
+        currency: {
+            required: "Please select your currency",
+
+        },
+        amount: {
+            required: "Please enter the amount",
+
+        },
+
+    },
+
+    submitHandler: function (form) {
+        form.submit();
+    }
+
+    });
+
+
+
+
+
+// withdraw validation
+
+$("#withdraw_form").validate({
+    errorClass: 'errors',
+    rules: {
+        withdraw_amount: {
+            required: true,
+            number : true,
+        },
+        trx_address: {
+            required: true,
+            
+            
+
+        },
+    },
+    messages: {
+        withdraw_amount: {
+            required: "Please enter the amount",
+
+        },
+        trx_address: {
+            required: "Please enter your trx-address",
+
+        },
+
+    },
+
+    submitHandler: function (form) {
+        form.submit();
+    }
+
+    });
+
+    
+// youtube refferance 
+
+$("#youtube_reffer").validate({
+    errorClass: 'errors',
+    rules: {
+        youtube: {
+            required: true,
+            url : true
+        },
+        
+    },
+
+    submitHandler: function (form) {
+        form.submit();
+    }
+
+    });
