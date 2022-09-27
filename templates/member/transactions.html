@@ -1,206 +1,143 @@
 {% extends 'member/partials/base.html' %}
 {% load static %}
 {% block content %}
-        
+
 <div class="content-body">
     <div class="container-fluid">
-    
-     
-        <!-- row -->
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Recent Payments Queue</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-responsive-md">
-                                <thead>
-                                    <tr>
-                                        <th style="width:80px;"><strong>#</strong></th>
-                                        <th><strong>TRANSACTION ID</strong></th>
-                                        <th><strong>AMOUNT OF COIN</strong></th>
-                                        <th><strong>DATE</strong></th>
-                                        <!-- <th><strong>STATUS</strong></th>
-                                        <th><strong>PRICE</strong></th> -->
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>01</strong></td>
-                                        <td>dkfdsjfkjsd</td>
-                                        <td>3 trx</td>
-                                        <td>01 August 2020</td>
-                                        <!-- <td><span class="badge light badge-success">Successful</span></td>
-                                        <td>$21.56</td> -->
-                                        <!-- <td>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">
-                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Edit</a>
-                                                    <a class="dropdown-item" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                        </td> -->
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td><strong>01</strong></td>
-                                        <td>dkfdsjfkjsd</td>
-                                        <td>3 trx</td>
-                                        <td>01 August 2020</td>
-                                        <!-- <td><span class="badge light badge-success">Successful</span></td>
-                                        <td>$21.56</td> -->
-                                        <!-- <td>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">
-                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Edit</a>
-                                                    <a class="dropdown-item" href="#">Delete</a>
-                                                </div>
-                                            </div>
-                                        </td> -->
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
+        <div class="form-head d-flex align-items-center flex-wrap mb-sm-5 mb-3">
+            <h2 class="font-w600 mb-0 text-black">Transactions</h2>
         </div>
+        
+                <div class="table-responsive table-hover fs-14">
+                    <table class="table display mb-4 dataTablesCard short-one card-table text-black" id="example5">
+                        <thead>
+                            <tr height="50">
+                                <th></th>
+                                
+                                <th>Transaction ID</th>
+                                <th>Coin</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Amount</th>
+                                <th>Mode</th>
+                                <th>Status</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transactions in transactions %}
+                            <tr>
+                                <td>
+                                    {% if transactions.mode == "deposit" %}
+                                    <span>
+                                        <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="63" height="63" rx="14" fill="#747474" />
+                                        <path
+                                            d="M22.1318 30.9043L22.1318 30.9043L22.1151 23.9961C22.1151 23.9922 22.1151 23.9887 22.1152 23.9854M22.1318 30.9043L22.6152 23.9909L22.1152 23.99C22.1152 23.9769 22.1157 23.9667 22.116 23.9623L22.1161 23.9608C22.1159 23.9641 22.1154 23.973 22.1152 23.9843C22.1152 23.9847 22.1152 23.985 22.1152 23.9854M22.1318 30.9043C22.1338 31.6982 22.7788 32.3403 23.5728 32.3384C24.3667 32.3365 25.0088 31.6914 25.0069 30.8975L25.0069 30.8975L24.9986 27.4687M22.1318 30.9043L24.9986 27.4687M22.1152 23.9854C22.1176 23.1968 22.7574 22.5545 23.5488 22.5524C23.5504 22.5524 23.5522 22.5523 23.554 22.5523L23.5561 22.5523L23.5732 22.5524L30.4671 22.569L30.4658 23.069L30.4671 22.569C31.2608 22.571 31.903 23.2159 31.9011 24.01C31.8992 24.8039 31.2541 25.446 30.4602 25.4441L30.4602 25.4441L27.0315 25.4358L40.2141 38.6184C40.7755 39.1798 40.7755 40.0899 40.2141 40.6513C39.6527 41.2127 38.7426 41.2127 38.1812 40.6513L24.9986 27.4687M22.1152 23.9854C22.1152 23.9874 22.1152 23.9894 22.1152 23.9914L24.9986 27.4687M23.5541 22.5524C23.5547 22.5524 23.5554 22.5524 23.5561 22.5524L23.5541 22.5524Z"
+                                            fill="white" stroke="white" />
+                                    </svg>
+                                    {% else %}
+                                    <svg width="50" height="50" viewBox="0 0 63 63" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="63" height="63" rx="14" fill="#71B945" />
+                                    <path
+                                        d="M40.6186 32.7207L40.6186 32.7207L40.6353 39.6289C40.6354 39.6328 40.6354 39.6363 40.6353 39.6396M40.6186 32.7207L40.1353 39.6341L40.6353 39.635C40.6353 39.6481 40.6347 39.6583 40.6345 39.6627L40.6344 39.6642C40.6346 39.6609 40.6351 39.652 40.6353 39.6407C40.6353 39.6403 40.6353 39.64 40.6353 39.6396M40.6186 32.7207C40.6167 31.9268 39.9717 31.2847 39.1777 31.2866C38.3838 31.2885 37.7417 31.9336 37.7436 32.7275L37.7436 32.7275L37.7519 36.1563M40.6186 32.7207L37.7519 36.1563M40.6353 39.6396C40.6329 40.4282 39.9931 41.0705 39.2017 41.0726C39.2 41.0726 39.1983 41.0727 39.1965 41.0727L39.1944 41.0727L39.1773 41.0726L32.2834 41.056L32.2846 40.556L32.2834 41.056C31.4897 41.054 30.8474 40.4091 30.8494 39.615C30.8513 38.8211 31.4964 38.179 32.2903 38.1809L32.2903 38.1809L35.719 38.1892L22.5364 25.0066C21.975 24.4452 21.975 23.5351 22.5364 22.9737C23.0978 22.4123 24.0079 22.4123 24.5693 22.9737L37.7519 36.1563M40.6353 39.6396C40.6353 39.6376 40.6353 39.6356 40.6353 39.6336L37.7519 36.1563M39.1964 41.0726C39.1957 41.0726 39.1951 41.0726 39.1944 41.0726L39.1964 41.0726Z"
+                                        fill="white" stroke="white" />
+                                </svg>
+                                        
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                
+                                <td>
+                                    {% if transactions.mode == "deposit" %}
+                                   {{ transactions.deposit.txn_id }}
+                                    {% else %}
+                                    {{ transactions.withdrow.txn_id }}
+                                    {% endif %}
+                                </td>
+                                <td class="wspace-no">
+                                    <?xml version="1.0" encoding="utf-8"?>
+                                    <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                                    <svg class="me-1" width="24" height="24" version="1.1"
+                                        id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                        viewBox="0 0 36 36" style="enable-background:new 0 0 36 36;"
+                                        xml:space="preserve">
+                                        <style type="text/css">
+                                            .st0 {
+                                                fill: #FFFFFF;
+                                            }
+
+                                            .st1 {
+                                                fill: #b21212;
+                                            }
+                                        </style>
+                                        <g>
+                                            <path class="st0"
+                                                d="M18,36L18,36C8.1,36,0,27.9,0,18v0C0,8.1,8.1,0,18,0h0c9.9,0,18,8.1,18,18v0C36,27.9,27.9,36,18,36z" />
+                                            <g>
+                                                <g>
+                                                    <path class="st1"
+                                                        d="M28.2,9.3L5.4,5l12.4,30.8l16.9-20.8L28.2,9.3z M31.8,14.7l-10.1,1.7l6.2-5.2L31.8,14.7z M26.3,10.4
+                                                    l-6.5,5.5L9.4,7.3L26.3,10.4z M17.5,31.1L8.6,8.7l10.5,8.6L17.5,31.1z M19,31.7l1.7-13.6l11-1.9L19,31.7z" />
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+
+                                    <span class="font-w600 text-black">Tron</span>
+                                </td>
+                                <td>
+                                    {{ transactions.date.date}}
+                                </td>
+                                <td>
+                                    {{ transactions.date.time}}
+                                </td>
+
+                                <td>
+                                    {% if transactions.mode == "deposit" %}
+                                   {{ transactions.deposit.amount }}
+                                    {% else %}
+                                    {{ transactions.withdrow.amount }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if transactions.mode == "deposit" %}
+                                    <span class="text-black font-w600">
+                                        <span class="badge badge-info text-capitalize">Deposit</span>
+                                    </span>
+
+                                    {% else %}
+                                    <span class="text-black font-w600">
+                                        <span class="badge badge-success text-capitalize">Withdraw</span>
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if transactions.mode == "deposit" %}
+                                    <a href="javascript:void(0);" class="btn-link text-success float-right">Success</a>
+
+                                    {% else %}
+                                    {% if transactions.withdrow.status == "pending" %}
+                                    <a href="javascript:void(0);" class="btn-link text-danger float-right">Pending</a>
+                                    {% else %}
+                                    <a href="javascript:void(0);" class="btn-link text-success float-right">Success</a>
+                                    {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            
+                            {% endfor %}
+                           
+                            
+                        </tbody>
+                    </table>
+                </div>
+        
     </div>
 </div>
-<script>
-    (function($) {
-    "use strict"
-    //example 1
-    var table = $('#example').DataTable({
-        createdRow: function ( row, data, index ) {
-           $(row).addClass('selected')
-        } ,
-		language: {
-			paginate: {
-			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-			}
-		}
-    });
 
-    table.on('click', 'tbody tr', function() {
-    var $row = table.row(this).nodes().to$();
-    var hasClass = $row.hasClass('selected');
-    if (hasClass) {
-        $row.removeClass('selected')
-    } else {
-        $row.addClass('selected')
-    }
-    })
-
-    table.rows().every(function() {
-    this.nodes().to$().removeClass('selected')
-    });
-
-
-
-    //example 2
-    var table2 = $('#example2').DataTable( {
-        createdRow: function ( row, data, index ) {
-            $(row).addClass('selected')
-        },
-
-        "scrollY":        "42vh",
-        "scrollCollapse": true,
-        "paging":         false
-    });
-
-
-    table2.on('click', 'tbody tr', function() {
-        var $row = table2.row(this).nodes().to$();
-        var hasClass = $row.hasClass('selected');
-        if (hasClass) {
-            $row.removeClass('selected')
-        } else {
-            $row.addClass('selected')
-        }
-    })
-
-    table2.rows().every(function() {
-        this.nodes().to$().removeClass('selected')
-    });
-
-	 //example 5
-	var table = $('#example5').DataTable({
-		searching: false,
-		paging:true,
-		select: false,
-		//info: false,
-		lengthChange:false ,
-		language: {
-			paginate: {
-			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-      }
-		}
-
-	});
-
-	//example 6
-	var table = $('#example6').DataTable({
-		searching: false,
-		paging:true,
-		select: false,
-		//info: false,
-		lengthChange:false,
-		language: {
-			paginate: {
-			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-			}
-		}
-
-	});
-
-	//ListDatatableView
-	var table = $('#ListDatatableView').DataTable({
-		searching: false,
-		paging:true,
-		select: false,
-		//info: false,
-		lengthChange:false ,
-		language: {
-			paginate: {
-			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-			}
-		}
-
-	});
-
-
-
-	//
-	var table = $('#example3, #example4').DataTable({
-		language: {
-			paginate: {
-			  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-			  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-			}
-		}
-	});
-	$('#example tbody').on('click', 'tr', function () {
-		var data = table.row( this ).data();
-	});
-
-	jQuery('.dataTables_wrapper select').selectpicker();
-
-})(jQuery);
-</script>
 {% endblock %}

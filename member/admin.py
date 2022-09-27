@@ -6,6 +6,9 @@ from member.models import *
 
 admin.site.register(Kyc)
 admin.site.register(Deposit)
-admin.site.register(TotalEarnings)
+admin.site.register(RewardEarnings)
 admin.site.register(Withdrow)
 admin.site.register(Transactions)
+admin.site.register(WeeklyMemberEarnings)
+admin.site.register(MemberTotalEarnings)
+admin.site.register(ReffferalEarnings)

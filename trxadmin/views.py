@@ -1,7 +1,7 @@
 from multiprocessing import context
 from urllib import request
 from django.shortcuts import render,redirect
-from member.models import Kyc,TotalEarnings, Transactions, Withdrow,Deposit
+from member.models import Kyc,RewardEarnings,ReffferalEarnings, Transactions, Withdrow,Deposit,WeeklyMemberEarnings,MemberTotalEarnings
 from home.models import Contact, Profile, Reward, User
 from member.views import profile, transactions
 from .models import *
@@ -78,6 +78,7 @@ def singlenotification(request):
 
 def reward(request):
     youtube = Reward.objects.all()
+    refferals = Profile.objects.exclude(recommended_by__isnull=True).filter(is_verified = True)
     if request.method == "POST":
         youtube = request.POST['youtubereffer']
         reffer = request.POST['reffer']
@@ -85,20 +86,40 @@ def reward(request):
         reffer_obj.save()
 
     context = {
-        "youtube":youtube
+        "youtube":youtube,
+        'refferals':refferals
     }
     return render(request, 'trxadmin/reward.html',context)
 
+def refferal_reward_given(request, id):
+    recommented_user_profile = Profile.objects.get(id=id)
+    recommentedby_user = recommented_user_profile.recommended_by
+    print("recommentedby_user",recommentedby_user)
+    reward_price_obj = AddReward.objects.all().last()
+    print(reward_price_obj.refer_reward)
+    Profile.objects.filter(id = id).update(recommended_by_status = True)
+    ReffferalEarnings.objects.create(user = recommentedby_user, earnings = reward_price_obj.refer_reward)
+    total_earnings_exist = MemberTotalEarnings.objects.filter(user = recommentedby_user).exists()
+    if total_earnings_exist:
+        total_earnings_obj = MemberTotalEarnings.objects.get(user = recommentedby_user)
+        total_earnings_obj.earnings += reward_price_obj.refer_reward
+        total_earnings_obj.save()
+    else:
+        MemberTotalEarnings.objects.create(user = recommentedby_user, earnings = reward_price_obj.refer_reward)
+    return redirect('/trxadmin/reward')
+
 def reward_given(request, id):
     user = Reward.objects.get(id = id)
-    total_earnings_obj = TotalEarnings.objects.filter(user = user.user).last()
-    if total_earnings_obj is None:
-        TotalEarnings.objects.create(user = user.user, earnings = 0)
-    total_earnings= TotalEarnings.objects.filter(user = user.user).last()
     reward_price_obj = AddReward.objects.all().last()
-    total_earnings.earnings += float(reward_price_obj.youtube_reward)
-    total_earnings.save()
+    RewardEarnings.objects.create(user = user.user, earnings = reward_price_obj.youtube_reward)
     Reward.objects.filter(id=id).update(status="given")
+    total_earnings_exist = MemberTotalEarnings.objects.filter(user = user.user).exists()
+    if total_earnings_exist:
+        total_earnings_obj = MemberTotalEarnings.objects.get(user = user.user)
+        total_earnings_obj.earnings += reward_price_obj.youtube_reward
+        total_earnings_obj.save()
+    else:
+        MemberTotalEarnings.objects.create(user = user.user, earnings = reward_price_obj.youtube_reward)
     return redirect('/trxadmin/reward')
 
 def reward_reject(request, id):
@@ -163,6 +184,26 @@ def handler404(request, exception):
     return render(request, "member/404.html", status=404)
 
 def earning(request):
+    total_deposit = 0
+    total_deposit_qs = Deposit.objects.filter(payment_status = "success")
+    for deposit in total_deposit_qs:
+        total_deposit += deposit.amount
+    if request.method == "POST":
+        earnings_amount = float(request.POST['earnings_amount'])
+        WeeklyEarnings.objects.create(earnings_amount = earnings_amount)
+        for percentage in total_deposit_qs:
+            member_deposits = Deposit.objects.filter(user = percentage.user)
+            for member_deposit_percentage in member_deposits:
+                percentage = (member_deposit_percentage.amount*100) / total_deposit
+                print(member_deposit_percentage.amount," ", percentage, " ", round(earnings_amount * percentage/100, 3))
+                WeeklyMemberEarnings.objects.create(user = member_deposit_percentage.user , amount = round(earnings_amount * percentage/100, 3))
+                total_earnings_exist = MemberTotalEarnings.objects.filter(user = member_deposit_percentage.user).exists()
+                if total_earnings_exist:
+                    total_earnings_obj = MemberTotalEarnings.objects.get(user = member_deposit_percentage.user)
+                    total_earnings_obj.earnings += round(earnings_amount * percentage/100, 3)
+                    total_earnings_obj.save()
+                else:
+                    MemberTotalEarnings.objects.create(user = member_deposit_percentage.user, earnings = round(earnings_amount * percentage/100, 3))
     context={
         "is_earning":True,
     }

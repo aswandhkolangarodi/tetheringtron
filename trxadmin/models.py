@@ -9,6 +9,10 @@ class Announcement(models.Model):
     is_seen = models.BooleanField(default=False)
 
 class AddReward(models.Model):
-    refer_reward =models.CharField(max_length=100)
-    youtube_reward = models.CharField(max_length=100)
+    refer_reward =models.FloatField()
+    youtube_reward = models.FloatField()
     
+
+class WeeklyEarnings(models.Model):
+    earnings_amount = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)

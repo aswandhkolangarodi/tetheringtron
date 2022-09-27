@@ -36,14 +36,22 @@ class Deposit(models.Model):
     txn_id = models.CharField(max_length=300)
     payment_status = models.CharField(max_length=100)
     trade_status = models.BooleanField(default=False)
-
+    total_deposit = models.FloatField(default=0)
+    
     def __str__(self):
         return str(self.user)
 
-class TotalEarnings(models.Model):
+class RewardEarnings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     earnings = models.FloatField()
     
+    def __str__(self):
+        return str(self.user)
+
+class ReffferalEarnings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    earnings = models.FloatField() 
+
     def __str__(self):
         return str(self.user)
 
@@ -52,7 +60,7 @@ class Withdrow(models.Model):
     amount = models.FloatField()
     trx_address = models.CharField(max_length=500)
     txn_id = models.CharField(max_length=300, null=True)
-    status = models.CharField(max_length=100, default="pending")
+    status = models.CharField(max_length=100, default="pending")    
     
 
     def __str__(self):
@@ -72,4 +80,17 @@ class Transactions(models.Model):
     def __str__(self):
         return str(self.user)
     
-  
+class WeeklyMemberEarnings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    amount = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user)
+
+class MemberTotalEarnings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    earnings = models.FloatField()
+
+    def __str__(self):
+        return str(self.user)

@@ -4,3 +4,4 @@ from trxadmin.models import *
 
 admin.site.register(Announcement)
 admin.site.register(AddReward)
+admin.site.register(WeeklyEarnings)

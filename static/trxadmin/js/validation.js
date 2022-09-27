@@ -73,14 +73,16 @@ $("#main_announcement").validate({
 $("#Earnings").validate({
     errorClass: 'errors',
     rules: {
-        Earnings: {
+        earnings_amount: {
             required: true,
+            number:true,
         },
 
     },
     messages: {
-        Earnings: {
+        earnings_amount: {
             required: "Please add Earnings",
+            
         },
     },
     submitHandler: function (form) {

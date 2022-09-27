@@ -12,9 +12,9 @@
                 <div class="card-body">
                     <div class="basic-form">
                         <form method="post" id="Earnings">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="ZvCTPiXNhD9fh1QgMicqDvtsjkPFQouI1ZQa1aj1ZZBizHZ0vdpzfBjHA97TQmnY">
+                            {% csrf_token %}
                             <div class="mb-3">
-                                <textarea class="form-control" rows="4" id="comment" name="Earnings"></textarea>
+                                <input class="form-control"  id="comment" name="earnings_amount">
                             </div>
                             <button type="submit" class="btn  btn-square btn-danger">Submit</button>
                         </form>
