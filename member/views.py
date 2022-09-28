@@ -16,7 +16,7 @@ from django.utils import timezone
 import random
 from django.db.models import Q
 import requests
-
+from .helpers import send_deposit_mail_to_admin
 
 @login_required(login_url="/member/login")
 def index(request):
@@ -190,11 +190,10 @@ def create_checkout_session(request):
                     success_url = f'http://127.0.0.1:8000/member/success/{test_id}',
                     cancel_url = f'http://127.0.0.1:8000/member/cancel/{test_id}',
                     )
-                    print(session)
                     if session:
                         id_generator=str(random.randint(100000000000000,999999999999999))
                         txn_id = "TETH-D"+id_generator
-                        last_deposit = Deposit.objects.filter(payment_status = "success").last()
+                        last_deposit = Deposit.objects.filter(user = request.user, payment_status = "success").last()
                         if last_deposit is None:
                             deposit = Deposit(user = request.user ,test_id = test_id, amount = round(amount/(100*tron_value), 3)  ,txn_id = txn_id,total_deposit = round(amount/(100*tron_value), 3))
                             deposit.save()
@@ -224,6 +223,7 @@ def paymentSuccess(request,test_id):
     amount = str(deposit.amount)
     Transactions.objects.filter(test_id = test_id).update(deposit_status = "success")
     messages.success(request, "Payment of " + amount + "TRX successfull")
+    send_deposit_mail_to_admin(test_id)
     return redirect('/member/dashboard/')
 
 def paymentCancel(request,test_id):

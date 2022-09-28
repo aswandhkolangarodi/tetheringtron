@@ -32,7 +32,7 @@ def signup(request):
         check=request.POST.get('ckeck')
 
         if check is None:
-            messages.success(request,'check Terms And condition')
+            messages.success(request,'You must check Terms and conditions')
             return redirect('/signup')
 
         try:

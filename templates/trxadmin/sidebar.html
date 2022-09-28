@@ -53,6 +53,13 @@
            
 
         </li>
+        <li  {% if is_earning %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:earning' %}" aria-expanded="false">
+            <i class="flaticon-049-copy"></i>
+            <span class="nav-text">Earnings</span>
+        </a>
+        
+        
+        </li> 
             <li  {% if is_announcement %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:announcement' %}" aria-expanded="false">
                 <i class="flaticon-061-puzzle"></i>
                 <span class="nav-text">Create Announcement</span>
@@ -79,13 +86,7 @@
    
 
 </li>     
-<li  {% if is_earning %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:earning' %}" aria-expanded="false">
-    <i class="flaticon-049-copy"></i>
-    <span class="nav-text">Earnings</span>
-</a>
-
-
-</li>                 
+                
                 </ul>                  
                       
           

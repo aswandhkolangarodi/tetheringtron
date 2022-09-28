@@ -44,6 +44,9 @@ $('#signup').validate({
         confirm_password: {
 
             equalTo: "#password_reg",
+        },
+        ckeck :{
+            required: true,
         }
     },
     messages: {
@@ -69,6 +72,9 @@ $('#signup').validate({
         },
         confirm_password: {
             equalTo: "Password must be same"
+        },
+        ckeck :{
+            required:"You must check Terms and conditions"
         }
     },
     submitHandler: function (form) {
