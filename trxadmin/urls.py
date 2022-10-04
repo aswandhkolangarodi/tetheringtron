@@ -23,7 +23,7 @@ urlpatterns = [
     path('contact', views.contact, name='contact'),
     path('reward-given/<str:id>', views.reward_given, name='reward_given'),
     path('refferal-reward-given/<str:id>',views.refferal_reward_given, name="refferal_reward_given"),
-    path('reward-reject/<str:id>', views.reward_reject, name='reward_reject'),
+    path('reward-reject/', views.reward_reject, name='reward_reject'),
     path('earning', views.earning, name='earning'),
     
 ]

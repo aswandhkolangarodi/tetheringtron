@@ -28,7 +28,7 @@
                                                 colspan="1" aria-sort="ascending"
                                                 aria-label="Roll No: activate to sort column descending"
                                                 style="width: 56.5469px;">Member:</th>
-                                            
+
                                             <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                                 colspan="1"
                                                 aria-label="Invoice number: activate to sort column ascending"
@@ -47,32 +47,35 @@
                                         {% for youtube in youtube %}
                                         <tr role="row" class="odd">
                                             <td class="sorting_1">{{youtube.user.first_name}}</td>
-                                           
+
                                             <td>
-                                                <a href="{{youtube.youtube}}" class="btn btn-info"
-                                                    target="_blank">video</a>
-                                                    {{youtube.date}}
-                                                </td>
-                                           
+                                                <a href="{{youtube.youtube}}" class="btn btn-youtube"
+                                                    target="_blank"><span class=""><i class="fab fa-youtube"></i></span></a>
+                                                {{youtube.date}}
+                                            </td>
+
 
                                             <th>
-                                            {% if youtube.status == "given" %}
-                                            <span class="badge badge-success">{{youtube.status}}</span>
-
-                                            {% elif youtube.status == "waiting for approval" %}
-                                            <span class="badge badge-warning">{{youtube.status}}</span>
-                                            {% else %}
-                                            <span class="badge badge-danger">{{youtube.status}}</span>
-
-
-                                           {% endif %}
-                                            </th>
-                                            <td>
-                                                {% if youtube.status == "waiting for approval" %}
-                                                <a href="{% url 'trxadmin:reward_reject' youtube.id %}" class="btn btn-danger"><i class="fas fa-times"></i></a>
-                                                <a href="{% url 'trxadmin:reward_given' youtube.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
-                                                {% endif %}
-                                            </td>
+                                                {% if youtube.status == "given" %}
+                                                <span class="badge badge-success">{{youtube.status}}</span>
+    
+                                                {% elif youtube.status == "waiting for approval" %}
+                                                <span class="badge badge-warning">{{youtube.status}}</span>
+                                                {% else %}
+                                                <span class="badge badge-danger">{{youtube.status}}</span>
+    
+    
+                                               {% endif %}
+                                                </th>
+                                                <td>
+                                                    {% if youtube.status == "waiting for approval" %}
+                                                    {% comment %}
+                                                    <!-- <a href="{% url 'trxadmin:reward_reject' youtube.id %}"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#withdraw"><i class="fas fa-times"></i></a> -->
+                                                    {% endcomment %}
+                                                    <a  class="btn btn-danger" onclick="youtube_reward_reject('{{youtube.id}}')"><i class="fas fa-times"></i></a>
+                                                    <a href="{% url 'trxadmin:reward_given' youtube.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
+                                                    {% endif %}
+                                                </td>
                                         </tr>
 
                                         {% endfor %}
@@ -118,7 +121,7 @@
                                     <tbody>
                                         {% for refferals in refferals %}
                                         <tr role="row" class="odd">
-                                            
+
                                             <td>
                                                 <h6>{{refferals.recommended_by.first_name}}</h6>
                                                 <span>{{refferals.recommended_by.email}}</span>
@@ -134,12 +137,13 @@
                                                 <span class="badge light badge-success">Given</span>
                                                 {% endif %}
                                             </td>
-                                            
+
                                             <td>
                                                 {% if refferals.recommended_by_status == 0 %}
                                                 <div class="d-flex action-button">
 
-                                                    <a href="{% url 'trxadmin:refferal_reward_given' refferals.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
+                                                    <a href="{% url 'trxadmin:refferal_reward_given' refferals.id %}"
+                                                        class="btn btn-success"><i class="fa fa-check"></i></a>
 
                                                 </div>
                                                 {% endif %}
@@ -164,13 +168,13 @@
                     <div class="card-body">
                         <form method="post" id="reward">
                             {% csrf_token %}
-                            
+
                             <div class="mb-3">
-                                <input  type="text" class="form-control" placeholder="add referral coins in TRX"
+                                <input type="text" class="form-control" placeholder="add referral coins in TRX"
                                     name="reffer">
                             </div>
                             <div class="mb-3">
-                                <input  type="text" class="form-control"
+                                <input type="text" class="form-control"
                                     placeholder="add coins for youtube referral in TRX" name="youtubereffer">
                             </div>
 
@@ -187,4 +191,79 @@
     </div>
 </div>
 
+<!-- Modal withdraw-->
+<div class="modal fade" id="youtube_reward_reject">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Withdraw</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="">
+                    <div class="basic-form">
+                        <form >
+                            <div class="mb-3">
+                                <input type="text" class="form-control input-default " id="reson" placeholder="Enter reson" required>
+                                <input type="hidden" id="req_id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" id="submit_reson">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function youtube_reward_reject(id){
+        $('#youtube_reward_reject').modal('show');
+        $('#req_id').val(id)
+        $('#submit_reson').click(function(){
+            reson = $('#reson').val()
+            req_id = $('#req_id').val()
+            
+            $.ajax({
+            url: "{% url 'trxadmin:reward_reject' %}",
+            type: 'POST',
+            data: {
+                'id': req_id,
+                'reson':reson
+
+            },
+           
+        })
+        })
+       
+    }
+
+    function youtube_reward_give(id) {
+        $.ajax({
+            url: '/trxadmin/reward-given/',
+            type: 'GET',
+            data: {
+                'id': id
+            },
+            success: function (response) {
+                console.log(response)
+                alert(response.status)
+                if (response.status == "success"){
+                    $('#youtube_status').addClass('badge-success').val('given')
+                    alert("reward given successfully")
+
+                }
+                else{
+                    $('#youtube_status').val('pending')
+                }
+            }
+        })
+    }
+</script>
 {% endblock %}

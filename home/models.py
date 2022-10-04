@@ -53,6 +53,7 @@ class Profile(models.Model):
     code = models.CharField(max_length=12,blank=True)
     recommended_by = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True,related_name='ref_by')
     recommended_by_status = models.BooleanField(default=False)
+    first_deposit_status = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now=True,null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     auth_token = models.CharField(max_length=100 )
@@ -79,10 +80,12 @@ class Profile(models.Model):
         super().save(*args,**kwargs)
 
 class Reward(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     youtube = models.TextField(max_length=1000)
     status  = models.CharField(max_length=100, default="waiting for approval")
+    reject_reson = models.CharField(max_length = 5000,blank=True,null=True)
     date = models.DateField(auto_now_add=True,null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    
 
 
 class Contact(models.Model):

@@ -18,3 +18,4 @@ def send_deposit_mail_to_admin(test_id):
     email_obj = EmailMultiAlternatives(subject, text_content, email_from, recipient_list)
     email_obj.attach_alternative(html_content, "text/html")
     email_obj.send()
+

@@ -4,7 +4,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
-from .models import Kyc, MemberTotalEarnings, RewardEarnings, Deposit, WeeklyMemberEarnings,Withdrow,Transactions
+from .models import Kyc, MemberTotalEarnings, RewardEarnings, Deposit, WeeklyMemberEarnings,Withdrow,Transactions,ReffferalEarnings
 import base64
 from django.contrib.auth import logout as django_logout
 from django.core.files.base import ContentFile
@@ -17,6 +17,9 @@ import random
 from django.db.models import Q
 import requests
 from .helpers import send_deposit_mail_to_admin
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required(login_url="/member/login")
 def index(request):
@@ -35,14 +38,20 @@ def index(request):
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
     today_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested"),user=request.user, date__range=(today_min, today_max)).order_by('-date')
-    all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested") ,user=request.user).order_by('-date')
+    # all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested") ,user=request.user).order_by('-date')
     # total earnings 
     total_earnings = MemberTotalEarnings.objects.filter(user = request.user).last()
     # total deposit of a member
+    member_refferal_earnings = 0
+    reffferal = ReffferalEarnings.objects.filter(user = request.user)
+    for refferal_earnings in reffferal:
+        member_refferal_earnings += refferal_earnings.earnings
+
+    print('member_refferal_earnings',member_refferal_earnings)
     total_deposit = 0
     total_deposit_qs = Deposit.objects.filter(user=request.user,payment_status = "success")
     for deposit in total_deposit_qs:
-        total_deposit += deposit.amount
+        total_deposit += round(deposit.amount_in_trx, 3)
     
     trans = Transactions.objects.filter(mode = "deposit").last()
     context ={
@@ -54,9 +63,10 @@ def index(request):
         'kyc_check':kyc_check,
         'kyc_status':kyc_status,
         'transactions':today_transactions,
-        'all_transactions':all_transactions,
+        # 'all_transactions':all_transactions,
         'total_deposit':total_deposit,
         'total_earnings':total_earnings,
+        'member_refferal_earnings':member_refferal_earnings,
         'is_index':True
     }
     return render(request, 'member/index.html', context)
@@ -65,7 +75,6 @@ def index(request):
 def profile(request):
     if request.method == 'POST':
         img = request.FILES['user_img']
-        print(img)
         profile = User.objects.get(email = request.user)
         profile.user_img = img
         profile.save()
@@ -167,19 +176,30 @@ def create_checkout_session(request):
             if request.method == 'POST':
                 amount = int(request.POST['amount'])*100
                 selected_currency = request.POST['currency']
-                live_tron = requests.get(url = f"https://min-api.cryptocompare.com/data/price?fsym=TRX&tsyms={selected_currency}").json()
-                tron_value = live_tron.get(selected_currency)
-                print('tron_value',amount/tron_value)
-                if amount/(tron_value*100) >= 1000:
+                live_tron_price_in_usd = requests.get(url = "https://min-api.cryptocompare.com/data/price?fsym=TRX&tsyms=USD").json()
+                tron_value = live_tron_price_in_usd.get('USD')
+                usd_price = requests.get(url = f"https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms={selected_currency}").json()
+                usd_value = usd_price.get(selected_currency)
+                member_deposit_amount_in_usd = round((amount/usd_value)/100 , 3)
+                print('usd_value_in',selected_currency ,' ',usd_value)
+                print('member_deposit_amount_in_usd', member_deposit_amount_in_usd, 'usd')
+                
+                print('tron_value_in_usd', tron_value)
+                member_deposit_amount_in_trx = round(member_deposit_amount_in_usd/tron_value , 3)
+                print('member_deposit_amount_in_trx', member_deposit_amount_in_trx , 'TRX')
+                if member_deposit_amount_in_trx >= 1000:
                     test_id = uuid.uuid4()
-                    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+                    
                     session = stripe.checkout.Session.create(
                     payment_method_types = ['card'],
                     line_items = [{
                         'price_data':{
                             'currency': selected_currency,
                             'product_data':{
-                                'name':'TRON'
+                                'name':'TRON',
+                                'description':str(member_deposit_amount_in_trx)+" TRX , " +str(member_deposit_amount_in_usd)+ " USD",
+                                
                             },
                             'unit_amount': amount,
 
@@ -187,23 +207,24 @@ def create_checkout_session(request):
                         'quantity':1,
                     }],
                     mode = 'payment',
-                    success_url = f'http://127.0.0.1:8000/member/success/{test_id}',
-                    cancel_url = f'http://127.0.0.1:8000/member/cancel/{test_id}',
+                    success_url = f'http://192.168.1.110:8000/member/success/{test_id}',
+                    cancel_url = f'http://192.168.1.110:8000/member/cancel/{test_id}',
                     )
                     if session:
                         id_generator=str(random.randint(100000000000000,999999999999999))
                         txn_id = "TETH-D"+id_generator
                         last_deposit = Deposit.objects.filter(user = request.user, payment_status = "success").last()
                         if last_deposit is None:
-                            deposit = Deposit(user = request.user ,test_id = test_id, amount = round(amount/(100*tron_value), 3)  ,txn_id = txn_id,total_deposit = round(amount/(100*tron_value), 3))
+                            deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx  ,txn_id = txn_id,amount_in_usd = member_deposit_amount_in_usd ,total_deposit = member_deposit_amount_in_trx)
                             deposit.save()
+                            Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
                         else:
-                            deposit = Deposit(user = request.user ,test_id = test_id, amount = round(amount/(100*tron_value), 3)  ,txn_id = txn_id)
+                            deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx ,amount_in_usd = member_deposit_amount_in_usd,txn_id = txn_id)
                             deposit.save()
-                            Deposit.objects.filter(txn_id = txn_id).update(total_deposit = last_deposit.total_deposit + round(amount/(100*tron_value), 3))
+                            Deposit.objects.filter(txn_id = txn_id).update(total_deposit = round(last_deposit.total_deposit + member_deposit_amount_in_trx, 3))
                             Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
                 else:
-                    messages.warning(request , "You try to deposit " + str(round(amount/(tron_value*100),3))  + " TRX. Minimum deposit amount is 1000 TRX")
+                    messages.warning(request , "You try to deposit " + str(member_deposit_amount_in_trx)  + " TRX. Minimum deposit amount is 1000 TRX")
                     return redirect('/member/dashboard/')
         elif kyc_check_last.status == "waiting for approval":
             messages.warning(request , "Your KYC under Verification please wait")
@@ -220,7 +241,8 @@ def paymentSuccess(request,test_id):
     deposit = Deposit.objects.filter(test_id = test_id).last()
     deposit.payment_status = "success"
     deposit.save()
-    amount = str(deposit.amount)
+    amount = str(deposit.amount_in_trx)
+    Profile.objects.filter(user = request.user).update(first_deposit_status = True)
     Transactions.objects.filter(test_id = test_id).update(deposit_status = "success")
     messages.success(request, "Payment of " + amount + "TRX successfull")
     send_deposit_mail_to_admin(test_id)
@@ -246,7 +268,7 @@ def withdraw(request):
                     messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
                     return redirect('/member/dashboard/')
                 else:
-                    id_generator=str(random.randint(10000000000,99999999999999999999))
+                    id_generator=str(random.randint(100000000000000,999999999999999))
                     txn_id = "TETH-W"+id_generator
                     withdrow = Withdrow(user = request.user , amount = amount, trx_address = trx_address, txn_id=txn_id)
                     withdrow.save()

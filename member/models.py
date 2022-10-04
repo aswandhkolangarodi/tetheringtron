@@ -32,7 +32,8 @@ class Kyc(models.Model):
 class Deposit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     test_id =models.UUIDField()
-    amount = models.FloatField()
+    amount_in_trx = models.FloatField()
+    amount_in_usd = models.FloatField()
     txn_id = models.CharField(max_length=300)
     payment_status = models.CharField(max_length=100)
     trade_status = models.BooleanField(default=False)

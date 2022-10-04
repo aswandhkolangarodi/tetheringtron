@@ -9,18 +9,20 @@ from django.contrib.auth import logout as django_logout
 from django.utils import timezone
 from datetime import  datetime
 from django.contrib.auth.decorators import user_passes_test
-from .helpers import reffer_reward_email_to_member, weekly_reward_email_to_member, youtube_reward_email_to_member
+from .helpers import reffer_reward_email_to_member, weekly_reward_email_to_member, youtube_reward_email_to_member,youtube_reward_reject_email_to_member
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import requests
 
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
 def Trxadmin(request):
-    print('...................', request.user)
     members=Profile.objects.all().count()
     withdrow_req = Withdrow.objects.all()
     deposit_list = Transactions.objects.filter(deposit_status = "success", mode = "deposit")
     total_deposit = 0
     total_deposit_qs = Deposit.objects.filter(payment_status = "success")
     for deposits in total_deposit_qs:
-        total_deposit += deposits.amount
+        total_deposit += deposits.amount_in_trx
     context={
         "members":members,
         "total_deposit":total_deposit,
@@ -87,7 +89,8 @@ def singlenotification(request):
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
 def reward(request):
     youtube = Reward.objects.all()
-    refferals = Profile.objects.exclude(recommended_by__isnull=True).filter(is_verified = True)
+    refferals = Profile.objects.exclude(recommended_by__isnull=True).filter(is_verified = True, first_deposit_status =True)  
+    print(refferals)
     if request.method == "POST":
         youtube = request.POST['youtubereffer']
         reffer = request.POST['reffer']
@@ -119,6 +122,7 @@ def refferal_reward_given(request, id):
         MemberTotalEarnings.objects.create(user = recommentedby_user, earnings = reward_price_obj.refer_reward)
     return redirect('/trxadmin/reward')
 
+
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
 def reward_given(request, id):
     user = Reward.objects.get(id = id)
@@ -135,9 +139,32 @@ def reward_given(request, id):
         MemberTotalEarnings.objects.create(user = user.user, earnings = reward_price_obj.youtube_reward)
     return redirect('/trxadmin/reward')
 
+
+# def reward_given(request):
+#     id = request.GET['id']
+#     user = Reward.objects.get(id = id)
+#     reward_price_obj = AddReward.objects.all().last()
+#     RewardEarnings.objects.create(user = user.user, earnings = reward_price_obj.youtube_reward)
+#     Reward.objects.filter(id=id).update(status="given")
+#     # youtube_reward_email_to_member(user.user, reward_price_obj.youtube_reward)
+#     total_earnings_exist = MemberTotalEarnings.objects.filter(user = user.user).exists()
+#     if total_earnings_exist:
+#         total_earnings_obj = MemberTotalEarnings.objects.get(user = user.user)
+#         total_earnings_obj.earnings += reward_price_obj.youtube_reward
+#         total_earnings_obj.save()
+#     else:
+#         MemberTotalEarnings.objects.create(user = user.user, earnings = reward_price_obj.youtube_reward)
+#     return JsonResponse({'status':'success'})
+
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
-def reward_reject(request, id):
-    Reward.objects.filter(id=id).update(status="rejected")
+@csrf_exempt
+def reward_reject(request):
+    id = request.POST['id']
+    reson = request.POST['reson']
+    print(id, reson)
+    Reward.objects.filter(id=id).update(status="rejected", reject_reson = reson)
+    reward_obj = Reward.objects.get(id=id)
+    youtube_reward_reject_email_to_member(reward_obj.user, reson , reward_obj.youtube)
     return redirect('/trxadmin/reward')
 
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
@@ -208,32 +235,38 @@ def handler404(request, exception):
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
 def earning(request):
     total_deposit = 0
-    weekly_earnings_obj = WeeklyEarnings.objects.all()
+    weekly_earnings_obj = WeeklyEarnings.objects.all().order_by('-id')
     total_deposit_qs = Deposit.objects.filter(payment_status = "success")
     for deposit in total_deposit_qs:
-        total_deposit += deposit.amount
+        total_deposit += deposit.amount_in_trx
     deposit_members = []
     for deposit_member in total_deposit_qs:
         deposit_members.append(deposit_member.user)
     duplicated_deposit_members = [*set(deposit_members)]
     if request.method == "POST":
-        earnings_amount = float(request.POST['earnings_amount'])
-        WeeklyEarnings.objects.create(earnings_amount = earnings_amount)
+        earnings_amount_in_usd = float(request.POST['earnings_amount'])
+        WeeklyEarnings.objects.create(earnings_amount = earnings_amount_in_usd)
+        live_tron_price_in_usd = requests.get(url = "https://min-api.cryptocompare.com/data/price?fsym=TRX&tsyms=USD").json()
+        tron_value = live_tron_price_in_usd.get('USD')
+        earnings_amount_in_usd_covert_to_trx = earnings_amount_in_usd/tron_value
+        print('earnings_amount_in_usd_covert_to_trx', earnings_amount_in_usd_covert_to_trx)
         for member in duplicated_deposit_members:
-            print("member",member)
             member_total_deposit = Deposit.objects.filter(user = member).last()
-            print(member_total_deposit.total_deposit)
-            member_deposit_percentage = round(member_total_deposit.total_deposit/total_deposit*100, 3)
-            weekly_member_earnings = round(earnings_amount * member_deposit_percentage/100, 3)
-            WeeklyMemberEarnings.objects.create(user = member , amount = weekly_member_earnings)
-            weekly_reward_email_to_member(member, weekly_member_earnings)
+            member_deposit_percentage = member_total_deposit.total_deposit / total_deposit*100
+            print(member,' percentage ',member_deposit_percentage)
+            weekly_member_earnings = float(earnings_amount_in_usd_covert_to_trx) * member_deposit_percentage/100
+            print('weekly_member_earnings_in 100 percent', weekly_member_earnings)
+            weekly_member_earnings_in_five_percent = round(weekly_member_earnings * 5/100, 3)
+            print(member,' 5% : ',weekly_member_earnings_in_five_percent)
+            WeeklyMemberEarnings.objects.create(user = member , amount = weekly_member_earnings_in_five_percent)
+            weekly_reward_email_to_member(member, weekly_member_earnings_in_five_percent)
             total_earnings_exist = MemberTotalEarnings.objects.filter(user = member).exists()
             if total_earnings_exist:
                 total_earnings_obj = MemberTotalEarnings.objects.get(user = member)
-                total_earnings_obj.earnings += weekly_member_earnings
+                total_earnings_obj.earnings += weekly_member_earnings_in_five_percent
                 total_earnings_obj.save()
             else:
-                MemberTotalEarnings.objects.create(user = member, earnings = weekly_member_earnings)
+                MemberTotalEarnings.objects.create(user = member, earnings = weekly_member_earnings_in_five_percent)
     context={
         "is_earning":True,
         "weekly_earnings_obj":weekly_earnings_obj
