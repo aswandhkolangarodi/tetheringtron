@@ -119,7 +119,8 @@ def refferal_reward_given(request, id):
         total_earnings_obj.earnings += reward_price_obj.refer_reward
         total_earnings_obj.save()
     else:
-        MemberTotalEarnings.objects.create(user = recommentedby_user, earnings = reward_price_obj.refer_reward)
+        MemberTotalEarnings.objects.create(user = recommentedby_user, earnings = 
+        reward_price_obj.refer_reward)
     return redirect('/trxadmin/reward')
 
 
