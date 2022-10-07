@@ -5,8 +5,10 @@ app_name= 'trxadmin'
 
 urlpatterns = [
     path("dashboard",views.Trxadmin,name='Trxadmin'),
+    path('bank-details/<str:id>', views.member_bank_details, name="bank_details"),
+    path('withdraw-req-reject', views.withdraw_req_reject, name="withdraw_req_reject"),
     path("trade-status-update/<str:id>", views.trade_status_update, name="trade_status_update"),
-    path('withdrow-request-status/<str:id>', views.withdrow_request_status , name="withdrow_request_status"),
+    path('withdraw-request-status/<str:id>', views.withdraw_request_status , name="withdraw_request_status"),
     path("kyc",views.kyc,name='kyc'),
     path("coindetails",views.coindetails,name='coindetails'),
     path("announcement",views.announcement,name='announcement'),

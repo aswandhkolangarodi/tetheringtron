@@ -41,7 +41,7 @@
 					<div class="card-body text-center">
 						<img src="{% static 'trxadmin/images/wage.png' %}" class="mb-4" style="width:60px;">
 						<h2 class="mb-2 font-w600" style="color: brown;">Earnings</h2>
-						<h3 class="text-black mb-2 font-w600">$667,224</h3>
+						<h3 class="text-black mb-2 font-w600">${{total_earnings}}</h3>
 
 					</div>
 				</div>
@@ -129,7 +129,7 @@
 											</td>
 											
 											<td>
-												<h6>{{deposit_list.deposit.amount}} <strong>TRX</strong></h6>
+												<h6>{{deposit_list.deposit.amount_in_trx}} <strong>TRX</strong></h6>
 											</td>
 										
 											<td>
@@ -190,7 +190,7 @@
 												colspan="1"
 												aria-label="Payment Type : activate to sort column ascending"
 												style="width: 108.531px;">Amount</th>
-
+											<th></th>
 											<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
 												colspan="1"
 												aria-label="Payment Type : activate to sort column ascending"
@@ -202,29 +202,31 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for withdrow_req in withdrow_req %}
+										{% for withdraw_req in withdraw_req %}
 										<tr role="row" class="odd">
 											<td class="sorting_1">{{forloop.counter}}</td>
 											<td>
-												<h6>{{withdrow_req.user.first_name}}</h6>
-												<span>{{withdrow_req.user.email}}</span>
+												<h6>{{withdraw_req.user.first_name}}</h6>
+												<span>{{withdraw_req.user.email}}</span>
 											</td>
-											<td>{{withdrow_req.amount}}</td>
+											<td>{{withdraw_req.amount}} TRX</td>
+											<td><a href="{% url 'trxadmin:bank_details' withdraw_req.id %}" class="btn btn-info">Bank Details</a></td>
 											<td>
-												{% if withdrow_req.status == "pending" %}
-												<span class="badge badge-warning">{{withdrow_req.status}}</span>
-												{% elif withdrow_req.status == "given" %}
-												<span class="badge badge-success">{{withdrow_req.status}}</span>
+												{% if withdraw_req.status == "pending" %}
+												<span class="badge badge-warning">{{withdraw_req.status}}</span>
+												{% elif withdraw_req.status == "given" %}
+												<span class="badge badge-success">{{withdraw_req.status}}</span>
 												{% else %}
-												<span class="badge badge-danger">{{withdrow_req.status}}</span>
+												<span class="badge badge-danger">{{withdraw_req.status}}</span>
 												{% endif %}
 											</td>
 											<!-- <td><span class="badge badge-success">Aprooved</span></td> -->
 											<td>
 												<div class="d-flex action-button">
 
-													{% if withdrow_req.status == "pending" %}
-												<a href="{% url 'trxadmin:withdrow_request_status' withdrow_req.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
+													{% if withdraw_req.status == "pending" %}
+												<a class="btn btn-danger mx-3" onclick="withdraw_req_reject('{{withdraw_req.id}}')"><i class="fas fa-times"></i></a>
+												<a href="{% url 'trxadmin:withdraw_request_status' withdraw_req.id %}" class="btn btn-success"><i class="fa fa-check"></i></a>
 												{% endif %}
 
 												</div>
@@ -254,8 +256,59 @@
 	</div>
 </div>
 
-<!--**********************************
-            Content body end
-        ***********************************-->
+<!-- Modal withdraw-->
+<div class="modal fade" id="withdraw_reject">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Withdraw</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="">
+                    <div class="basic-form">
+                        <form >
+                            <div class="mb-3">
+                                <input type="text" class="form-control input-default " id="reson" placeholder="Enter reson" required>
+                                <input type="hidden" id="req_id" value="">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" id="submit_reson">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function withdraw_req_reject(id){
+        $('#withdraw_reject').modal('show');
+        $('#req_id').val(id)
+        $('#submit_reson').click(function(){
+            reson = $('#reson').val()
+            req_id = $('#req_id').val()
+            alert(reson)
+			alert(req_id)
+            $.ajax({
+            url: "{% url 'trxadmin:withdraw_req_reject' %}",
+            type: 'POST',
+            data: {
+                'id': req_id,
+                'reson':reson
+            },
+           
+        })
+        })
+       
+    }
+
+</script>
 
 {% endblock %}

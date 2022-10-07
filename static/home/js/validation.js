@@ -21,6 +21,10 @@ $('#signup').validate({
 
 
         },
+        countryCode:{
+            required: true,
+
+        },
         phone: {
             required: true,
             matches: "[0-9]+",
@@ -63,6 +67,9 @@ $('#signup').validate({
             required: "Please enter phone number",
 
 
+        },
+        countryCode:{
+            required: "Please select country",
         },
         password: {
             pwcheck: "Password is not strong enough",

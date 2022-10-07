@@ -1,0 +1,111 @@
+{% extends 'member/partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12  mx-auto">
+                {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+            <!-- <script>
+                alert('{{message}}')
+            </script> -->
+            <div class="alert alert-warning alert-dismissible fade show">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <strong>Warning!</strong> {{message}}.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                </button>
+            </div>
+            {% endif %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success alert-dismissible fade show ">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <strong>Success!</strong> {{ message }}.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                </button>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endif %}
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Bank Details Form</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form">
+                            <form id="bank_details" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label class="form-label">Bank Name :</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="bank_name" class="form-control input-default"
+                                                placeholder="Enter your international Bank name" value="{{bank_details.bank_name}}" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="form-label">Branch :</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="branch" class="form-control input-default " value="{{bank_details.branch}}" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="form-label">Swift Code :</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="swift_code" class="form-control input-default" value="{{bank_details.swift_code}}" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <label class="form-label">Account Number :</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="account_number" value="{{bank_details.account_number}}" class="form-control input-default" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="form-label">IFSC Code (optional) :</label>
+                                        <div class="mb-3">
+                                            <input type="text" name="ifsc_code" value="{{bank_details.ifsc_code}}" class="form-control input-default " autocomplete="off">
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div>
+                                    <h6 class="text-center">
+                                        Please be aware any mistake on the form could delay the transfer of the fund into the bank account that you provided.Thank you for your corporation
+                                    </h6>
+                                </div>
+
+                               
+                                <div class="text-center">
+                                    <button type="submit" class="btn light btn-info">submit</button>
+                                
+                            </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

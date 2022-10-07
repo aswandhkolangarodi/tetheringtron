@@ -1,7 +1,7 @@
 from multiprocessing import context
 from urllib import request
 from django.shortcuts import render,redirect
-from member.models import Kyc,RewardEarnings,ReffferalEarnings, Transactions, Withdrow,Deposit,WeeklyMemberEarnings,MemberTotalEarnings
+from member.models import *
 from home.models import Contact, Profile, Reward, User
 from member.views import profile, transactions
 from .models import *
@@ -17,23 +17,49 @@ import requests
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
 def Trxadmin(request):
     members=Profile.objects.all().count()
-    withdrow_req = Withdrow.objects.all()
+    withdraw_req = Withdraw.objects.all()
     deposit_list = Transactions.objects.filter(deposit_status = "success", mode = "deposit")
     total_deposit = 0
     total_deposit_qs = Deposit.objects.filter(payment_status = "success")
     for deposits in total_deposit_qs:
         total_deposit += deposits.amount_in_trx
+    total_earnings = 0
+    total_earnings_obj = WeeklyEarnings.objects.all()
+    for earnings in total_earnings_obj:
+        total_earnings += earnings.earnings_amount
+    print(total_earnings)
     context={
         "members":members,
         "total_deposit":total_deposit,
+        'total_earnings':total_earnings,
         "deposit_list":deposit_list,
-        "withdrow_req":withdrow_req,
+        "withdraw_req":withdraw_req,
         "is_index":True,
     }
 
         
     return render(request,'trxadmin/index.html',context)
 
+@user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
+def member_bank_details(request, id):
+    withdraw_req_member_details = Withdraw.objects.get(id=id)
+    bank_details = BankDetails.objects.filter(user=withdraw_req_member_details.user).last()
+    return render(request, 'trxadmin/single-bank-details.html',{'bank_details':bank_details})
+
+@user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
+@csrf_exempt
+def withdraw_req_reject(request):
+    id = request.POST['id']
+    reson = request.POST['reson']
+    withdrow_obj = Withdraw.objects.filter(id=id).update(status="rejected", reject_reson = reson)
+    withdraw = Withdraw.objects.get(id=id)
+    print('user',withdraw.user,"amount",withdraw.amount )
+    total_earnings = MemberTotalEarnings.objects.get(user = withdraw.user)
+    print(total_earnings)
+    total_earnings.earnings += withdraw.amount
+    total_earnings.save()
+    return redirect('/trxadmin/dashboard')
+    
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
 def trade_status_update(request, id):
     transaction_obj = Transactions.objects.filter(id = id).last()
@@ -42,8 +68,8 @@ def trade_status_update(request, id):
     return redirect('/trxadmin/dashboard')
 
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
-def withdrow_request_status(request, id):
-    Withdrow.objects.filter(id=id).update(status = "given")
+def withdraw_request_status(request, id):
+    Withdraw.objects.filter(id=id).update(status = "given")
     return redirect('/trxadmin/dashboard')
 
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")

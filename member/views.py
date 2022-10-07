@@ -4,7 +4,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
 from trxadmin.models import *
-from .models import Kyc, MemberTotalEarnings, RewardEarnings, Deposit, WeeklyMemberEarnings,Withdrow,Transactions,ReffferalEarnings
+from .models import *
 import base64
 from django.contrib.auth import logout as django_logout
 from django.core.files.base import ContentFile
@@ -37,8 +37,8 @@ def index(request):
     kyc_status = Kyc.objects.filter(user=request.user).last()
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
-    today_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested"),user=request.user, date__range=(today_min, today_max)).order_by('-date')
-    # all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested") ,user=request.user).order_by('-date')
+    today_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrawal_status = "requested"),user=request.user, date__range=(today_min, today_max)).order_by('-date')
+    # all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrawal_status = "requested") ,user=request.user).order_by('-date')
     # total earnings 
     total_earnings = MemberTotalEarnings.objects.filter(user = request.user).last()
     # total deposit of a member
@@ -120,6 +120,9 @@ def kyc_main(request):
         if kyc_check_last.status == "approved":
             messages.warning(request ,"KYC already approved")
             return redirect('/member/dashboard/')
+        elif kyc_check_last.status == "Waiting for approvel":
+            messages.warning(request ,"Your KYC under verification")
+            return redirect('/member/dashboard/')
     user_id=request.user.id
     print(user_id)
     if request.method == 'POST' and request.FILES:
@@ -158,7 +161,7 @@ def selfie(request):
     return render(request, 'member/selfie.html')
 
 def transactions(request):
-    all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrowal_status = "requested") ,user=request.user).order_by('-date')
+    all_transactions = Transactions.objects.filter(Q(deposit_status = "success") | Q(withdrawal_status = "requested") ,user=request.user).order_by('-date')
     context ={
         'is_transactions':True,
         "transactions" : all_transactions
@@ -207,8 +210,8 @@ def create_checkout_session(request):
                         'quantity':1,
                     }],
                     mode = 'payment',
-                    success_url = f'http://192.168.1.110:8000/member/success/{test_id}',
-                    cancel_url = f'http://192.168.1.110:8000/member/cancel/{test_id}',
+                    success_url = f'https://tetheringtron.geany.website/member/success/{test_id}',
+                    cancel_url = f'https://tetheringtron.geany.website/member/cancel/{test_id}',
                     )
                     if session:
                         id_generator=str(random.randint(100000000000000,999999999999999))
@@ -254,29 +257,38 @@ def paymentCancel(request,test_id):
     return redirect('/member/dashboard/')
 
 def withdraw(request):
-    kyc_check = Kyc.objects.filter(user=request.user).exists()
+    user = request.user
+    kyc_check = Kyc.objects.filter(user=user).exists()
     if kyc_check :
-        kyc_check_last = Kyc.objects.filter(user = request.user).last()       
+        kyc_check_last = Kyc.objects.filter(user = user).last()       
         if kyc_check_last.status == "approved":
             # total earnings 
-            total_earnings = MemberTotalEarnings.objects.filter(user = request.user).last()
-
-            if request.method == "POST":
-                amount = float(request.POST['withdraw_amount'])
-                trx_address = request.POST['trx_address']
-                if amount > total_earnings.earnings:
-                    messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
-                    return redirect('/member/dashboard/')
+            first_deposit_check = Profile.objects.filter(user = user, first_deposit_status = True)
+            if first_deposit_check:
+                total_earnings = MemberTotalEarnings.objects.filter(user = user).last()
+                bank_details = BankDetails.objects.filter(user = user).last()
+                if bank_details:
+                    if request.method == "POST":
+                        amount = float(request.POST['withdraw_amount'])
+                        trx_address = request.POST['trx_address']
+                        if amount > total_earnings.earnings:
+                            messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
+                            return redirect('/member/dashboard/')
+                        else:
+                            id_generator=str(random.randint(100000000000000,999999999999999))
+                            txn_id = "TETH-W"+id_generator
+                            withdraw = Withdraw(user = user , amount = amount, trx_address = trx_address, txn_id=txn_id)
+                            withdraw.save()
+                            total_earnings.earnings -= round(amount, 3)
+                            total_earnings.save()
+                            Transactions(user = user ,withdraw = withdraw , mode = "withdraw",withdrawal_status ="requested" ).save()
+                            messages.success(request , "withdraw request is send successfully.The amount will be credited with in 24 houre ")
+                            return redirect('/member/dashboard/')
                 else:
-                    id_generator=str(random.randint(100000000000000,999999999999999))
-                    txn_id = "TETH-W"+id_generator
-                    withdrow = Withdrow(user = request.user , amount = amount, trx_address = trx_address, txn_id=txn_id)
-                    withdrow.save()
-                    total_earnings.earnings -= round(amount, 3)
-                    total_earnings.save()
-                    Transactions(user = request.user ,withdrow = withdrow , mode = "withdrow",withdrowal_status ="requested" ).save()
-                    messages.success(request , "Withdrow request is send successfully.The amount will be credited with in 24 houre ")
-                    return redirect('/member/dashboard/')
+                    messages.warning(request, "Add your bank details")
+                    return redirect('/member/bankdetails')
+            else:
+                messages.warning(request, "Complte Your first deposit to withdraw your earnings")
         elif kyc_check_last.status == "Waiting for approvel":
             messages.warning(request , "Your KYC under Verification please wait")
         else:
@@ -287,6 +299,43 @@ def withdraw(request):
 
 def handler404(request, exception):
     return render(request, "member/404.html", status=404)
+
+def bankdetails(request):
+    user = request.user
+    bank_details = BankDetails.objects.filter(user=user).last()
+    if request.method == "POST":
+        bank_name = request.POST['bank_name']
+        branch = request.POST['branch']
+        account_number = request.POST['account_number']
+        swift_code = request.POST['swift_code']
+        ifsc_code = request.POST['ifsc_code']
+        
+        bank_exist = BankDetails.objects.filter(user=user).exists()
+        if bank_exist:
+            BankDetails.objects.filter(user=user).update(
+                bank_name = bank_name,
+                branch=branch,
+                swift_code =swift_code,
+                account_number = account_number,
+                ifsc_code = ifsc_code
+                )
+            messages.success(request, "Bank details updated successfully")
+        else:
+            BankDetails.objects.create(
+                user=user,
+                bank_name = bank_name,
+                branch=branch,
+                swift_code =swift_code,
+                account_number = account_number,
+                ifsc_code = ifsc_code
+            )
+            messages.success(request, "Bank details added successfully")
+        return redirect('/member/bankdetails')
+    context = {
+        "is_bankdetails" : True,
+        "bank_details":bank_details
+    }
+    return render(request, "member/bank-details.html",context)
 
 def announcement_is_seen(request,id):
     Announcement.objects.filter(id=id).update(is_seen = True)

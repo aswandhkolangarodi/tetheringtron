@@ -54,7 +54,7 @@
                                     {% if transactions.mode == "deposit" %}
                                    {{ transactions.deposit.txn_id }}
                                     {% else %}
-                                    {{ transactions.withdrow.txn_id }}
+                                    {{ transactions.withdraw.txn_id }}
                                     {% endif %}
                                 </td>
                                 <td class="wspace-no">
@@ -98,9 +98,9 @@
 
                                 <td>
                                     {% if transactions.mode == "deposit" %}
-                                   {{ transactions.deposit.amount }}
+                                   {{ transactions.deposit.amount_in_trx }}
                                     {% else %}
-                                    {{ transactions.withdrow.amount }}
+                                    {{ transactions.withdraw.amount }}
                                     {% endif %}
                                 </td>
 
@@ -121,11 +121,13 @@
                                     <a href="javascript:void(0);" class="btn-link text-success float-right">Success</a>
 
                                     {% else %}
-                                    {% if transactions.withdrow.status == "pending" %}
-                                    <a href="javascript:void(0);" class="btn-link text-danger float-right">Pending</a>
-                                    {% else %}
-                                    <a href="javascript:void(0);" class="btn-link text-success float-right">Success</a>
-                                    {% endif %}
+                                        {% if transactions.withdraw.status == "pending" %}
+                                        <a href="javascript:void(0);" class="btn-link text-warning float-right">Pending</a>
+                                        {% elif transactions.withdraw.status == "rejected" %}
+                                        <a href="javascript:void(0);" class="btn-link text-danger float-right">canceled</a>
+                                        {% else %}
+                                        <a href="javascript:void(0);" class="btn-link text-success float-right">Success</a>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                             </tr>

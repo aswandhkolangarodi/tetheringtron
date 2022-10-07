@@ -1,60 +1,60 @@
 
 // kyc
-    
-    $("#kyc").validate({
-        errorClass: 'errors',
-        rules: {
-            country: {
-                required: true,
-            },
-            city: {
-                required: true,
-                
 
-            },
-            idproof_name: {
-                required: true,
-
-            },
-            address: {
-                required: true,
-            },
-            pin: {
-                required: true,
-            },
-
-          
+$("#kyc").validate({
+    errorClass: 'errors',
+    rules: {
+        country: {
+            required: true,
         },
-        messages: {
-            country: {
-                required: "Please select your country",
+        city: {
+            required: true,
 
-            },
-            city: {
-                required: "Please enter your city",
 
-            },
-            idproof_name: {
-                required: "Please enter your pin",
+        },
+        idproof_name: {
+            required: true,
 
-            },
-            address: {
-                required: "Please enter your address",
+        },
+        address: {
+            required: true,
+        },
+        pin: {
+            required: true,
+        },
 
-            },
-            pin: {
-                required: "Please enter your pin",
 
-            },
-            
+    },
+    messages: {
+        country: {
+            required: "Please select your country",
+
+        },
+        city: {
+            required: "Please enter your city",
+
+        },
+        idproof_name: {
+            required: "Please enter your pin",
+
+        },
+        address: {
+            required: "Please enter your address",
+
+        },
+        pin: {
+            required: "Please enter your pin",
 
         },
 
-        submitHandler: function (form) {
-            form.submit();
-        }
 
-        });
+    },
+
+    submitHandler: function (form) {
+        form.submit();
+    }
+
+});
 
 
 // deposit 
@@ -67,8 +67,8 @@ $("#deposit_form").validate({
         },
         amount: {
             required: true,
-            number : true,
-            
+            number: true,
+
 
         },
     },
@@ -88,7 +88,7 @@ $("#deposit_form").validate({
         form.submit();
     }
 
-    });
+});
 
 
 
@@ -96,24 +96,29 @@ $("#deposit_form").validate({
 
 // withdraw validation
 
+$.validator.addMethod("notOnlyZero", function (value, element, param) {
+    return this.optional(element) || parseInt(value) > 0;
+});
+
 $("#withdraw_form").validate({
+    
     errorClass: 'errors',
     rules: {
         withdraw_amount: {
             required: true,
-            number : true,
+            notOnlyZero: '0'
         },
         trx_address: {
             required: true,
-            
-            
+
+
 
         },
     },
     messages: {
         withdraw_amount: {
             required: "Please enter the amount",
-
+            notOnlyZero : "Enter a valid number"
         },
         trx_address: {
             required: "Please enter your trx-address",
@@ -126,9 +131,9 @@ $("#withdraw_form").validate({
         form.submit();
     }
 
-    });
+});
 
-    
+
 // youtube refferance 
 
 $("#youtube_reffer").validate({
@@ -136,13 +141,60 @@ $("#youtube_reffer").validate({
     rules: {
         youtube: {
             required: true,
-            url : true
+            url: true
         },
-        
+
     },
 
     submitHandler: function (form) {
         form.submit();
     }
 
-    });
+});
+
+
+$("#bank_details").validate({
+    errorClass: 'errors',
+    rules: {
+        bank_name: {
+            required: true,
+        },
+        branch :{
+            required :true
+        },
+        ifsc_code :{
+            
+        },
+        account_number :{
+            required : true,
+            number : true
+        },
+        swift_code :{
+            required : true,
+        }
+
+    },
+    messages :{
+        bank_name :{
+            required :"Please enter your bank name"
+        },
+        branch :{
+            required :"Please enter your bank branch"
+        },
+        ifsc_code :{
+           
+        },
+        account_number :{
+            required : "Plese enter your account number",
+            
+        },
+        swift_code :{
+            required : "Please enter swift code",
+        }
+    },
+    submitHandler: function (form) {
+        form.submit();
+    }
+
+});
+

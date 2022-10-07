@@ -14,6 +14,7 @@ urlpatterns = [
    path('selfie/', views.selfie, name='selfie'),
    path('selfie/', views.selfie, name='selfie'),
    path('announcement_is_seen/<str:id>', views.announcement_is_seen, name='announcement_is_seen'),
+   path('bankdetails', views.bankdetails, name='bankdetails'),
 
 
 
@@ -22,7 +23,7 @@ urlpatterns = [
    path('create-checkout-session/', views.create_checkout_session, name="create_checkout_session2"),
    path('success/<str:test_id>', views.paymentSuccess, name="success"),
    path('cancel/<str:test_id>', views.paymentCancel, name="cancel"),
-   # withdrow
-   path('withdrow', views.withdraw, name="withdrow")
+   # withdraw
+   path('withdraw', views.withdraw, name="withdraw")
 ]
 

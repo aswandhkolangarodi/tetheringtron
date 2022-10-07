@@ -1,7 +1,5 @@
 from email.headerregistry import Address
-from pyclbr import Class
 from tabnanny import verbose
-import uuid
 from django.db import models
 
 # from phone_field import PhoneField
@@ -56,13 +54,13 @@ class ReffferalEarnings(models.Model):
     def __str__(self):
         return str(self.user)
 
-class Withdrow(models.Model):
+class Withdraw(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     amount = models.FloatField()
     trx_address = models.CharField(max_length=500)
     txn_id = models.CharField(max_length=300, null=True)
     status = models.CharField(max_length=100, default="pending")    
-    
+    reject_reson = models.CharField(max_length = 1000, blank=True,null=True)
 
     def __str__(self):
         return str(self.user)
@@ -72,11 +70,11 @@ class Transactions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     test_id =models.UUIDField(null=True)
     deposit = models.ForeignKey(Deposit , on_delete=models.CASCADE, blank=True,null=True)
-    withdrow = models.ForeignKey(Withdrow , on_delete=models.CASCADE, blank=True,null=True)
+    withdraw = models.ForeignKey(Withdraw , on_delete=models.CASCADE, blank=True,null=True)
     mode = models.CharField(max_length=50, null=True)
     date = models.DateTimeField(auto_now_add=True,null=True, blank=True) 
     deposit_status = models.CharField(max_length=100, null=True, default="unpaid")
-    withdrowal_status = models.CharField(max_length=100, null=True, default="pending")
+    withdrawal_status = models.CharField(max_length=100, null=True, default="pending")
 
     def __str__(self):
         return str(self.user)
@@ -92,6 +90,17 @@ class WeeklyMemberEarnings(models.Model):
 class MemberTotalEarnings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     earnings = models.FloatField()
+
+    def __str__(self):
+        return str(self.user)
+
+class BankDetails(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    bank_name = models.CharField(max_length = 10)
+    branch = models.CharField(max_length = 300)
+    swift_code = models.CharField(max_length = 300)
+    account_number = models.CharField(max_length = 300)
+    ifsc_code = models.CharField(max_length = 300, blank=True,null=True)
 
     def __str__(self):
         return str(self.user)

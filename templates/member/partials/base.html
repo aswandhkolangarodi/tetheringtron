@@ -671,23 +671,24 @@
                         </a>
 
                     </li>
-                    <!-- <li><a class=" ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-049-copy"></i>
-                            <span class="nav-text">Referrals</span>
-                        </a>
+                    
 
-                    </li> -->
-
-                    <li class="{% if is_coin_details %}mm-active{% endif %}">
-                        <a href="{% url 'member:coin-details' %}" class="ai-icon " aria-expanded="false">
+                    <li class="{% if is_bankdetails %}mm-active{% endif %}">
+                        <a href="{% url 'member:bankdetails' %}" class="ai-icon " aria-expanded="false">
                             <i class="flaticon-381-network"></i>
-                            <span class="nav-text">Coin Details</span>
+                            <span class="nav-text">Bank Details</span>
                         </a>
                     </li>
                     <li class="{% if is_transactions %}mm-active{% endif %}">
                         <a href="{% url 'member:transactions' %}" class="ai-icon" aria-expanded="false">
                             <i class="flaticon-381-settings-2"></i>
                             <span class="nav-text">Transactions</span>
+                        </a>
+                    </li>
+                    <li class="{% if is_coin_details %}mm-active{% endif %}">
+                        <a href="{% url 'member:coin-details' %}" class="ai-icon " aria-expanded="false">
+                            <i class="flaticon-381-network"></i>
+                            <span class="nav-text">Coin Details</span>
                         </a>
                     </li>
                 </ul>

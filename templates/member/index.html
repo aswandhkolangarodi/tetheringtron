@@ -96,7 +96,7 @@
                             <div class="card-info">
                                 <p class="mb-1 text-white fs-14">Total Deposit</p>
                                 <div class="d-flex justify-content-between">
-                                    <h2 class="num-text text-white mb-5 font-w600">{{total_deposit}} TRX</h2>
+                                    <h2 class="num-text text-white mb-5 font-w600">{{total_deposit|floatformat:3}} TRX</h2>
                                     <?xml version="1.0" encoding="utf-8"?>
                                     <!-- Generator: Adobe Illustrator 26.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
                                     <svg version="1.1" height="36" width="36" id="Layer_1"
@@ -147,7 +147,7 @@
                                 <div class="d-flex justify-content-between">
                                     <h2 class="num-text text-white mb-5 font-w600">
                                         {% if total_earnings %}
-                                        {{total_earnings.earnings}} TRX
+                                        {{total_earnings.earnings|floatformat:3}} TRX
                                         {% else %}
                                         0 TRX
                                         {% endif %}
@@ -276,7 +276,7 @@
                                                         {% if transactions.mode == "deposit" %}
                                                         {{ transactions.deposit.txn_id }}
                                                         {% else %}
-                                                        {{ transactions.withdrow.txn_id }}
+                                                        {{ transactions.withdraw.txn_id }}
                                                         {% endif %}
                                                     </td>
                                                     <td class="wspace-no">
@@ -320,9 +320,9 @@
                                                     <td>
                                                         <span class="font-w600 text-black">
                                                             {% if transactions.mode == "deposit" %}
-                                                            {{transactions.deposit.amount}}
+                                                            {{transactions.deposit.amount_in_trx}} TRX
                                                             {% else %}
-                                                            {{transactions.withdrow.amount}}
+                                                            {{transactions.withdraw.amount}} TRX
                                                             {% endif %}
                                                         </span>
                                                     </td>
@@ -341,9 +341,12 @@
                                                             class="btn-link text-success float-right">Success</a>
 
                                                         {% else %}
-                                                        {% if transactions.withdrow.status == "pending" %}
+                                                        {% if transactions.withdraw.status == "pending" %}
                                                         <a href="javascript:void(0);"
-                                                            class="btn-link text-danger float-right">Pending</a>
+                                                            class="btn-link text-warning float-right">Pending</a>
+                                                        {% elif transactions.withdraw.status == "rejected" %}
+                                                        <a href="javascript:void(0);"
+                                                            class="btn-link text-danger float-right">canceled</a>
                                                         {% else %}
                                                         <a href="javascript:void(0);"
                                                             class="btn-link text-success float-right">Success</a>
@@ -427,9 +430,9 @@
                                                     <td>
                                                         <span class="font-w600 text-black">
                                                             {% if all_transactions.mode == "deposit" %}
-                                                            {{all_transactions.deposit.amount}}
+                                                            {{all_transactions.deposit.amount_in_trx}}
                                                             {% else %}
-                                                            {{all_transactions.withdrow.amount}}
+                                                            {{all_transactions.withdraw.amount}}
                                                             {% endif %}
                                                         </span>
                                                     </td>
@@ -571,11 +574,11 @@
 
                 <div class="">
                     <div class="basic-form">
-                        <form method="post" action="{% url 'member:withdrow' %}" id="withdraw_form">
+                        <form method="post" action="{% url 'member:withdraw' %}" id="withdraw_form">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <input type="text" class="form-control input-default " name="withdraw_amount"
-                                    placeholder="withdraw Amount">
+                                    placeholder="withdraw Amount" id="withdraw_amount">
                             </div>
                             <div class="mb-3">
                                 <input type="text" class="form-control input-default" name="trx_address"

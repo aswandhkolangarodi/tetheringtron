@@ -27,7 +27,9 @@ def signup(request):
     if request.method == 'POST':
         first_name = request.POST.get('username')
         email = request.POST.get('email')
-        phone = request.POST.get('phone')
+        country = str(request.POST.get('countryCode'))
+        phone = str(request.POST.get('phone'))
+        phone_number_with_country_code = country + phone
         password = request.POST.get('password')
         check=request.POST.get('ckeck')
 
@@ -36,15 +38,21 @@ def signup(request):
             return redirect('/signup')
 
         try:
-            if User.objects.filter(email = email).first():
-                messages.success(request, 'Username is taken.')
-                return redirect('/signup')
+            user =User.objects.filter(email = email).first()
+            if user:
+                verification_check = Profile.objects.filter(user = user,is_verified = True).last()
+                if verification_check:
+                    print(verification_check)
+                    messages.success(request, 'Username is taken.')
+                    return redirect('/signup')
+                else:
+                    User.objects.filter(email = email).delete()
 
-            if User.objects.filter(phone = phone).first():
+            if User.objects.filter(phone = phone_number_with_country_code).first():
                 messages.success(request, 'Number is taken.')
                 return redirect('/signup')
             
-            user_obj = User(first_name = first_name , email = email,phone=phone)
+            user_obj = User(first_name = first_name , email = email,phone=phone_number_with_country_code)
             print(user_obj)
             user_obj.set_password(password)
             user_obj.save()
@@ -95,7 +103,6 @@ def signup_otp(request, token):
             return redirect(f'/member/signup-otp/{member_profile.auth_token}')
     else:
         message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
-        print('recent_otp',recent_otp)
     return render(request, 'home/otp.html',{'token':token})
 
 # Referral
