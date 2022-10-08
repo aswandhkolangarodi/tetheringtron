@@ -86,16 +86,21 @@ def rewards(request):
     user=User.objects.get(email=request.user)
     reward=Profile.objects.get(user=user)
     add_reward = AddReward.objects.all().last()
+    member_youtube_reward_exist = Reward.objects.filter(user = user).last()
     if request.method == 'POST':
         youtube = request.POST['youtube']
-        print(youtube)
+        if member_youtube_reward_exist:
+            return redirect('/member/rewards/')
+            
         youtube_obj = Reward(youtube=youtube,user=request.user)
         youtube_obj.save()
-        
+        messages.success(request, "Your reward request send successfully")
+        return redirect('/member/rewards/')
     context ={
         'is_rewards':True,
         'reward' : reward,
-        'add_reward':add_reward
+        'add_reward':add_reward,
+        'member_youtube_reward_exist':member_youtube_reward_exist
     }
     return render(request, 'member/rewards.html',context)
 
@@ -270,14 +275,13 @@ def withdraw(request):
                 if bank_details:
                     if request.method == "POST":
                         amount = float(request.POST['withdraw_amount'])
-                        trx_address = request.POST['trx_address']
                         if amount > total_earnings.earnings:
                             messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
                             return redirect('/member/dashboard/')
                         else:
                             id_generator=str(random.randint(100000000000000,999999999999999))
                             txn_id = "TETH-W"+id_generator
-                            withdraw = Withdraw(user = user , amount = amount, trx_address = trx_address, txn_id=txn_id)
+                            withdraw = Withdraw(user = user , amount = amount, txn_id=txn_id)
                             withdraw.save()
                             total_earnings.earnings -= round(amount, 3)
                             total_earnings.save()
@@ -308,7 +312,6 @@ def bankdetails(request):
         branch = request.POST['branch']
         account_number = request.POST['account_number']
         swift_code = request.POST['swift_code']
-        ifsc_code = request.POST['ifsc_code']
         
         bank_exist = BankDetails.objects.filter(user=user).exists()
         if bank_exist:
@@ -317,7 +320,6 @@ def bankdetails(request):
                 branch=branch,
                 swift_code =swift_code,
                 account_number = account_number,
-                ifsc_code = ifsc_code
                 )
             messages.success(request, "Bank details updated successfully")
         else:
@@ -327,7 +329,6 @@ def bankdetails(request):
                 branch=branch,
                 swift_code =swift_code,
                 account_number = account_number,
-                ifsc_code = ifsc_code
             )
             messages.success(request, "Bank details added successfully")
         return redirect('/member/bankdetails')

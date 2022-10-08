@@ -57,7 +57,6 @@ class ReffferalEarnings(models.Model):
 class Withdraw(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     amount = models.FloatField()
-    trx_address = models.CharField(max_length=500)
     txn_id = models.CharField(max_length=300, null=True)
     status = models.CharField(max_length=100, default="pending")    
     reject_reson = models.CharField(max_length = 1000, blank=True,null=True)
