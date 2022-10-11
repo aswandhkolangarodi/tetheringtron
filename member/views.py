@@ -11,13 +11,13 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 import stripe
 from django.contrib import messages
-from datetime import  datetime
+from datetime import  datetime,date
 from django.utils import timezone
 import random
 from django.db.models import Q
 import requests
 from .helpers import send_deposit_mail_to_admin
-
+from dateutil.relativedelta import relativedelta
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -27,12 +27,17 @@ def index(request):
     if user.member_status == False:
         django_logout(request)
         return redirect('/')
-
     reward=Profile.objects.get(user=user)
     alert = Announcement.objects.filter(user = request.user,is_seen =False).last()
     profile=Profile.objects.get(user=user)
     my_recs=profile.get_recommended_profiles()
     recs_count= len(my_recs)
+    today = date.today()
+    first_deposit_date = profile.first_deposit_date
+    five_year_date = '00/00/0000'
+    if first_deposit_date is not None:
+        five_year_date = first_deposit_date + relativedelta(days=+1)
+        print('five_year_date',five_year_date)
     kyc_check = Kyc.objects.filter(user=request.user).exists()
     kyc_status = Kyc.objects.filter(user=request.user).last()
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
@@ -47,11 +52,8 @@ def index(request):
     for refferal_earnings in reffferal:
         member_refferal_earnings += refferal_earnings.earnings
 
-    print('member_refferal_earnings',member_refferal_earnings)
-    total_deposit = 0
-    total_deposit_qs = Deposit.objects.filter(user=request.user,payment_status = "success")
-    for deposit in total_deposit_qs:
-        total_deposit += round(deposit.amount_in_trx, 3)
+    total_deposit = Deposit.objects.filter(user = user ,payment_status ='success').last()
+    
     
     trans = Transactions.objects.filter(mode = "deposit").last()
     context ={
@@ -67,6 +69,8 @@ def index(request):
         'total_deposit':total_deposit,
         'total_earnings':total_earnings,
         'member_refferal_earnings':member_refferal_earnings,
+        'five_year_date':five_year_date,
+        'today':today,
         'is_index':True
     }
     return render(request, 'member/index.html', context)
@@ -182,59 +186,64 @@ def create_checkout_session(request):
         kyc_check_last = Kyc.objects.filter(user = request.user).last()        
         if kyc_check_last.status == "approved":
             if request.method == 'POST':
-                amount = int(request.POST['amount'])*100
-                selected_currency = request.POST['currency']
-                live_tron_price_in_usd = requests.get(url = "https://min-api.cryptocompare.com/data/price?fsym=TRX&tsyms=USD").json()
-                tron_value = live_tron_price_in_usd.get('USD')
-                usd_price = requests.get(url = f"https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms={selected_currency}").json()
-                usd_value = usd_price.get(selected_currency)
-                member_deposit_amount_in_usd = round((amount/usd_value)/100 , 3)
-                print('usd_value_in',selected_currency ,' ',usd_value)
-                print('member_deposit_amount_in_usd', member_deposit_amount_in_usd, 'usd')
-                
-                print('tron_value_in_usd', tron_value)
-                member_deposit_amount_in_trx = round(member_deposit_amount_in_usd/tron_value , 3)
-                print('member_deposit_amount_in_trx', member_deposit_amount_in_trx , 'TRX')
-                if member_deposit_amount_in_trx >= 1000:
-                    test_id = uuid.uuid4()
-
+                try:
+                    amount = int(request.POST['amount'])*100
+                    selected_currency = request.POST['currency']
+                    live_tron_price_in_usd = requests.get(url = "https://min-api.cryptocompare.com/data/price?fsym=TRX&tsyms=USD").json()
+                    tron_value = live_tron_price_in_usd.get('USD')
+                    usd_price = requests.get(url = f"https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms={selected_currency}").json()
+                    usd_value = usd_price.get(selected_currency)
+                    member_deposit_amount_in_usd = round((amount/usd_value)/100 , 3)
+                    print('usd_value_in',selected_currency ,' ',usd_value)
+                    print('member_deposit_amount_in_usd', member_deposit_amount_in_usd, 'usd')
                     
-                    session = stripe.checkout.Session.create(
-                    payment_method_types = ['card'],
-                    line_items = [{
-                        'price_data':{
-                            'currency': selected_currency,
-                            'product_data':{
-                                'name':'TRON',
-                                'description':str(member_deposit_amount_in_trx)+" TRX , " +str(member_deposit_amount_in_usd)+ " USD",
-                                
-                            },
-                            'unit_amount': amount,
+                    print('tron_value_in_usd', tron_value)
+                    member_deposit_amount_in_trx = round(member_deposit_amount_in_usd/tron_value , 3)
+                    print('member_deposit_amount_in_trx', member_deposit_amount_in_trx , 'TRX')
+                    if member_deposit_amount_in_trx >= 1000:
+                        test_id = uuid.uuid4()
 
-                        },
-                        'quantity':1,
-                    }],
-                    mode = 'payment',
-                    success_url = f'https://tetheringtron.geany.website/member/success/{test_id}',
-                    cancel_url = f'https://tetheringtron.geany.website/member/cancel/{test_id}',
-                    )
-                    if session:
-                        id_generator=str(random.randint(100000000000000,999999999999999))
-                        txn_id = "TETH-D"+id_generator
-                        last_deposit = Deposit.objects.filter(user = request.user, payment_status = "success").last()
-                        if last_deposit is None:
-                            deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx  ,txn_id = txn_id,amount_in_usd = member_deposit_amount_in_usd ,total_deposit = member_deposit_amount_in_trx)
-                            deposit.save()
-                            Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
-                        else:
-                            deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx ,amount_in_usd = member_deposit_amount_in_usd,txn_id = txn_id)
-                            deposit.save()
-                            Deposit.objects.filter(txn_id = txn_id).update(total_deposit = round(last_deposit.total_deposit + member_deposit_amount_in_trx, 3))
-                            Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
-                else:
-                    messages.warning(request , "You try to deposit " + str(member_deposit_amount_in_trx)  + " TRX. Minimum deposit amount is 1000 TRX")
+                        
+                        session = stripe.checkout.Session.create(
+                        payment_method_types = ['card'],
+                        line_items = [{
+                            'price_data':{
+                                'currency': selected_currency,
+                                'product_data':{
+                                    'name':'TRON',
+                                    'description':str(member_deposit_amount_in_trx)+" TRX , " +str(member_deposit_amount_in_usd)+ " USD",
+                                    
+                                },
+                                'unit_amount': amount,
+
+                            },
+                            'quantity':1,
+                        }],
+                        mode = 'payment',
+                        success_url = f'https://tetheringtron.geany.website/member/success/{test_id}',
+                        cancel_url = f'https://tetheringtron.geany.website/member/cancel/{test_id}',
+                        )
+                        if session:
+                            id_generator=str(random.randint(100000000000000,999999999999999))
+                            txn_id = "TETH-D"+id_generator
+                            last_deposit = Deposit.objects.filter(user = request.user, payment_status = "success").last()
+                            if last_deposit is None:
+                                deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx  ,txn_id = txn_id,amount_in_usd = member_deposit_amount_in_usd ,total_deposit = member_deposit_amount_in_trx)
+                                deposit.save()
+                                Profile.objects.filter(user=request.user).update(first_deposit_date = date.today())
+                                Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
+                            else:
+                                deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx ,amount_in_usd = member_deposit_amount_in_usd,txn_id = txn_id)
+                                deposit.save()
+                                Deposit.objects.filter(txn_id = txn_id).update(total_deposit = round(last_deposit.total_deposit + member_deposit_amount_in_trx, 3))
+                                Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
+                    else:
+                        messages.warning(request , "You try to deposit " + str(member_deposit_amount_in_trx)  + " TRX. Minimum deposit amount is 1000 TRX")
+                        return redirect('/member/dashboard/')
+                except:
+                    messages.warning(request, "Something went wrong")
                     return redirect('/member/dashboard/')
-        elif kyc_check_last.status == "waiting for approval":
+        elif kyc_check_last.status == "Waiting for approvel":
             messages.warning(request , "Your KYC under Verification please wait")
             return redirect('/member/dashboard/')
         else:
@@ -275,19 +284,35 @@ def withdraw(request):
                 if bank_details:
                     if request.method == "POST":
                         amount = float(request.POST['withdraw_amount'])
-                        if amount > total_earnings.earnings:
-                            messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
-                            return redirect('/member/dashboard/')
+                        amount_from = request.POST['from']
+                        id_generator=str(random.randint(100000000000000,999999999999999))
+                        txn_id = "TETH-W"+id_generator
+                        if amount_from == 'earnings':
+                            if amount > total_earnings.earnings:
+                                messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
+                                return redirect('/member/dashboard/')
+                            else:
+                                withdraw = Withdraw(user = user , amount = amount, txn_id=txn_id)
+                                withdraw.save()
+                                total_earnings.earnings -= round(amount, 3)
+                                total_earnings.save()
+                                Transactions(user = user ,withdraw = withdraw , mode = "withdraw",withdrawal_status ="requested" ).save()
+                                messages.success(request , "withdraw request is send successfully.The amount will be credited with in 24 houre ")
+                                return redirect('/member/dashboard/')
                         else:
-                            id_generator=str(random.randint(100000000000000,999999999999999))
-                            txn_id = "TETH-W"+id_generator
-                            withdraw = Withdraw(user = user , amount = amount, txn_id=txn_id)
-                            withdraw.save()
-                            total_earnings.earnings -= round(amount, 3)
-                            total_earnings.save()
-                            Transactions(user = user ,withdraw = withdraw , mode = "withdraw",withdrawal_status ="requested" ).save()
-                            messages.success(request , "withdraw request is send successfully.The amount will be credited with in 24 houre ")
-                            return redirect('/member/dashboard/')
+                            last_deposit = Deposit.objects.filter(user=user, payment_status='success').last()
+                            print(last_deposit)
+                            if amount > last_deposit.total_deposit:
+                                messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
+                                return redirect('/member/dashboard/')
+                            else:
+                                withdraw = Withdraw(user = user , amount = amount, txn_id=txn_id)
+                                withdraw.save()
+                                last_deposit.total_deposit = round(last_deposit.total_deposit - amount, 3)
+                                last_deposit.save()
+                                Transactions(user = user ,withdraw = withdraw , mode = "withdraw",withdrawal_status ="requested" ).save()
+                                messages.success(request , "withdraw request is send successfully.The amount will be credited with in 24 houre ")
+                                return redirect('/member/dashboard/')
                 else:
                     messages.warning(request, "Add your bank details")
                     return redirect('/member/bankdetails')

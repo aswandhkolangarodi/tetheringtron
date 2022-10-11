@@ -49,7 +49,9 @@
 
             <div class="col-xl-6">
                 <div class="card">
+                    {% if kyc_details.live_photo %}
                     <img class="card-img-top img-fluid" src="{{kyc_details.live_photo.url}}" alt="">
+                    {% endif %}
                 </div>
             </div>
             <div class="col-xl-6">

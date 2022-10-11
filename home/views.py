@@ -87,8 +87,8 @@ def signup(request):
 def signup_otp(request, token):
     member_profile=Profile.objects.get(auth_token = token)
     otp = pyotp.TOTP(token, interval=300)
-    print('asdfghjk',otp)
     recent_otp = otp.now()
+    print(recent_otp)
     if request.method == 'POST':
         enter_otp=request.POST['otp']
         verification = otp.verify(enter_otp)
@@ -102,7 +102,10 @@ def signup_otp(request, token):
             messages.success(request,'Wrong OTP')
             return redirect(f'/member/signup-otp/{member_profile.auth_token}')
     else:
-        message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
+        try:
+            message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
+        except Exception as e:
+            print(e)
     return render(request, 'home/otp.html',{'token':token})
 
 # Referral
@@ -199,10 +202,10 @@ def login_attempt(request):
 
 # login otp
 def otp(request, token):
-    print('hi')
     member_profile=Profile.objects.get(auth_token = token)
     otp = pyotp.TOTP(token, interval=300)
     recent_otp = otp.now()
+    print(recent_otp)
     if request.method == 'POST':
         enter_otp=request.POST['otp']
         verification = otp.verify(enter_otp)
@@ -216,7 +219,10 @@ def otp(request, token):
             messages.success(request,'Wrong OTP')
             return redirect(f'/member/otp/{token}')
     else:
-        message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
+        try:
+            message_handler=MessageHandler(member_profile.user.phone, recent_otp).send_otp()
+        except Exception as e:
+            print(e)
     return render(request,'home/otp.html',{'token':token})
 
 

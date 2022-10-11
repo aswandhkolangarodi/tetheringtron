@@ -54,6 +54,7 @@ class Profile(models.Model):
     recommended_by = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True,related_name='ref_by')
     recommended_by_status = models.BooleanField(default=False)
     first_deposit_status = models.BooleanField(default=False)
+    first_deposit_date = models.DateField(null=True, blank=True)
     updated = models.DateTimeField(auto_now=True,null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     auth_token = models.CharField(max_length=100 )
@@ -65,7 +66,7 @@ class Profile(models.Model):
         return self.user.email
 
     def get_recommended_profiles(self):
-        qs=Profile.objects.all()
+        qs=Profile.objects.filter(is_verified =True)
         my_recs=[]
         for profile in qs:
             if profile.recommended_by == self.user:

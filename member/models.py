@@ -99,7 +99,6 @@ class BankDetails(models.Model):
     branch = models.CharField(max_length = 300)
     swift_code = models.CharField(max_length = 300)
     account_number = models.CharField(max_length = 300)
-    ifsc_code = models.CharField(max_length = 300, blank=True,null=True)
 
     def __str__(self):
         return str(self.user)
