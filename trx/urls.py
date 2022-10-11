@@ -7,8 +7,13 @@ from django.conf.urls.static import static
 
 from member import views
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
+urlpatterns = []
+
+if settings.ADMIN_ENABLED is True:
+    urlpatterns += [
+        path('admin/', admin.site.urls),
+        ]
+urlpatterns += [
     path('',include('home.urls')),
     path('trxadmin/',include('trxadmin.urls')),
     path('member/', include('member.urls')),

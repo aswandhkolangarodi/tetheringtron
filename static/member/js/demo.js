@@ -284,7 +284,7 @@ function deleteAllCookie(reload = true)
 		
 		
 		
-		/* Light-Dark Theme Version Button Setting For Zenix */
+		/* Light-Dark Theme Version Button Setting For Tethering Tron */
 		jQuery('.dz-theme-mode').on('click',function(){
 			jQuery(this).toggleClass('active');
 			
@@ -303,7 +303,7 @@ function deleteAllCookie(reload = true)
 			jQuery('.dz-theme-mode').addClass('active');
 		}
 
-		/* Light-Dark Theme Version Button Setting For Zenix END */
+		/* Light-Dark Theme Version Button Setting For Tethering Tron END */
 		
 	});
 	

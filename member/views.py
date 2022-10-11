@@ -90,7 +90,7 @@ def rewards(request):
     user=User.objects.get(email=request.user)
     reward=Profile.objects.get(user=user)
     add_reward = AddReward.objects.all().last()
-    member_youtube_reward_exist = Reward.objects.filter(user = user).last()
+    member_youtube_reward_exist = Reward.objects.filter(Q(status = "waiting for approval") | Q(status = "given") ,user = user).last()
     if request.method == 'POST':
         youtube = request.POST['youtube']
         if member_youtube_reward_exist:

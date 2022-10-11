@@ -1,5 +1,4 @@
 from twilio.rest import Client
-import pyotp
 from django.conf import settings
 import time
 
