@@ -16,7 +16,7 @@ from django.utils import timezone
 import random
 from django.db.models import Q
 import requests
-from .helpers import send_deposit_mail_to_admin
+from .helpers import send_deposit_mail_to_admin,send_withdraw_mail_to_admin
 from dateutil.relativedelta import relativedelta
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -276,39 +276,41 @@ def withdraw(request):
     if kyc_check :
         kyc_check_last = Kyc.objects.filter(user = user).last()       
         if kyc_check_last.status == "approved":
-            # total earnings 
+            # total earnings
             first_deposit_check = Profile.objects.filter(user = user, first_deposit_status = True)
             if first_deposit_check:
                 total_earnings = MemberTotalEarnings.objects.filter(user = user).last()
                 bank_details = BankDetails.objects.filter(user = user).last()
                 if bank_details:
                     if request.method == "POST":
-                        amount = float(request.POST['withdraw_amount'])
+                        req_amount = float(request.POST['withdraw_amount'])
+                        withdraw_amount  = req_amount - 10
                         amount_from = request.POST['from']
                         id_generator=str(random.randint(100000000000000,999999999999999))
                         txn_id = "TETH-W"+id_generator
                         if amount_from == 'earnings':
-                            if amount > total_earnings.earnings:
+                            if req_amount > total_earnings.earnings:
                                 messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
                                 return redirect('/member/dashboard/')
                             else:
-                                withdraw = Withdraw(user = user , amount = amount, txn_id=txn_id)
+                                withdraw = Withdraw(user = user , amount = withdraw_amount, txn_id=txn_id)
                                 withdraw.save()
-                                total_earnings.earnings -= round(amount, 3)
+                                total_earnings.earnings -= round(req_amount, 3)
                                 total_earnings.save()
                                 Transactions(user = user ,withdraw = withdraw , mode = "withdraw",withdrawal_status ="requested" ).save()
                                 messages.success(request , "withdraw request is send successfully.The amount will be credited with in 24 houre ")
+                                send_withdraw_mail_to_admin(txn_id)
                                 return redirect('/member/dashboard/')
                         else:
                             last_deposit = Deposit.objects.filter(user=user, payment_status='success').last()
                             print(last_deposit)
-                            if amount > last_deposit.total_deposit:
+                            if req_amount > last_deposit.total_deposit:
                                 messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
                                 return redirect('/member/dashboard/')
                             else:
-                                withdraw = Withdraw(user = user , amount = amount, txn_id=txn_id)
+                                withdraw = Withdraw(user = user , amount = withdraw_amount, txn_id=txn_id)
                                 withdraw.save()
-                                last_deposit.total_deposit = round(last_deposit.total_deposit - amount, 3)
+                                last_deposit.total_deposit = round(last_deposit.total_deposit - req_amount, 3)
                                 last_deposit.save()
                                 Transactions(user = user ,withdraw = withdraw , mode = "withdraw",withdrawal_status ="requested" ).save()
                                 messages.success(request , "withdraw request is send successfully.The amount will be credited with in 24 houre ")

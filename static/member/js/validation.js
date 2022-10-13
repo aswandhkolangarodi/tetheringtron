@@ -106,7 +106,8 @@ $("#withdraw_form").validate({
     rules: {
         withdraw_amount: {
             required: true,
-            notOnlyZero: '0'
+            notOnlyZero: '0',
+            min: 100
         },
         trx_address: {
             required: true,
@@ -118,7 +119,8 @@ $("#withdraw_form").validate({
     messages: {
         withdraw_amount: {
             required: "Please enter the amount",
-            notOnlyZero : "Enter a valid number"
+            notOnlyZero : "Enter a valid number",
+            min:"Minimum withdroaw amount is 100"
         },
         trx_address: {
             required: "Please enter your trx-address",
