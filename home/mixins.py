@@ -17,9 +17,9 @@ class MessageHandler:
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN) 
 
         message = client.messages.create(  
-                               
+                                messaging_service_sid='MG50cd2dc652121ee9fa33b4dad45a7d13', 
                                 body=f'Your otp for verification is {self.otp}',   
-                                from_='+12184007822',  
+                                  
                                 to=self.phone_number
                             ) 
 
