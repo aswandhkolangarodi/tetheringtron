@@ -8,15 +8,7 @@
 
         <div class="deznav">
             <div class="deznav-scroll">
-                <!-- <div class="main-profile">
-                    <div class="image-bx">
-                      
-                        <img src="{% static 'trxadmin/images/Untitled-1.jpg' %}" alt="" class="logo-abbr">
-                        <a href="javascript:void(0);"><i class="fa fa-cog" aria-hidden="true"></i></a>
-                    </div>
-                    <h5 class="name"><span class="font-w400">Hello,</span> Marquez</h5>
-                    <p class="email">marquezzzz@mail.com</p>
-                </div> -->
+               
                 <ul class="metismenu" id="menu">
                     <li class="nav-label first">Main Menu</li>
                     <li  {% if is_index %} class="mm-active" {% endif %}><a class=" ai-icon " href="{% url 'trxadmin:Trxadmin' %}" aria-expanded="false">
@@ -29,7 +21,7 @@
     
                    
                             <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:kyc' %}" aria-expanded="false">
-                            <i class="flaticon-381-network"></i>
+                            <i class="flaticon-056-information"></i>
                             <span class="nav-text">KYC Verification</span>
                         </a>
                        
@@ -37,7 +29,7 @@
                     </li>
               
                     <li  {% if is_member %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:members' %}" aria-expanded="false">
-                        <i class="flaticon-381-network"></i>
+                        <i class="flaticon-028-user-1"></i>
                         <span class="nav-text">Members</span>
                     </a>
                    
@@ -54,15 +46,15 @@
 
         </li>
         <li  {% if is_earning %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:earning' %}" aria-expanded="false">
-            <i class="flaticon-049-copy"></i>
+            <i class="flaticon-008-credit-card"></i>
             <span class="nav-text">Earnings</span>
         </a>
         
         
         </li> 
             <li  {% if is_announcement %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:announcement' %}" aria-expanded="false">
-                <i class="flaticon-061-puzzle"></i>
-                <span class="nav-text">Create Announcement</span>
+                <i class="flaticon-130-surprise"></i>
+                <span class="nav-text">Announcement</span>
             </a>
            
    
@@ -71,7 +63,7 @@
         
                     
         <li  {% if is_contact %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:contact' %}" aria-expanded="false">
-            <i class="flaticon-049-copy"></i>
+            <i class="flaticon-025-rewind"></i>
             <span class="nav-text">Enquiries</span>
         </a>
        
@@ -80,7 +72,7 @@
     </li>      
                         
     <li  {% if is_coin %} class="mm-active" {% endif %}><a class=" ai-icon" href="{% url 'trxadmin:coindetails' %}" aria-expanded="false">
-        <i class="flaticon-049-copy"></i>
+        <i class="flaticon-057-eye"></i>
         <span class="nav-text">Coin Details</span>
     </a>
    
