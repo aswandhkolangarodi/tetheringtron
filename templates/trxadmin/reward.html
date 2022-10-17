@@ -11,7 +11,7 @@
 
 
         <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Youtube</h4>
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6">
+            <div class="col-xl-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Referral</h4>
@@ -107,15 +107,7 @@
                                             <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
                                                 colspan="1" aria-label="Student Name: activate to sort column ascending"
                                                 style="width: 123.984px;">Recommended Member</th>
-                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                                colspan="1"
-                                                aria-label="Invoice number: activate to sort column ascending"
-                                                style="width: 119.078px;">Status</th>
-
-                                            <th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
-                                                colspan="1"
-                                                aria-label="Invoice number: activate to sort column ascending"
-                                                style="width: 119.078px;">Action</th>
+                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -130,24 +122,7 @@
                                                 <h6>{{refferals.user.first_name}}</h6>
                                                 <span>{{refferals.user.email}}</span>
                                             </td>
-                                            <td>
-                                                {% if refferals.recommended_by_status == 0 %}
-                                                <span class="badge light badge-warning">Pending</span>
-                                                {% else %}
-                                                <span class="badge light badge-success">Given</span>
-                                                {% endif %}
-                                            </td>
-
-                                            <td>
-                                                {% if refferals.recommended_by_status == 0 %}
-                                                <div class="d-flex action-button">
-
-                                                    <a href="{% url 'trxadmin:refferal_reward_given' refferals.id %}"
-                                                        class="btn btn-success"><i class="fa fa-check"></i></a>
-
-                                                </div>
-                                                {% endif %}
-                                            </td>
+                                           
 
                                         </tr>
 

@@ -21,6 +21,7 @@ $("#kyc").validate({
         },
         pin: {
             required: true,
+            number :true,
         },
 
 

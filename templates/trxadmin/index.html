@@ -102,6 +102,7 @@
 												colspan="1"
 												aria-label="Payment Type : activate to sort column ascending"
 												style="width: 108.531px;">Amount</th>
+											<th></th>
 											
 											<th class="sorting" tabindex="0" aria-controls="example4" rowspan="1"
 												colspan="1"
@@ -130,8 +131,11 @@
 											
 											<td>
 												<h6>{{deposit_list.deposit.amount_in_trx}} <strong>TRX</strong></h6>
+												
 											</td>
-										
+											<td>
+												<h6>{{deposit_list.deposit.amount_in_usd}} <strong>USD</strong></h6>
+											</td>
 											<td>
 												{% if deposit_list.deposit.trade_status == 0 %}
 												<span class="badge light badge-warning">Pending</span>
@@ -294,8 +298,6 @@
         $('#submit_reson').click(function(){
             reson = $('#reson').val()
             req_id = $('#req_id').val()
-            alert(reson)
-			alert(req_id)
             $.ajax({
             url: "{% url 'trxadmin:withdraw_req_reject' %}",
             type: 'POST',

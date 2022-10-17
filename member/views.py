@@ -3,6 +3,7 @@ from statistics import mode
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from home.models import *
+from trxadmin.helpers import reffer_reward_email_to_member
 from trxadmin.models import *
 from .models import *
 import base64
@@ -225,12 +226,11 @@ def create_checkout_session(request):
                         )
                         if session:
                             id_generator=str(random.randint(100000000000000,999999999999999))
-                            txn_id = "TETH-D"+id_generator
+                            txn_id = "TETHD"+id_generator
                             last_deposit = Deposit.objects.filter(user = request.user, payment_status = "success").last()
                             if last_deposit is None:
                                 deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx  ,txn_id = txn_id,amount_in_usd = member_deposit_amount_in_usd ,total_deposit = member_deposit_amount_in_trx)
                                 deposit.save()
-                                Profile.objects.filter(user=request.user).update(first_deposit_date = date.today())
                                 Transactions(user = request.user ,deposit = deposit,test_id = test_id, mode = "deposit").save()
                             else:
                                 deposit = Deposit(user = request.user ,test_id = test_id, amount_in_trx= member_deposit_amount_in_trx ,amount_in_usd = member_deposit_amount_in_usd,txn_id = txn_id)
@@ -259,7 +259,23 @@ def paymentSuccess(request,test_id):
     deposit.payment_status = "success"
     deposit.save()
     amount = str(deposit.amount_in_trx)
-    Profile.objects.filter(user = request.user).update(first_deposit_status = True)
+    user = Profile.objects.get(user=request.user)
+    if user.first_deposit_status == False:
+        if user.recommended_by is not None:
+            recommented_user = user.recommended_by
+            reward_price_obj = AddReward.objects.all().last()
+            Profile.objects.filter(user=request.user).update(recommended_by_status = True)
+            ReffferalEarnings.objects.create(user = recommented_user, earnings = reward_price_obj.refer_reward)
+            reffer_reward_email_to_member(recommented_user, reward_price_obj.refer_reward)
+            total_earnings_exist = MemberTotalEarnings.objects.filter(user = recommented_user).exists()
+            if total_earnings_exist:
+                total_earnings_obj = MemberTotalEarnings.objects.get(user = recommented_user)
+                total_earnings_obj.earnings += reward_price_obj.refer_reward
+                total_earnings_obj.save()
+            else:
+                MemberTotalEarnings.objects.create(user = recommented_user, earnings = 
+                reward_price_obj.refer_reward)
+        Profile.objects.filter(user=request.user).update(first_deposit_status = True, first_deposit_date = date.today())
     Transactions.objects.filter(test_id = test_id).update(deposit_status = "success")
     messages.success(request, "Payment of " + amount + "TRX successfull")
     send_deposit_mail_to_admin(test_id)
@@ -284,7 +300,7 @@ def withdraw(request):
                 if bank_details:
                     if request.method == "POST":
                         req_amount = float(request.POST['withdraw_amount'])
-                        withdraw_amount  = req_amount - 10
+                        
                         amount_from = request.POST['from']
                         id_generator=str(random.randint(100000000000000,999999999999999))
                         txn_id = "TETH-W"+id_generator
@@ -293,7 +309,7 @@ def withdraw(request):
                                 messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
                                 return redirect('/member/dashboard/')
                             else:
-                                withdraw = Withdraw(user = user , amount = withdraw_amount, txn_id=txn_id)
+                                withdraw = Withdraw(user = user , amount = req_amount, txn_id=txn_id)
                                 withdraw.save()
                                 total_earnings.earnings -= round(req_amount, 3)
                                 total_earnings.save()
@@ -308,7 +324,7 @@ def withdraw(request):
                                 messages.warning(request, "Your account has insufficient funds.Retry after checking your balance")
                                 return redirect('/member/dashboard/')
                             else:
-                                withdraw = Withdraw(user = user , amount = withdraw_amount, txn_id=txn_id)
+                                withdraw = Withdraw(user = user , amount = req_amount, txn_id=txn_id)
                                 withdraw.save()
                                 last_deposit.total_deposit = round(last_deposit.total_deposit - req_amount, 3)
                                 last_deposit.save()

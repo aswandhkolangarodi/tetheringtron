@@ -9,7 +9,7 @@ from django.contrib.auth import logout as django_logout
 from django.utils import timezone
 from datetime import  datetime
 from django.contrib.auth.decorators import user_passes_test
-from .helpers import reffer_reward_email_to_member, weekly_reward_email_to_member, youtube_reward_email_to_member,youtube_reward_reject_email_to_member
+from .helpers import reffer_reward_email_to_member, weekly_reward_email_to_member, youtube_reward_email_to_member,youtube_reward_reject_email_to_member,withdraw_request_reject_email_to_member
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
@@ -58,6 +58,7 @@ def withdraw_req_reject(request):
     print(total_earnings)
     total_earnings.earnings += withdraw.amount
     total_earnings.save()
+    withdraw_request_reject_email_to_member(id)
     return redirect('/trxadmin/dashboard')
     
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
@@ -129,25 +130,6 @@ def reward(request):
     }
     return render(request, 'trxadmin/reward.html',context)
 
-@user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
-def refferal_reward_given(request, id):
-    recommented_user_profile = Profile.objects.get(id=id)
-    recommentedby_user = recommented_user_profile.recommended_by
-    print("recommentedby_user",recommentedby_user)
-    reward_price_obj = AddReward.objects.all().last()
-    print(reward_price_obj.refer_reward)
-    Profile.objects.filter(id = id).update(recommended_by_status = True)
-    ReffferalEarnings.objects.create(user = recommentedby_user, earnings = reward_price_obj.refer_reward)
-    reffer_reward_email_to_member(recommentedby_user, reward_price_obj.refer_reward)
-    total_earnings_exist = MemberTotalEarnings.objects.filter(user = recommentedby_user).exists()
-    if total_earnings_exist:
-        total_earnings_obj = MemberTotalEarnings.objects.get(user = recommentedby_user)
-        total_earnings_obj.earnings += reward_price_obj.refer_reward
-        total_earnings_obj.save()
-    else:
-        MemberTotalEarnings.objects.create(user = recommentedby_user, earnings = 
-        reward_price_obj.refer_reward)
-    return redirect('/trxadmin/reward')
 
 
 @user_passes_test(lambda u: u.is_superuser,login_url="/member/login")
